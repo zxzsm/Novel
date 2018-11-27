@@ -1,4 +1,33 @@
-﻿
+﻿@model Novel.Models.IndexViewModel
 @{
     Layout = "_Layout";
 }
+<div class="pure-g">
+    <div class="pure-u-1">
+        <h2 class="content-subhead">玄幻奇幻</h2>
+    </div>
+
+
+
+
+</div>
+<div class="pure-g">
+    @foreach (var item in Model.Fantasy)
+    {
+        <div class="pure-u-1-4">
+            <div class="novel">
+                <a href="#">
+                    <img src="@item.BookImage" style="height:200px;">
+
+                </a>
+                <p class="title">
+                    <a href="#">
+                        @item.BookName
+                    </a>
+                  
+                </p>
+            </div>
+
+        </div>
+    }
+</div>
