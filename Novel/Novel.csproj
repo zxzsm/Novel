@@ -8,7 +8,12 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\Novel.Entity\Novel.Entity.csproj" />
+    <ProjectReference Include="..\Novel.Utilities\Novel.Utilities.csproj" />
   </ItemGroup>
 
 </Project>
