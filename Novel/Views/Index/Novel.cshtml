@@ -54,7 +54,7 @@
                     @{
                         BookItem lastItem = Model.Items.OrderByDescending(m => m.ItemId).FirstOrDefault();
                     }
-                    <td>@lastItem.ItemName</td>
+                    <td><a href="#">@lastItem.ItemName</a></td>
                 </tr>
             </tbody>
         </table>
