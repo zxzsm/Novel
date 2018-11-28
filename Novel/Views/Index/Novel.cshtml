@@ -11,14 +11,15 @@
         .pure-table td {
             border-left-width: 0px;
         }
+
     .btitle {
         border: 2px solid #eee;
-        border-radius:5px;
-        padding:20px 10px;
-        margin:10px 0px;
+        border-radius: 5px;
+        padding: 20px 10px;
+        margin: 10px 0px;
     }
 </style>
-<div class="pure-g btitle" >
+<div class="pure-g btitle">
     <div class="pure-u-1-4">
         <div class="novel">
             <img class="img" src="@Model.Book.BookImage">
@@ -69,5 +70,14 @@
     </div>
 </div>
 <div class="pure-g btitle">
+    @foreach (var item in Model.Items)
+    {
+
+        <div class="pure-u-1-2 itemcont" style="height:40px;">
+            <a href="#" style="margin-left:10%">
+                @item.ItemName
+            </a>
+        </div>
+    }
 
 </div>

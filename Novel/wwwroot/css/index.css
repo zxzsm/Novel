@@ -22,8 +22,9 @@ html, button, input, select, textarea,
 }
 
 
-.title a, a:active, a:hover, a:link {
+.title a,a, a:active, a:hover, a:link {
     text-decoration: none;
+    color:black;
 }
 
 .title {
