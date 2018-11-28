@@ -35,7 +35,7 @@ namespace Novel
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            StringCommon.ConnectionString= Configuration.GetConnectionString("BookDatabase");
+            StringCommon.ConnectionString = Configuration.GetConnectionString("BookDatabase");
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddDbContext<BookContext>(options => options.UseSqlServer(StringCommon.ConnectionString));
         }
@@ -61,8 +61,14 @@ namespace Novel
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Index}/{action=Index}/{id?}");
+                             name: "novel",
+                            template: "novel/{id}.html",
+                            defaults: new { controller = "Index", action = "Novel" });
+
+                routes.MapRoute(
+                            name: "default",
+                            template: "/",
+                            defaults: new { controller = "Index", action = "Index" });
             });
         }
     }

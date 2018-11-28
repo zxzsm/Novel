@@ -20,5 +20,18 @@ namespace Novel.Controllers
             }
             return View(viewModel);
         }
+
+        public IActionResult Novel(int id)
+        {
+            BookViewModel bookViewModel = new BookViewModel();
+            using (BookContext bookContext = new BookContext())
+            {
+                var book = bookContext.Book.FirstOrDefault(m => m.BookId == id);
+                var bookItems = bookContext.BookItem.Where(m => m.BookId == id).ToList();
+                bookViewModel.Book = book;
+                bookViewModel.Items = bookItems;
+            }
+            return View(bookViewModel);
+        }
     }
 }

@@ -1,0 +1,73 @@
+﻿@using Novel.Entity.Models
+@model Novel.Models.BookViewModel
+@{
+    Layout = "_Layout";
+}
+<style>
+    .pure-table {
+        border-width: 0px;
+    }
+
+        .pure-table td {
+            border-left-width: 0px;
+        }
+    .btitle {
+        border: 2px solid #eee;
+        border-radius:5px;
+        padding:20px 10px;
+        margin:10px 0px;
+    }
+</style>
+<div class="pure-g btitle" >
+    <div class="pure-u-1-4">
+        <div class="novel">
+            <img class="img" src="@Model.Book.BookImage">
+        </div>
+    </div>
+    <div class="pure-u-3-4">
+        <table class="pure-table">
+            <tbody>
+                <tr>
+                    <td>
+                        <h2 class="content-subhead" style="margin:0px;">@Model.Book.BookName</h2>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>作者</td>
+                    <td>@Model.Book.BookAuthor</td>
+                </tr>
+                <tr>
+                    <td>最后更新时间</td>
+                    <td>@Model.Book.UpdateTime</td>
+                </tr>
+                <tr>
+                    <td>状态</td>
+                    @{
+                        string state = Model.Book.BookState.HasValue && Model.Book.BookState.Value == 1 ? "完结" : "连载中";
+                    }
+                    <td>@state</td>
+                </tr>
+                <tr>
+                    <td>最新章节</td>
+                    @{
+                        BookItem lastItem = Model.Items.OrderByDescending(m => m.ItemId).FirstOrDefault();
+                    }
+                    <td>@lastItem.ItemName</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="pure-u-1-4"></div>
+    <div class="pure-u-3-4">
+        <hr style="border-top:1px #808080 dashed ;" />
+    </div>
+
+    <div class="pure-u-1-4"></div>
+    <div class="pure-u-3-4">
+        @Model.Book.BookSummary
+    </div>
+</div>
+<div class="pure-g btitle">
+
+</div>

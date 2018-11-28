@@ -21,10 +21,6 @@ html, button, input, select, textarea,
     margin-left: -70px;
 }
 
-    .novel img {
-        margin: 0px auto;
-        border-radius: 7px;
-    }
 
 .title a, a:active, a:hover, a:link {
     text-decoration: none;
