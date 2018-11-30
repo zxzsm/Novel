@@ -1,7 +1,8 @@
 ﻿using System.Linq;
+using System.Web;
 using Microsoft.AspNetCore.Mvc;
 using Novel.Entity.Models;
-using Novel.Models;
+using Novel.Service;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -32,6 +33,13 @@ namespace Novel.Controllers
                 bookViewModel.Items = bookItems;
             }
             return View(bookViewModel);
+        }
+
+        public IActionResult Content(int itemId)
+        {
+            HttpUtility
+            ContentViewModel contentViewModel = BookService.GetContentViewModel(itemId);
+            return View(contentViewModel);
         }
     }
 }

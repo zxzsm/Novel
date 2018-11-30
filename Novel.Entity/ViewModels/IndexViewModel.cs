@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Novel.Models
+namespace Novel.Entity.Models
 {
     public class IndexViewModel
     {

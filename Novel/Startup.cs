@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Novel.Entity;
 using Novel.Entity.Models;
-using Novel.Models;
 
 namespace Novel
 {
@@ -64,7 +58,10 @@ namespace Novel
                              name: "novel",
                             template: "novel/{id}.html",
                             defaults: new { controller = "Index", action = "Novel" });
-
+                routes.MapRoute(
+                             name: "content",
+                            template: "content/{itemId}.html",
+                            defaults: new { controller = "Index", action = "Content" });
                 routes.MapRoute(
                             name: "default",
                             template: "/",

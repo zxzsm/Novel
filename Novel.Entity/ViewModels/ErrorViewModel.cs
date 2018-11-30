@@ -1,6 +1,6 @@
 using System;
 
-namespace Novel.Models
+namespace Novel.Entity.Models
 {
     public class ErrorViewModel
     {

@@ -22,9 +22,9 @@ html, button, input, select, textarea,
 }
 
 
-.title a,a, a:active, a:hover, a:link {
+.title a, a, a:active, a:hover, a:link {
     text-decoration: none;
-    color:black;
+    color: black;
 }
 
 .title {
@@ -42,4 +42,9 @@ html, button, input, select, textarea,
     bottom: 0;
     z-index: -1;
     background: #EFF2FB;
+}
+
+.fr {
+    border: 2px solid white;
+    border-radius: 5px;
 }
