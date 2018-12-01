@@ -37,7 +37,6 @@ namespace Novel.Controllers
 
         public IActionResult Content(int itemId)
         {
-            HttpUtility
             ContentViewModel contentViewModel = BookService.GetContentViewModel(itemId);
             return View(contentViewModel);
         }
