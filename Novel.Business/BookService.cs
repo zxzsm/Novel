@@ -22,6 +22,7 @@ namespace Novel.Service
                 {
                     return contentViewModel;
                 }
+
                 contentViewModel = new ContentViewModel
                 {
                     BookId = book.BookId,
@@ -30,6 +31,20 @@ namespace Novel.Service
                     ItemId = bookItem.ItemId,
                     ItemName = bookItem.ItemName
                 };
+                //上一章
+                var preItem = db.BookItem.Where(m => m.BookId == book.BookId && m.ItemId < itemId).OrderByDescending(m => m.ItemId).FirstOrDefault();
+                if (preItem != null)
+                {
+                    contentViewModel.PreId = preItem.ItemId;
+                    contentViewModel.PreItemName = preItem.ItemName;
+                }
+                //下一章节
+                var nextItem = db.BookItem.Where(m => m.BookId == book.BookId && m.ItemId > itemId).OrderBy(m => m.ItemId).FirstOrDefault();
+                if (nextItem != null)
+                {
+                    contentViewModel.NextId = nextItem.ItemId;
+                    contentViewModel.NextName = nextItem.ItemName;
+                }
             }
             return contentViewModel;
         }

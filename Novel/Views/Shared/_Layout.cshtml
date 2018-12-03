@@ -7,6 +7,7 @@
     <link href="~/lib/pure-min.css" rel="stylesheet" />
     <link href="~/css/site.css" rel="stylesheet" />
     <link href="~/css/index.css" rel="stylesheet" />
+    <script src="~/js/jquery.min.js"></script>
     <style>
         .container {
             margin: 0px auto;
@@ -18,14 +19,32 @@
             border-radius: 7px;
             height: 200px;
         }
+
+        .logo {
+            background: url('/files/logo.png') no-repeat scroll 0 0 transparent;
+            width: 120px;
+            height: 80px;
+            position: relative;
+            display: block;
+            text-indent: -9999em;
+            margin-left:10px;
+        }
     </style>
 </head>
 <body>
     <div class="background"></div>
     <div class="container ">
         <div class="pure-g">
-            <div class="pure-u-1-5">头部logo</div>
-            <div class="pure-u-4-5"></div>
+            <div class="pure-u-1-8">
+                <a class="logo" href="/">
+                    书客来
+                </a>
+
+            </div>
+            @*<div class="pure-u-3-8" style="padding-top:20px;color:#FD8000;">
+                书当快意读易尽,客有可人期不来
+            </div>*@
+            <div class="pure-u-4-8"></div>
         </div>
         <div class="pure-g">
             <div class="pure-u-1">
