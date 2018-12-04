@@ -1,5 +1,9 @@
-﻿using Novel.Entity.Models;
+﻿using Novel.Entity;
+using Novel.Entity.Models;
+using Novel.Entity.ViewModels;
+using Novel.Utilities;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Novel.Service
@@ -47,6 +51,49 @@ namespace Novel.Service
                 }
             }
             return contentViewModel;
+        }
+
+        public static Book GetBook(int id)
+        {
+            using (var db = new BookContext())
+            {
+                return db.Book.FirstOrDefault(m => m.BookId == id);
+            }
+        }
+        public static PaginatedList<Book> GetBooks(SearchViewModel viewModel)
+        {
+            if (viewModel == null)
+            {
+
+                viewModel = new SearchViewModel
+                {
+                    pageSize = 10,
+                    pageIndex = 1,
+                };
+            }
+            if (viewModel.pageIndex <= 0)
+            {
+                viewModel.pageIndex = 1;
+            }
+            using (var db = new BookContext())
+            {
+                var q = db.Book.Where(m => 1 == 1);
+                if (!viewModel.keyword.IsEmpty())
+                {
+                    q = q.Where(m => m.BookName.Contains(viewModel.keyword));
+                }
+                var list = q.ToList();
+                return new PaginatedList<Book>(list, list.Count, viewModel.pageIndex, viewModel.pageSize);
+            }
+
+        }
+
+        public static List<BookCategory> GetCategories()
+        {
+            using (var db = new BookContext())
+            {
+                return db.BookCategory.ToList();
+            }
         }
     }
 }

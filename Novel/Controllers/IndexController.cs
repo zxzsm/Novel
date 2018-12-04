@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Web;
 using Microsoft.AspNetCore.Mvc;
 using Novel.Entity.Models;
+using Novel.Entity.ViewModels;
 using Novel.Service;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -24,7 +26,7 @@ namespace Novel.Controllers
 
         public IActionResult Novel(int id)
         {
-            BookViewModel bookViewModel = new BookViewModel();
+            NovelViewModel bookViewModel = new NovelViewModel();
             using (BookContext bookContext = new BookContext())
             {
                 var book = bookContext.Book.FirstOrDefault(m => m.BookId == id);
@@ -39,6 +41,13 @@ namespace Novel.Controllers
         {
             ContentViewModel contentViewModel = BookService.GetContentViewModel(itemId);
             return View(contentViewModel);
+        }
+        [HttpPost]
+        public IActionResult Search(SearchViewModel viewModel)
+        {
+            var d = BookService.GetBooks(viewModel);
+            ViewData["BookCategory"] = BookService.GetCategories();
+            return View(viewModel);
         }
     }
 }

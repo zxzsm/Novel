@@ -8,11 +8,11 @@
     </div>
 </div>
 <div class="pure-g">
+
     @foreach (var item in Model.Fantasy)
     {
         <div class="pure-u-1-4">
             <div class="novel">
-                @Url.Action("")
                 @{ string title = item.BookName + "(" + item.BookAuthor + ")";}
                 <a href="@Url.Action("Novel",new { id=item.BookId })" title='@title' alt="@item.BookName">
                     <img class="img" src="@item.BookImage">

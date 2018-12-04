@@ -47,10 +47,23 @@ html, button, input, select, textarea,
     left: 0;
     bottom: 0;
     z-index: -1;
-    /*background: #EFF2FB;*/
+    background: #EFF2FB;
+}
+
+.btitle {
+    padding: 20px 10px;
+    margin: 10px 0px;
 }
 
 .fr {
     border: 2px solid white;
     border-radius: 5px;
 }
+
+.tbnb {
+    border-width: 0px;
+}
+
+    .tbnb td {
+        border-left-width: 0px;
+    }

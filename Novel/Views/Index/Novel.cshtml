@@ -1,21 +1,12 @@
 ﻿@using Novel.Entity.Models
-@model BookViewModel
+@model NovelViewModel
 @{
     Layout = "_Layout";
 }
 <style>
-    .pure-table {
-        border-width: 0px;
-    }
 
-        .pure-table td {
-            border-left-width: 0px;
-        }
 
-    .btitle {
-        padding: 20px 10px;
-        margin: 10px 0px;
-    }
+    
 
     .item {
         height: 40px;
@@ -28,7 +19,7 @@
         </div>
     </div>
     <div class="pure-u-3-4">
-        <table class="pure-table">
+        <table class="pure-table tbnb">
             <tbody>
                 <tr>
                     <td>
@@ -56,7 +47,7 @@
                     @{
                         BookItem lastItem = Model.Items.OrderByDescending(m => m.ItemId).FirstOrDefault();
                     }
-                    <td><a href="#">@lastItem.ItemName</a></td>
+                    <td><a href="@Url.Action("Content",new { itemId=lastItem.ItemId })">@lastItem.ItemName</a></td>
                 </tr>
             </tbody>
         </table>

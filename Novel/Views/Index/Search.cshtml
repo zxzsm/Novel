@@ -1,0 +1,61 @@
+﻿@model Novel.Entity.ViewModels.SearchViewModel
+@{
+    Layout = "_Layout";
+}
+<style>
+    .pure-table {
+        font-size: 14px;
+    }
+
+        .pure-table td a {
+            margin-left: 15px;
+        }
+</style>
+@using (Html.BeginForm("Search", "Index"))
+{
+
+
+    <div class="pure-g fr btitle">
+        <div class="pure-u-1">
+            <table class="pure-table tbnb">
+                <tbody>
+                    <tr>
+                        <td>
+                            分类
+                        </td>
+                        <td>
+                            <a href="#">全部</a>
+                            @foreach (var item in ViewData["BookCategory"] as List<BookCategory>)
+                            {
+                                <a href="#">@item.CategoryName</a>
+                            }
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            状态
+                        </td>
+                        <td>
+                            <a href="#">连载</a>
+                            <a href="#">完结</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            字数
+                        </td>
+                        <td>
+                            <a href="#">50万字以下</a>
+                            <a href="#">50-200万之间</a>
+                            <a href="#">200万以上</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <label for="name"></label>
+
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.keyword, new { });
+}
