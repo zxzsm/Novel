@@ -49,5 +49,7 @@ namespace Novel.Controllers
             ViewData["BookCategory"] = BookService.GetCategories();
             return View(viewModel);
         }
+
+
     }
 }

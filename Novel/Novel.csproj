@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Novel.Business\Novel.Service.csproj" />
+    <ProjectReference Include="..\Novel.Common\Novel.Common.csproj" />
     <ProjectReference Include="..\Novel.Entity\Novel.Entity.csproj" />
     <ProjectReference Include="..\Novel.Utilities\Novel.Utilities.csproj" />
   </ItemGroup>
