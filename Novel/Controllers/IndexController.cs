@@ -49,6 +49,11 @@ namespace Novel.Controllers
         {
             var d = BookService.GetBooks(viewModel);
             ViewData["BookCategory"] = BookService.GetCategories();
+            using (BookContext bookContext = new BookContext())
+            {
+                var t = bookContext.Book.ToList();
+                ViewData["Books"] = t;
+            }
             return View(viewModel);
         }
 

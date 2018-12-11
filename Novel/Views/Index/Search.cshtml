@@ -20,50 +20,109 @@
         background-color: red;
         color: white;
     }
+
+    .img {
+        height: 180px;
+    }
+    .bookinfo{
+        width:500px;
+       
+    }
+    .bookinfo-intro
+    {
+         padding:0em 1em !important;
+    }
+    .bookinfo-intro p {
+        height: 48px;
+        overflow: hidden;
+        line-height: 24px;
+    }
+    .title {
+        margin-left: 0px !important;
+        padding: 0px !important;
+    }
 </style>
 
 @using (Html.BeginForm("Search", "Index"))
 {
-    <div class="pure-g fr btitle" id="serarch">
-        <div class="pure-u-1">
+    <div id="serarch">
+        <div class="pure-g fr btitle">
+            <div class="pure-u-1">
+                <table class="pure-table tbnb">
+                    <tbody>
+                        <tr>
+                            <td>
+                                分类
+                            </td>
+                            <td>
+                                <a href="#" v-for="item in categories" v-bind:class="item.selectd?'sa':''"
+                                   v-on:click="click(item,categories)">
+                                    {{item.name}}
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                状态
+                            </td>
+                            <td>
+                                <a href="#" v-for="item in states" v-bind:class="item.selectd?'sa':''"
+                                   v-on:click="click(item,states)">
+                                    {{item.name}}
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                字数
+                            </td>
+                            <td>
+                                <a href="#" v-for="item in wordNumbers" v-bind:class="item.selectd?'sa':''"
+                                   v-on:click="click(item,wordNumbers)">
+                                    {{item.name}}
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <label for="name"></label>
+
+            </div>
+        </div>
+        <div class="pure-g fr btitle">
             <table class="pure-table tbnb">
-                <tbody>
+                @foreach (var item in ViewData["Books"] as List<Book>)
+                {
                     <tr>
                         <td>
-                            分类
-                        </td>
-                        <td>
-                            <a href="#" v-for="item in categories" v-bind:class="item.selectd?'sa':''"
-                               v-on:click="click(item,categories)">
-                                {{item.name}}
+                            <a  href="@Url.Action("Novel",new { id=item.BookId })" title='@item.BookName' alt="@item.BookName">
+                                <img src="@item.BookImage" class="img">
                             </a>
                         </td>
+                        <td>
+                            <table class="pure-table tbnb bookinfo">
+                                <tbody>
+                                    <tr>
+                                        <td> <a class="title" href="@Url.Action("Novel",new { id=item.BookId })">@item.BookName</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td> @item.BookAuthor</td>
+                                    </tr>
+                                    <tr >
+                                        <td class="bookinfo-intro" style="overflow:hidden">
+                                            <p>@item.BookSummary</p></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a class="title" href="@Url.Action("Novel",new { id=item.BookId })">@item.BookName</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                           
+                        </td>
+
                     </tr>
-                    <tr>
-                        <td>
-                            状态
-                        </td>
-                        <td>
-                            <a href="#" v-for="item in states" v-bind:class="item.selectd?'sa':''"
-                               v-on:click="click(item,states)">
-                                {{item.name}}
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            字数
-                        </td>
-                        <td>
-                            <a href="#" v-for="item in wordNumbers" v-bind:class="item.selectd?'sa':''"
-                               v-on:click="click(item,wordNumbers)">
-                                {{item.name}}
-                            </a>
-                        </td>
-                    </tr>
-                </tbody>
+                }
             </table>
-            <label for="name"></label>
 
         </div>
     </div>
