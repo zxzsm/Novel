@@ -1,5 +1,9 @@
-﻿using Novel.Entity.Models;
+﻿using Novel.Entity;
+using Novel.Entity.Models;
+using Novel.Entity.ViewModels;
+using Novel.Utilities;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Novel.Service
@@ -22,6 +26,7 @@ namespace Novel.Service
                 {
                     return contentViewModel;
                 }
+
                 contentViewModel = new ContentViewModel
                 {
                     BookId = book.BookId,
@@ -30,8 +35,65 @@ namespace Novel.Service
                     ItemId = bookItem.ItemId,
                     ItemName = bookItem.ItemName
                 };
+                //上一章
+                var preItem = db.BookItem.Where(m => m.BookId == book.BookId && m.ItemId < itemId).OrderByDescending(m => m.ItemId).FirstOrDefault();
+                if (preItem != null)
+                {
+                    contentViewModel.PreId = preItem.ItemId;
+                    contentViewModel.PreItemName = preItem.ItemName;
+                }
+                //下一章节
+                var nextItem = db.BookItem.Where(m => m.BookId == book.BookId && m.ItemId > itemId).OrderBy(m => m.ItemId).FirstOrDefault();
+                if (nextItem != null)
+                {
+                    contentViewModel.NextId = nextItem.ItemId;
+                    contentViewModel.NextName = nextItem.ItemName;
+                }
             }
             return contentViewModel;
+        }
+
+        public static Book GetBook(int id)
+        {
+            using (var db = new BookContext())
+            {
+                return db.Book.FirstOrDefault(m => m.BookId == id);
+            }
+        }
+        public static PaginatedList<Book> GetBooks(SearchViewModel viewModel)
+        {
+            if (viewModel == null)
+            {
+
+                viewModel = new SearchViewModel
+                {
+                    pageSize = 10,
+                    pageIndex = 1,
+                };
+            }
+            if (viewModel.pageIndex <= 0)
+            {
+                viewModel.pageIndex = 1;
+            }
+            using (var db = new BookContext())
+            {
+                var q = db.Book.Where(m => 1 == 1);
+                if (!viewModel.keyword.IsEmpty())
+                {
+                    q = q.Where(m => m.BookName.Contains(viewModel.keyword));
+                }
+                var list = q.ToList();
+                return new PaginatedList<Book>(list, list.Count, viewModel.pageIndex, viewModel.pageSize);
+            }
+
+        }
+
+        public static List<BookCategory> GetCategories()
+        {
+            using (var db = new BookContext())
+            {
+                return db.BookCategory.ToList();
+            }
         }
     }
 }

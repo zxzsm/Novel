@@ -13,6 +13,10 @@ namespace Novel.Entity.Models
         public int ItemId { get; set; }
         public string ItemName { get; set; }
         public string Content { get; set; }
+        public int PreId { get; set; }
+        public string PreItemName { get; set; }
+        public int NextId { get; set; }
+        public string NextName { get; set; }
 
     }
 }

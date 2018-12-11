@@ -10,9 +10,25 @@
         margin: 10px 0px;
     }
 
-    .at {
-        font-size: 17px;
+    .f14 {
+        font-size: 14px;
     }
+
+    .ncontent {
+        width: 80%;
+        margin: 0 auto;
+        line-height: 2em;
+    }
+
+    .nfooter {
+        width: 80%;
+        text-align: center;
+        margin: 5% 0px 1% 0px;
+    }
+
+        .nfooter a {
+            margin: 0px 20px;
+        }
     .ncontent
     {
         width:85%;
@@ -21,10 +37,9 @@
     }
 </style>
 <div class="pure-g">
-    
     <div class="pure-u-1 fr" style="margin-top:10px;">
         <div class="pure-u-1" style="padding:10px;">
-            <a href="@Url.Action("Novel",new { id=Model.BookId })" class="at"> @Model.BookName</a>&nbsp;/<a href="@Url.Action("Content",new { itemId=Model.ItemId })" class="at"> @Model.ItemName</a>
+            <a href="@Url.Action("Novel",new { id=Model.BookId })" class="f14"> @Model.BookName</a>&nbsp;/<a href="@Url.Action("Content",new { itemId=Model.ItemId })" class="f14"> @Model.ItemName</a>
         </div>
         <div class="pure-u-1" style="text-align:center;"><h2 class="content-subhead">@Model.ItemName</h2></div>
 
@@ -32,9 +47,37 @@
             <hr style="border-top:1px #808080 dashed ;">
         </div>
         <div class="pure-u-1">
-            <div class="ncontent">
-                @Html.Raw(HttpUtility.HtmlDecode(Model.Content))
+            <div>
+                <div class="ncontent">
+                    @Html.Raw(HttpUtility.HtmlDecode(Model.Content))
+                </div>
+                <div class="nfooter">
+                    @if (Model.PreId > 0)
+                    {
+                        <a class="f14" id="pre" href="@Url.Action("Content",new { itemId=Model.PreId })" title="@Model.BookName-@Model.PreItemName">上一章</a>
+                    }
+                    @if (Model.NextId > 0)
+                    {
+                        <a class="f14" id="next" href="@Url.Action("Content",new { itemId=Model.NextId })" title="@Model.BookName-@Model.NextName">下一章</a>
+                    }
+
+                </div>
             </div>
+
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $(document).keyup(function (event) {
+        var e = event || window.event || arguments.callee.caller.arguments[0];
+        debugger;
+        if (e.keyCode == 37 && $("#pre")) {
+            $("#pre")[0].click();
+        }
+        else if (e.keyCode == 39 && $("#next")) {
+            $("#next")[0].click();
+        }
+    });
+
+</script>

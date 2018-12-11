@@ -1,0 +1,135 @@
+﻿@model Novel.Entity.ViewModels.SearchViewModel
+@using Novel.Common
+@using Novel.Utilities
+@{
+    Layout = "_Layout";
+}
+<script src="~/js/linq.js"></script>
+<script src="~/js/vue.min.js"></script>
+<style>
+    .pure-table {
+        font-size: 14px;
+    }
+
+        .pure-table td a {
+            padding: 5px;
+            margin-left: 10px;
+        }
+
+    .sa, .sa:hover {
+        background-color: red;
+        color: white;
+    }
+</style>
+
+@using (Html.BeginForm("Search", "Index"))
+{
+    <div class="pure-g fr btitle" id="serarch">
+        <div class="pure-u-1">
+            <table class="pure-table tbnb">
+                <tbody>
+                    <tr>
+                        <td>
+                            分类
+                        </td>
+                        <td>
+                            <a href="#" v-for="item in categories" v-bind:class="item.selectd?'sa':''"
+                               v-on:click="click(item,categories)">
+                                {{item.name}}
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            状态
+                        </td>
+                        <td>
+                            <a href="#" v-for="item in states" v-bind:class="item.selectd?'sa':''"
+                               v-on:click="click(item,states)">
+                                {{item.name}}
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            字数
+                        </td>
+                        <td>
+                            <a href="#" v-for="item in wordNumbers" v-bind:class="item.selectd?'sa':''"
+                               v-on:click="click(item,wordNumbers)">
+                                {{item.name}}
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <label for="name"></label>
+
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.keyword, new { });
+    <script type="text/javascript">
+        @{
+            int serializing = (int)BookState.Serializing;
+            int end = (int)BookState.End;
+            var jdata = ViewData["BookCategory"] as List<BookCategory>;
+
+            var t = jdata.Select(m => new { name = m.CategoryName, value = m.CategoryId });
+            var json = JsonUtil.SerializeObject(jdata.Select(m => new { name = m.CategoryName, value = m.CategoryId}));
+         }
+        var app = new Vue(
+            {
+                el: "#serarch",
+                data: {
+                    categories: [
+                        {
+                            name: "全部", value: "", selectd: false
+                        }
+                    ],
+                    states: [
+                        { name: "全部", value: "", selectd: false },
+                        { name: "连载", value: "@serializing", selectd: false },
+                        { name: "完结", value: "@end", selectd: false }
+                    ],
+                    wordNumbers: [
+                        { name: "全部", value: "", selectd: false },
+                        { name: "50万字以下", value: "50万字以下", selectd: false },
+                        { name: "50-200万之间", value: "50-200万之间", selectd: false },
+                        { name: "200万以上", value: "200万以上", selectd: false }
+                    ]
+                },
+                methods: {
+                    click: function (item, datas) {
+                        var t = !item.selectd;
+                        item.selectd = t;
+
+                        if (item.name == "全部") {
+                            for (var i = 1; i < datas.length; i++) {
+                                datas[i].selectd=t;
+                            }
+                        }
+                        else {
+                            var arr = Enumerable.from(datas);
+                            var selectedCount = arr.where(function (x) {
+                                return x.name != "全部" && x.selectd;
+                            }
+                            ).count();
+                            if (selectedCount == (arr.count() - 1)) {
+                                datas[0].selectd=true
+                            }
+                            else {
+                                datas[0].selectd = false;
+                            }
+                        }
+                    }
+                },
+                created: function () {
+                    var c = @Html.Raw(json);
+                    for (var i = 0; i < c.length; i++) {
+                        c[i].selectd = false;
+                        this.categories.push(c[i]);
+                    }
+                }
+            });
+    </script>
+}
