@@ -4,8 +4,8 @@
 @{
     Layout = "_Layout";
 }
-<script src="~/js/knockout-3.4.2.js"></script>
 <script src="~/js/linq.js"></script>
+<script src="~/js/vue.min.js"></script>
 <style>
     .pure-table {
         font-size: 14px;
@@ -24,7 +24,7 @@
 
 @using (Html.BeginForm("Search", "Index"))
 {
-    <div class="pure-g fr btitle">
+    <div class="pure-g fr btitle" id="serarch">
         <div class="pure-u-1">
             <table class="pure-table tbnb">
                 <tbody>
@@ -32,24 +32,33 @@
                         <td>
                             分类
                         </td>
-                        <td data-bind="foreach: categories">
-                            <a href="#" data-bind="text:name,click:$parent.cclick,attr:{class:$data.selectd()==true?'sa':''}"></a>
+                        <td>
+                            <a href="#" v-for="item in categories" v-bind:class="item.selectd?'sa':''"
+                               v-on:click="click(item,categories)">
+                                {{item.name}}
+                            </a>
                         </td>
                     </tr>
                     <tr>
                         <td>
                             状态
                         </td>
-                        <td data-bind="foreach: states">
-                            <a href="#" data-bind="text:name,click:$parent.sclick,attr:{class:$data.selectd()==true?'sa':''}"></a>
+                        <td>
+                            <a href="#" v-for="item in states" v-bind:class="item.selectd?'sa':''"
+                               v-on:click="click(item,states)">
+                                {{item.name}}
+                            </a>
                         </td>
                     </tr>
                     <tr>
                         <td>
                             字数
                         </td>
-                        <td data-bind="foreach: wordNumbers">
-                            <a href="#" data-bind="text:name,click:$parent.nclick,attr:{class:$data.selectd()==true?'sa':''}"></a>
+                        <td>
+                            <a href="#" v-for="item in wordNumbers" v-bind:class="item.selectd?'sa':''"
+                               v-on:click="click(item,wordNumbers)">
+                                {{item.name}}
+                            </a>
                         </td>
                     </tr>
                 </tbody>
@@ -68,67 +77,59 @@
             var t = jdata.Select(m => new { name = m.CategoryName, value = m.CategoryId });
             var json = JsonUtil.SerializeObject(jdata.Select(m => new { name = m.CategoryName, value = m.CategoryId}));
          }
-        var viewModel = {
-            categories: ko.observableArray([{
-                name: "全部", value: "", selectd: ko.observable(false)
-            }])
-            ,
-            states: ko.observableArray([
-                { name: "全部", value: "", selectd: ko.observable(false) },
-                { name: "连载", value: "@serializing", selectd: ko.observable(false)  },
-                { name: "完结", value: "@end", selectd: ko.observable(false)  }
-            ]),
-            wordNumbers: ko.observableArray([
-                { name: "全部", value: "", selectd: ko.observable(false)  },
-                { name: "50万字以下", value: "50万字以下", selectd: ko.observable(false)  },
-                { name: "50-200万之间", value: "50-200万之间", selectd: ko.observable(false)  },
-                { name: "200万以上", value: "200万以上", selectd: ko.observable(false)  },
-            ]),
-            cclick: function () {
-                var item = this;
-                var parent = viewModel;
-                commclick(item, parent.categories());
-            },
-            sclick: function () {
-                var item = this;
-                var parent = viewModel;
-                commclick(item, parent.states());
-            },
-            nclick: function () {
-                var item = this;
-                var parent = viewModel;
-                commclick(item, parent.wordNumbers());
-            }
-        };
-        function commclick(item, datas) {
-            var t = !item.selectd();
-            item.selectd(t);
-            if (item.name == "全部") {
-                for (var i = 1; i < datas.length; i++) {
-                    datas[i].selectd(t);
-                }
-            }
-            else {
-                var arr = Enumerable.from(datas);
-                var selectedCount = arr.where(function (x) {
-                    return x.name != "全部" && x.selectd();
-                }
-                ).count();
-                if (selectedCount == (arr.count() - 1)) {
-                    datas[0].selectd(true);
-                }
-                else {
-                    datas[0].selectd(false);
-                }
-            }
-        }
+        var app = new Vue(
+            {
+                el: "#serarch",
+                data: {
+                    categories: [
+                        {
+                            name: "全部", value: "", selectd: false
+                        }
+                    ],
+                    states: [
+                        { name: "全部", value: "", selectd: false },
+                        { name: "连载", value: "@serializing", selectd: false },
+                        { name: "完结", value: "@end", selectd: false }
+                    ],
+                    wordNumbers: [
+                        { name: "全部", value: "", selectd: false },
+                        { name: "50万字以下", value: "50万字以下", selectd: false },
+                        { name: "50-200万之间", value: "50-200万之间", selectd: false },
+                        { name: "200万以上", value: "200万以上", selectd: false }
+                    ]
+                },
+                methods: {
+                    click: function (item, datas) {
+                        var t = !item.selectd;
+                        item.selectd = t;
 
-        var c = @Html.Raw(json);
-        for (var i = 0; i < c.length; i++) {
-            c[i].selectd = ko.observable(false);
-            viewModel.categories.push(c[i]);
-        }
-        debugger;
-        ko.applyBindings(viewModel);
+                        if (item.name == "全部") {
+                            for (var i = 1; i < datas.length; i++) {
+                                datas[i].selectd=t;
+                            }
+                        }
+                        else {
+                            var arr = Enumerable.from(datas);
+                            var selectedCount = arr.where(function (x) {
+                                return x.name != "全部" && x.selectd;
+                            }
+                            ).count();
+                            if (selectedCount == (arr.count() - 1)) {
+                                datas[0].selectd=true
+                            }
+                            else {
+                                datas[0].selectd = false;
+                            }
+                        }
+                    }
+                },
+                created: function () {
+                    var c = @Html.Raw(json);
+                    for (var i = 0; i < c.length; i++) {
+                        c[i].selectd = false;
+                        this.categories.push(c[i]);
+                    }
+                }
+            });
     </script>
 }
