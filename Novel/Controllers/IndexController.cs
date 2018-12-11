@@ -32,12 +32,14 @@ namespace Novel.Controllers
                 bookViewModel.Book = book;
                 bookViewModel.Items = bookItems;
             }
+            ViewData["Title"] = bookViewModel.Book.BookName;
             return View(bookViewModel);
         }
 
         public IActionResult Content(int itemId)
         {
             ContentViewModel contentViewModel = BookService.GetContentViewModel(itemId);
+            ViewData["Title"] = contentViewModel.BookName + "-" + contentViewModel.ItemName;
             return View(contentViewModel);
         }
     }
