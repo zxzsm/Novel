@@ -70,6 +70,10 @@ namespace Novel
                             name: "default2",
                             template: "search/",
                             defaults: new { controller = "Index", action = "Search" });
+                routes.MapRoute(
+                            name: "default3",
+                            template: "searchkeyword/",
+                            defaults: new { controller = "Index", action = "SearchKeyword" });
             });
         }
     }

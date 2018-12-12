@@ -53,11 +53,16 @@ namespace Novel.Service
             return contentViewModel;
         }
 
-        public static Book GetBook(int id)
+        public static NovelViewModel GetBook(int id)
         {
+            NovelViewModel bookViewModel = new NovelViewModel();
             using (var db = new BookContext())
             {
-                return db.Book.FirstOrDefault(m => m.BookId == id);
+                var book = db.Book.FirstOrDefault(m => m.BookId == id);
+                var bookItems = db.BookItem.Where(m => m.BookId == id).ToList();
+                bookViewModel.Book = book;
+                bookViewModel.Items = bookItems;
+                return bookViewModel;
             }
         }
         public static PaginatedList<Book> GetBooks(SearchViewModel viewModel)

@@ -26,14 +26,7 @@ namespace Novel.Controllers
 
         public IActionResult Novel(int id)
         {
-            NovelViewModel bookViewModel = new NovelViewModel();
-            using (BookContext bookContext = new BookContext())
-            {
-                var book = bookContext.Book.FirstOrDefault(m => m.BookId == id);
-                var bookItems = bookContext.BookItem.Where(m => m.BookId == id).ToList();
-                bookViewModel.Book = book;
-                bookViewModel.Items = bookItems;
-            }
+            NovelViewModel bookViewModel = BookService.GetBook(id);
             ViewData["Title"] = bookViewModel.Book.BookName;
             return View(bookViewModel);
         }
@@ -44,7 +37,6 @@ namespace Novel.Controllers
             ViewData["Title"] = contentViewModel.BookName + "-" + contentViewModel.ItemName;
             return View(contentViewModel);
         }
-        [HttpPost]
         public IActionResult Search(SearchViewModel viewModel)
         {
             var d = BookService.GetBooks(viewModel);
@@ -55,6 +47,18 @@ namespace Novel.Controllers
                 ViewData["Books"] = t;
             }
             return View(viewModel);
+        }
+        [HttpPost]
+        public JsonResult SearchKeyword(SearchViewModel viewModel)
+        {
+            var d = BookService.GetBooks(viewModel);
+            return Json(new
+            {
+                currentPageIndex = d.PageIndex,
+                viewModel.pageSize,
+                totalPages = d.TotalPages,
+                items = d.ToList()
+            });
         }
 
 

@@ -24,38 +24,48 @@
     .img {
         height: 180px;
     }
-    .bookinfo{
-        width:500px;
-       
+
+    .bookinfo {
+        width: 500px;
     }
-    .bookinfo-intro
-    {
-         padding:0em 1em !important;
+
+    .bookinfo-intro {
+        padding: 0em 1em !important;
     }
-    .bookinfo-intro p {
-        height: 48px;
-        overflow: hidden;
-        line-height: 24px;
-    }
+
+        .bookinfo-intro p {
+            height: 48px;
+            overflow: hidden;
+            line-height: 24px;
+        }
+
     .title {
         margin-left: 0px !important;
         padding: 0px !important;
     }
 </style>
 
-@using (Html.BeginForm("Search", "Index"))
+@using (Html.BeginForm("SearchKeyword", "Index", FormMethod.Post, new { @class = "pure-form" }))
 {
     <div id="serarch">
+        <div class="pure-g">
+            <div class="pure-u-1" style="margin:20px 0px;text-align:center;">
+                <input id="keyword" name="keyword" type="text" v-model="keyword" style="width: 50%;">
+                <input type="button" class="pure-button button-error" value="搜索" v-on:click="search()" />
+            </div>
+
+        </div>
         <div class="pure-g fr btitle">
             <div class="pure-u-1">
                 <table class="pure-table tbnb">
                     <tbody>
+
                         <tr>
                             <td>
                                 分类
                             </td>
                             <td>
-                                <a href="#" v-for="item in categories" v-bind:class="item.selectd?'sa':''"
+                                <a href="#" v-for="item in categories" v-bind:class="item.selectd?'sa':''" 
                                    v-on:click="click(item,categories)">
                                     {{item.name}}
                                 </a>
@@ -91,42 +101,39 @@
         </div>
         <div class="pure-g fr btitle">
             <table class="pure-table tbnb">
-                @foreach (var item in ViewData["Books"] as List<Book>)
-                {
-                    <tr>
-                        <td>
-                            <a  href="@Url.Action("Novel",new { id=item.BookId })" title='@item.BookName' alt="@item.BookName">
-                                <img src="@item.BookImage" class="img">
-                            </a>
-                        </td>
-                        <td>
-                            <table class="pure-table tbnb bookinfo">
-                                <tbody>
-                                    <tr>
-                                        <td> <a class="title" href="@Url.Action("Novel",new { id=item.BookId })">@item.BookName</a></td>
-                                    </tr>
-                                    <tr>
-                                        <td> @item.BookAuthor</td>
-                                    </tr>
-                                    <tr >
-                                        <td class="bookinfo-intro" style="overflow:hidden">
-                                            <p>@item.BookSummary</p></td>
-                                    </tr>
-                                    <tr>
-                                        <td><a class="title" href="@Url.Action("Novel",new { id=item.BookId })">@item.BookName</a></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                           
-                        </td>
+                <tr v-for="item in bookitems">
+                    <td>
+                        <a href="" title="item.bookName" alt="item.bookName">
+                            <img v-bind:src="item.bookImage" class="img">
+                        </a>
+                    </td>
+                    <td>
+                        <table class="pure-table tbnb bookinfo">
+                            <tbody>
+                                <tr>
+                                    <td> <a class="title" target="_blank" v-bind:href="geturl(item.bookId)">{{item.bookName}}</a></td>
+                                </tr>
+                                <tr>
+                                    <td> {{item.bookAuthor}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="bookinfo-intro" style="overflow:hidden">
+                                        <p>{{item.bookSummary}}</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><a class="title" target="_blank" v-bind:href="geturl(item.bookId)">{{item.bookName}}</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
 
-                    </tr>
-                }
+                    </td>
+
+                </tr>
             </table>
 
         </div>
     </div>
-    @Html.HiddenFor(m => m.keyword, new { });
     <script type="text/javascript">
         @{
             int serializing = (int)BookState.Serializing;
@@ -155,7 +162,11 @@
                         { name: "50万字以下", value: "50万字以下", selectd: false },
                         { name: "50-200万之间", value: "50-200万之间", selectd: false },
                         { name: "200万以上", value: "200万以上", selectd: false }
-                    ]
+                    ],
+                    bookitems: [],
+                    keyword: "@Html.Raw(Model.keyword)",
+                    pi: 1,
+                    ps:20
                 },
                 methods: {
                     click: function (item, datas) {
@@ -180,6 +191,19 @@
                                 datas[0].selectd = false;
                             }
                         }
+                    },
+                    search: function () {
+                        var _self = this;
+                        $.post("@Url.Action("SearchKeyword", "Index")", {
+                            keyword: _self.keyword,
+                            pageIndex: _self.pi,
+                            pageSize: _self.ps
+                        }, function (rs) {
+                            _self.bookitems = rs.items;
+                        });
+                    },
+                    geturl: function (id) {
+                        return "/novel/" + id + ".html";
                     }
                 },
                 created: function () {
@@ -188,6 +212,7 @@
                         c[i].selectd = false;
                         this.categories.push(c[i]);
                     }
+                    this.search(1, 20);
                 }
             });
     </script>
