@@ -8,6 +8,8 @@
 <script src="~/js/vue.min.js"></script>
 <!-- use the latest release -->
 <script src="~/js/paginate.js"></script>
+<link href="~/css/jquery.mloading.css" rel="stylesheet" />
+<script src="~/js/jquery.mloading.js"></script>
 <style>
     .pure-table {
         font-size: 14px;
@@ -50,13 +52,19 @@
         letter-spacing: 0em;
         list-style: none outside none;
         font-size: 14px;
+        position: relative;
+        left: 30%;
     }
 
         .pagination li {
             list-style-type: none;
             float: left;
-            padding: 8px;
+            padding:8px;
         }
+
+            .pagination li a {
+                padding: 8px;
+            }
 
     .pselectd {
         background-color: red;
@@ -64,11 +72,20 @@
 
         .pselectd a {
             color: white;
+           
         }
+            .pselectd a:link {
+                background-color: yellow;
+                border: 0px solid white;
+            }
+
 </style>
+
+
 
 @using (Html.BeginForm("SearchKeyword", "Index", FormMethod.Post, new { @class = "pure-form" }))
 {
+    <div id="loading"></div>
     <div id="serarch">
         <div class="pure-g">
             <div class="pure-u-1" style="margin:20px 0px;text-align:center;">
@@ -81,7 +98,6 @@
             <div class="pure-u-1">
                 <table class="pure-table tbnb">
                     <tbody>
-
                         <tr>
                             <td>
                                 分类
@@ -178,7 +194,14 @@
             var t = jdata.Select(m => new { name = m.CategoryName, value = m.CategoryId });
             var json = JsonUtil.SerializeObject(jdata.Select(m => new { name = m.CategoryName, value = m.CategoryId}));
          }
-        Vue.component('paginate', VuejsPaginate)
+        $(".container").mLoading({
+            text: "",//加载文字，默认值：加载中...
+            icon: "",//加载图标，默认值：一个小型的base64的gif图片
+            html: false,//设置加载内容是否是html格式，默认值是false
+            content: "",//忽略icon和text的值，直接在加载框中显示此值
+            mask: true//是否显示遮罩效果，默认显示
+        });
+        Vue.component('paginate', VuejsPaginate);
         var app = new Vue(
             {
                 el: "#serarch",
@@ -229,14 +252,15 @@
                     },
                     search: function () {
                         var _self = this;
+                        $(".container").mLoading("show");
                         $.post("@Url.Action("SearchKeyword", "Index")", {
                             keyword: _self.keyword,
                             pageIndex: _self.page,
                             pageSize: 5
                         }, function (rs) {
-                            debugger;
                             _self.bookitems = rs.items;
                             _self.pageCount = rs.pageCount;
+                            $(".container").mLoading("hide");
                         });
                     },
                     geturl: function (id) {

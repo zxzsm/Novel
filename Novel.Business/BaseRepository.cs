@@ -59,6 +59,10 @@ namespace Novel.Service
             }
             total = tempData.Count();
             totalPage = (int)Math.Ceiling(total / (double)pageSize);
+            if (pageIndex>totalPage)
+            {
+                pageIndex = 1;
+            }
             //排序获取当前页的数据
             if (isAsc)
             {
