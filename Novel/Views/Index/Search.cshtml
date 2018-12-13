@@ -6,6 +6,8 @@
 }
 <script src="~/js/linq.js"></script>
 <script src="~/js/vue.min.js"></script>
+<!-- use the latest release -->
+<script src="~/js/paginate.js"></script>
 <style>
     .pure-table {
         font-size: 14px;
@@ -43,6 +45,26 @@
         margin-left: 0px !important;
         padding: 0px !important;
     }
+
+    .pagination {
+        letter-spacing: 0em;
+        list-style: none outside none;
+        font-size: 14px;
+    }
+
+        .pagination li {
+            list-style-type: none;
+            float: left;
+            padding: 8px;
+        }
+
+    .pselectd {
+        background-color: red;
+    }
+
+        .pselectd a {
+            color: white;
+        }
 </style>
 
 @using (Html.BeginForm("SearchKeyword", "Index", FormMethod.Post, new { @class = "pure-form" }))
@@ -65,7 +87,7 @@
                                 分类
                             </td>
                             <td>
-                                <a href="#" v-for="item in categories" v-bind:class="item.selectd?'sa':''" 
+                                <a href="#" v-for="item in categories" v-bind:class="item.selectd?'sa':''"
                                    v-on:click="click(item,categories)">
                                     {{item.name}}
                                 </a>
@@ -100,39 +122,52 @@
             </div>
         </div>
         <div class="pure-g fr btitle">
-            <table class="pure-table tbnb">
-                <tr v-for="item in bookitems">
-                    <td>
-                        <a href="" title="item.bookName" alt="item.bookName">
-                            <img v-bind:src="item.bookImage" class="img">
-                        </a>
-                    </td>
-                    <td>
-                        <table class="pure-table tbnb bookinfo">
-                            <tbody>
-                                <tr>
-                                    <td> <a class="title" target="_blank" v-bind:href="geturl(item.bookId)">{{item.bookName}}</a></td>
-                                </tr>
-                                <tr>
-                                    <td> {{item.bookAuthor}}</td>
-                                </tr>
-                                <tr>
-                                    <td class="bookinfo-intro" style="overflow:hidden">
-                                        <p>{{item.bookSummary}}</p>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><a class="title" target="_blank" v-bind:href="geturl(item.bookId)">{{item.bookName}}</a></td>
-                                </tr>
-                            </tbody>
-                        </table>
+            <div style="width:100%">
+                <table class="pure-table tbnb">
+                    <tr v-for="item in bookitems">
+                        <td>
+                            <a href="" title="item.bookName" alt="item.bookName">
+                                <img v-bind:src="item.bookImage" class="img">
+                            </a>
+                        </td>
+                        <td>
+                            <table class="pure-table tbnb bookinfo">
+                                <tbody>
+                                    <tr>
+                                        <td> <a class="title" target="_blank" v-bind:href="geturl(item.bookId)">{{item.bookName}}</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td> {{item.bookAuthor}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="bookinfo-intro" style="overflow:hidden">
+                                            <p>{{item.bookSummary}}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><a class="title" target="_blank" v-bind:href="geturl(item.bookId)">{{item.bookName}}</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
 
-                    </td>
+                        </td>
 
-                </tr>
-            </table>
-
+                    </tr>
+                </table>
+            </div>
+            <div style="width:100%;">
+                <paginate v-model="page"
+                          :page-count="pageCount"
+                          :click-handler="clickNum"
+                          :prev-text="'上一页'"
+                          :next-text="'下一页'"
+                          :active-class="'pselectd'"
+                          :container-class="'pagination'"
+                          :page-class="'page-item'">
+                </paginate>
+            </div>
         </div>
+
     </div>
     <script type="text/javascript">
         @{
@@ -143,10 +178,13 @@
             var t = jdata.Select(m => new { name = m.CategoryName, value = m.CategoryId });
             var json = JsonUtil.SerializeObject(jdata.Select(m => new { name = m.CategoryName, value = m.CategoryId}));
          }
+        Vue.component('paginate', VuejsPaginate)
         var app = new Vue(
             {
                 el: "#serarch",
                 data: {
+                    page: 1,
+                    pageCount:1,
                     categories: [
                         {
                             name: "全部", value: "", selectd: false
@@ -164,15 +202,12 @@
                         { name: "200万以上", value: "200万以上", selectd: false }
                     ],
                     bookitems: [],
-                    keyword: "@Html.Raw(Model.keyword)",
-                    pi: 1,
-                    ps:20
+                    keyword: "@Html.Raw(Model.keyword)"
                 },
                 methods: {
                     click: function (item, datas) {
                         var t = !item.selectd;
                         item.selectd = t;
-
                         if (item.name == "全部") {
                             for (var i = 1; i < datas.length; i++) {
                                 datas[i].selectd=t;
@@ -196,14 +231,19 @@
                         var _self = this;
                         $.post("@Url.Action("SearchKeyword", "Index")", {
                             keyword: _self.keyword,
-                            pageIndex: _self.pi,
-                            pageSize: _self.ps
+                            pageIndex: _self.page,
+                            pageSize: 5
                         }, function (rs) {
+                            debugger;
                             _self.bookitems = rs.items;
+                            _self.pageCount = rs.pageCount;
                         });
                     },
                     geturl: function (id) {
                         return "/novel/" + id + ".html";
+                    },
+                    clickNum: function (pagenum) {
+                        this.search();
                     }
                 },
                 created: function () {

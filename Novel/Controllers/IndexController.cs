@@ -26,39 +26,52 @@ namespace Novel.Controllers
 
         public IActionResult Novel(int id)
         {
-            NovelViewModel bookViewModel = BookService.GetBook(id);
-            ViewData["Title"] = bookViewModel.Book.BookName;
-            return View(bookViewModel);
+            using (BookService service = new BookService())
+            {
+                NovelViewModel bookViewModel = service.GetBook(id);
+                ViewData["Title"] = bookViewModel.Book.BookName;
+                return View(bookViewModel);
+            }
+
         }
 
         public IActionResult Content(int itemId)
         {
-            ContentViewModel contentViewModel = BookService.GetContentViewModel(itemId);
-            ViewData["Title"] = contentViewModel.BookName + "-" + contentViewModel.ItemName;
-            return View(contentViewModel);
+            using (BookService service = new BookService())
+            {
+                ContentViewModel contentViewModel = service.GetContentViewModel(itemId);
+                ViewData["Title"] = contentViewModel.BookName + "-" + contentViewModel.ItemName;
+                return View(contentViewModel);
+            }
         }
         public IActionResult Search(SearchViewModel viewModel)
         {
-            var d = BookService.GetBooks(viewModel);
-            ViewData["BookCategory"] = BookService.GetCategories();
-            using (BookContext bookContext = new BookContext())
+            using (BookService service = new BookService())
             {
-                var t = bookContext.Book.ToList();
-                ViewData["Books"] = t;
+                var d = service.GetBooks(viewModel);
+                ViewData["BookCategory"] = service.GetCategories();
+                using (BookContext bookContext = new BookContext())
+                {
+                    var t = bookContext.Book.ToList();
+                    ViewData["Books"] = t;
+                }
+                return View(viewModel);
             }
-            return View(viewModel);
         }
         [HttpPost]
         public JsonResult SearchKeyword(SearchViewModel viewModel)
         {
-            var d = BookService.GetBooks(viewModel);
-            return Json(new
+            using (BookService service = new BookService())
             {
-                currentPageIndex = d.PageIndex,
-                viewModel.pageSize,
-                totalPages = d.TotalPages,
-                items = d.ToList()
-            });
+                var d = service.GetBooks(viewModel);
+                return Json(new
+                {
+                    currentPageIndex = d.PageIndex,
+                    viewModel.pageSize,
+                    pageCount = d.TotalPages,
+                    items = d.ToList()
+                });
+            }
         }
 
 
