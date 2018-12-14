@@ -47,7 +47,7 @@ html, button, input, select, textarea,
     left: 0;
     bottom: 0;
     z-index: -1;
-    background: #EFF2FB;
+    background: #f5f5f5;
 }
 
 .btitle {

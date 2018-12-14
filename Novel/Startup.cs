@@ -56,7 +56,7 @@ namespace Novel
             {
                 routes.MapRoute(
                              name: "novel",
-                            template: "novel/{id}.html",
+                            template: "book/{id}.html",
                             defaults: new { controller = "Index", action = "Novel" });
                 routes.MapRoute(
                              name: "content",
