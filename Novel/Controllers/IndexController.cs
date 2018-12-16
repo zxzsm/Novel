@@ -41,7 +41,7 @@ namespace Novel.Controllers
             {
                 ContentViewModel contentViewModel = service.GetContentViewModel(itemId);
                 ViewData["Title"] = contentViewModel.BookName + "-" + contentViewModel.ItemName;
-                return View(contentViewModel);
+                return View(contentViewModel); 
             }
         }
         public IActionResult Search(SearchViewModel viewModel)
