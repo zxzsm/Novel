@@ -12,6 +12,7 @@ namespace Novel.Entity.Models
         public string BookImage { get; set; }
         public string BookSummary { get; set; }
         public int? BookState { get; set; }
+        public int ReadVolume { get; set; }
         public DateTime? CreateTime { get; set; }
         public DateTime? UpdateTime { get; set; }
     }

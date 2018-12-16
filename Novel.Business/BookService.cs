@@ -15,23 +15,18 @@ namespace Novel.Service
         {
             ContentViewModel contentViewModel = null;
 
-            var content = Db.BookContent.FirstOrDefault(m => m.ItemId == itemId);
+           
             var bookItem = Db.BookItem.FirstOrDefault(m => m.ItemId == itemId);
-            if (content == null || bookItem == null)
-            {
-                return contentViewModel;
-            }
             var book = Db.Book.FirstOrDefault(m => m.BookId == bookItem.BookId);
             if (book == null)
             {
                 return contentViewModel;
             }
-
             contentViewModel = new ContentViewModel
             {
                 BookId = book.BookId,
                 BookName = book.BookName,
-                Content = content.Content,
+                Content = bookItem.Content,
                 ItemId = bookItem.ItemId,
                 ItemName = bookItem.ItemName
             };
@@ -58,7 +53,7 @@ namespace Novel.Service
             NovelViewModel bookViewModel = new NovelViewModel();
 
             var book = Db.Book.FirstOrDefault(m => m.BookId == id);
-            var bookItems = Db.BookItem.Where(m => m.BookId == id).ToList();
+            var bookItems = Db.BookItem.Where(m => m.BookId == id).Select(m=>new BookItemViewModel { ItemName=m.ItemName, ItemId=m.ItemId }).ToList();
             bookViewModel.Book = book;
             bookViewModel.Items = bookItems;
             return bookViewModel;

@@ -9,6 +9,13 @@ namespace Novel.Entity.Models
     public class NovelViewModel
     {
         public Book Book { get; set; }
-        public List<BookItem> Items { get; set; }
+        public List<BookItemViewModel> Items { get; set; }
+    }
+
+    public class BookItemViewModel
+    {
+        public int ItemId { get; set; }
+        public string ItemName { get; set; }
+        public string Content { get; set; }
     }
 }
