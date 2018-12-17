@@ -41,7 +41,7 @@
                 <tr>
                     <td>最新章节</td>
                     @{
-                        BookItem lastItem = Model.Items.OrderByDescending(m => m.ItemId).FirstOrDefault();
+                        BookItemViewModel lastItem = Model.Items.OrderByDescending(m => m.ItemId).FirstOrDefault();
                     }
                     <td><a href="@Url.Action("Content",new { itemId=lastItem.ItemId })">@lastItem.ItemName</a></td>
                 </tr>
@@ -55,7 +55,7 @@
 
     <div class="pure-u-1-4"></div>
     <div class="pure-u-3-4">
-        @Model.Book.BookSummary
+       @Html.Raw(Model.Book.BookSummary)
     </div>
 </div>
 <div class="pure-g btitle fr">
