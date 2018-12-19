@@ -5,8 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.WebEncoders;
 using Novel.Entity;
 using Novel.Entity.Models;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 
 namespace Novel
 {
@@ -27,6 +30,10 @@ namespace Novel
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+            services.Configure<WebEncoderOptions>(options =>
+            {
+                options.TextEncoderSettings = new TextEncoderSettings(UnicodeRanges.BasicLatin, UnicodeRanges.CjkUnifiedIdeographs);
             });
 
             StringCommon.ConnectionString = Configuration.GetConnectionString("BookDatabase");
@@ -74,6 +81,10 @@ namespace Novel
                             name: "default3",
                             template: "searchkeyword/",
                             defaults: new { controller = "Index", action = "SearchKeyword" });
+                routes.MapRoute(
+                           name: "default4",
+                           template: "{controller}/{action}",
+                           defaults: new { controller = "Index" });
             });
         }
     }

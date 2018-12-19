@@ -15,7 +15,7 @@ namespace Novel.Service
         {
             ContentViewModel contentViewModel = null;
 
-           
+
             var bookItem = Db.BookItem.FirstOrDefault(m => m.ItemId == itemId);
             var book = Db.Book.FirstOrDefault(m => m.BookId == bookItem.BookId);
             if (book == null)
@@ -30,6 +30,22 @@ namespace Novel.Service
                 ItemId = bookItem.ItemId,
                 ItemName = bookItem.ItemName
             };
+            var now = DateTime.Now;
+            BookIndex bookIndex = Db.BookIndex.FirstOrDefault(m => m.BookId == book.BookId && m.Date == now.Date);
+            if (bookIndex == null)
+            {
+                bookIndex = new BookIndex
+                {
+                    BookId = book.BookId,
+                    BookName = book.BookName,
+                    Date = now.Date,
+                    DataYm = int.Parse(now.ToString("yyyyMM")),
+                    ReadVolume = 0,
+                    Recommend = 0
+                };
+                Db.BookIndex.Add(bookIndex);
+            }
+
             //上一章
             var preItem = Db.BookItem.Where(m => m.BookId == book.BookId && m.ItemId < itemId).OrderByDescending(m => m.ItemId).FirstOrDefault();
             if (preItem != null)
@@ -44,7 +60,9 @@ namespace Novel.Service
                 contentViewModel.NextId = nextItem.ItemId;
                 contentViewModel.NextName = nextItem.ItemName;
             }
-
+            bookIndex.ReadVolume++;
+            book.ReadVolume++;
+            Db.SaveChanges();
             return contentViewModel;
         }
 
@@ -53,7 +71,7 @@ namespace Novel.Service
             NovelViewModel bookViewModel = new NovelViewModel();
 
             var book = Db.Book.FirstOrDefault(m => m.BookId == id);
-            var bookItems = Db.BookItem.Where(m => m.BookId == id).Select(m=>new BookItemViewModel { ItemName=m.ItemName, ItemId=m.ItemId }).ToList();
+            var bookItems = Db.BookItem.Where(m => m.BookId == id).Select(m => new BookItemViewModel { ItemName = m.ItemName, ItemId = m.ItemId }).ToList();
             bookViewModel.Book = book;
             bookViewModel.Items = bookItems;
             return bookViewModel;

@@ -7,6 +7,25 @@
     .item {
         height: 40px;
     }
+
+        .item a {
+            margin-left: 10%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+        }
+
+    .ca {
+        background-color: #FD8000;
+        padding: 10px 20px;
+        color: white !important;
+    }
+
+    .bg-gray {
+        background-color: #e6e6e6;
+        color:black !important;
+    }
 </style>
 <div class="pure-g btitle fr">
     <div class="pure-u-1-4">
@@ -45,6 +64,18 @@
                     }
                     <td><a href="@Url.Action("Content",new { itemId=lastItem.ItemId })">@lastItem.ItemName</a></td>
                 </tr>
+                <tr>
+                    <td colspan="2">
+                        @{
+                            List<int> bookshelves = ViewData["bookshelves"] as List<int>;
+                            bool isaddbook = bookshelves.Any(m => m == Model.Book.BookId);
+                            string bookshelftext = isaddbook ? "已入书架" : "加入书架";
+                            string attclass = isaddbook ? "ca bg-gray" : "ca";
+                        }
+                        <a class="@attclass" href="javascript:" id="addbook">@bookshelftext</a>
+                        <a class="ca" href="javascript:">推荐此书</a>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
@@ -55,17 +86,36 @@
 
     <div class="pure-u-1-4"></div>
     <div class="pure-u-3-4">
-       @Html.Raw(Model.Book.BookSummary)
+        @Html.Raw(Model.Book.BookSummary)
     </div>
 </div>
 <div class="pure-g btitle fr">
     @foreach (var item in Model.Items)
     {
         <div class="pure-u-1-2 item">
-            <a href="@Url.Action("Content",new { itemId=item.ItemId })" style="margin-left:10%">
+            <a href="@Url.Action("Content",new { itemId=item.ItemId })" title="@item.ItemName">
                 @item.ItemName
             </a>
         </div>
     }
 
 </div>
+<script>
+    @if (!isaddbook)
+    {
+        <text>
+         $("#addbook").click(function() {
+            var url = "@Url.Action("AddBookShelf", "Index")";
+            var id = 0;
+        $.post(url, { id: id }, function(rs) {
+            if (rs && rs.status == 0) {
+                $('#addbook').unbind("click");
+                $("#addbook").html("已入书架")
+                $("#addbook").addClass("bg-gray");
+            }
+            });
+    });
+    </text>
+    }
+
+</script>
