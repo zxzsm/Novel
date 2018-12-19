@@ -88,6 +88,7 @@ namespace Novel.Controllers
                 shelves.Add(id);
             }
             SetCookies("bookshelves", JsonUtil.SerializeObject(shelves), SAVECOOKIESTIME);
+            shelves = GetCookies<List<int>>("bookshelves", new List<int>());
             return Json(new ApiResult { data = shelves, status = 0, msg = "请求成功" });
         }
         public IActionResult Search(SearchViewModel viewModel)
