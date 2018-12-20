@@ -17,8 +17,8 @@ namespace Novel.Entity.Models
 
         public virtual DbSet<Book> Book { get; set; }
         public virtual DbSet<BookCategory> BookCategory { get; set; }
-        public virtual DbSet<BookContent> BookContent { get; set; }
         public virtual DbSet<BookGroupCategroyRelation> BookGroupCategroyRelation { get; set; }
+        public virtual DbSet<BookIndex> BookIndex { get; set; }
         public virtual DbSet<BookItem> BookItem { get; set; }
         public virtual DbSet<BookReptileTask> BookReptileTask { get; set; }
         public virtual DbSet<BookShelf> BookShelf { get; set; }
@@ -76,19 +76,6 @@ namespace Novel.Entity.Models
                 entity.Property(e => e.UpdateTime).HasColumnType("datetime");
             });
 
-            modelBuilder.Entity<BookContent>(entity =>
-            {
-                entity.HasKey(e => e.CotentId);
-
-                entity.Property(e => e.Content).HasColumnType("text");
-
-                entity.Property(e => e.CreateTime)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity.Property(e => e.UpdateTime).HasColumnType("datetime");
-            });
-
             modelBuilder.Entity<BookGroupCategroyRelation>(entity =>
             {
                 entity.ToTable("Book_GroupCategroy_Relation");
@@ -100,11 +87,20 @@ namespace Novel.Entity.Models
                 entity.Property(e => e.UpdateTime).HasColumnType("datetime");
             });
 
+            modelBuilder.Entity<BookIndex>(entity =>
+            {
+                entity.Property(e => e.BookName)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.DataYm).HasColumnName("DataYM");
+
+                entity.Property(e => e.Date).HasColumnType("datetime");
+            });
+
             modelBuilder.Entity<BookItem>(entity =>
             {
                 entity.HasKey(e => e.ItemId);
-
-                entity.Property(e => e.Content).HasColumnType("ntext");
 
                 entity.Property(e => e.CreateTime)
                     .HasColumnType("datetime")

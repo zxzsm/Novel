@@ -1,16 +1,20 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using Microsoft.AspNetCore.Mvc;
+using Novel.Entity;
 using Novel.Entity.Models;
 using Novel.Entity.ViewModels;
 using Novel.Service;
+using Novel.Utilities;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Novel.Controllers
 {
-    public class IndexController : Controller
+    public class IndexController : BaseController
     {
         // GET: /<controller>/
         public IActionResult Index()
@@ -26,6 +30,7 @@ namespace Novel.Controllers
 
         public IActionResult Novel(int id)
         {
+            ViewData["bookshelves"] = GetCookies<List<int>>("bookshelves", new List<int>());
             using (BookService service = new BookService())
             {
                 NovelViewModel bookViewModel = service.GetBook(id);
@@ -37,13 +42,43 @@ namespace Novel.Controllers
 
         public IActionResult Content(int itemId)
         {
+            ContentViewModel contentViewModel = null;
             using (BookService service = new BookService())
             {
-                ContentViewModel contentViewModel = service.GetContentViewModel(itemId);
+                contentViewModel = service.GetContentViewModel(itemId);
                 ViewData["Title"] = contentViewModel.BookName + "-" + contentViewModel.ItemName;
-                return View(contentViewModel); 
             }
+
+            SetReadBookCookies(contentViewModel);
+            return View(contentViewModel);
         }
+
+        private void SetReadBookCookies(ContentViewModel contentViewModel)
+        {
+            List<BookReadViewModel> bookReadViewModels = GetCookies("historyreadbooks", new List<BookReadViewModel>());
+            var r = bookReadViewModels.FirstOrDefault(m => m.bookid == contentViewModel.BookId);
+            if (r == null)
+            {
+                r = new BookReadViewModel
+                {
+                    bookid = contentViewModel.BookId,
+                    bookname = contentViewModel.BookName,
+                    bookurl = Url.Action("Novel", new { id = contentViewModel.BookId }),
+                };
+                bookReadViewModels.Add(r);
+            }
+            r.currentitemname = contentViewModel.ItemName;
+            r.currentreaditemid = contentViewModel.ItemId;
+            r.currentitemurl = Url.Action("Content", new { itemId = contentViewModel.ItemId });
+            r.update = DateTime.Now;
+            SetCookies("historyreadbooks", JsonUtil.SerializeObject(bookReadViewModels), SAVECOOKIESTIME);
+        }
+
+        public IActionResult My()
+        {
+            return View();
+        }
+      
         public IActionResult Search(SearchViewModel viewModel)
         {
             using (BookService service = new BookService())
