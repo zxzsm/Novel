@@ -3,6 +3,8 @@
 @{
     Layout = "_Layout";
 }
+<script src="~/js/lexp.js"></script>
+<script src="~/js/linq.js"></script>
 <style>
     .item {
         height: 40px;
@@ -24,7 +26,7 @@
 
     .bg-gray {
         background-color: #e6e6e6;
-        color:black !important;
+        color: black !important;
     }
 </style>
 <div class="pure-g btitle fr">
@@ -62,18 +64,24 @@
                     @{
                         BookItemViewModel lastItem = Model.Items.OrderByDescending(m => m.ItemId).FirstOrDefault();
                     }
-                    <td><a href="@Url.Action("Content",new { itemId=lastItem.ItemId })">@lastItem.ItemName</a></td>
+                    <td><a href="@Url.Action("Content", new { itemId = lastItem.ItemId })">@lastItem.ItemName</a></td>
                 </tr>
                 <tr>
                     <td colspan="2">
                         @{
                             List<int> bookshelves = ViewData["bookshelves"] as List<int>;
                             bool isaddbook = bookshelves.Any(m => m == Model.Book.BookId);
-                            string bookshelftext = isaddbook ? "已入书架" : "加入书架";
+                            string txt = isaddbook ? "已入书架" : "加入书架";
                             string attclass = isaddbook ? "ca bg-gray" : "ca";
+
                         }
-                        <a class="@attclass" href="javascript:" id="bookshelf">@bookshelftext</a>
-                        <a class="ca" href="javascript:">推荐此书</a>
+                        <a class="@attclass" href="javascript:" id="bookshelf">@txt</a>
+                        @{ 
+                            bool isThumbsup = Model.IsThumbsup;
+                            txt = isThumbsup ? "已推荐" : "推荐此书";
+                            attclass = isThumbsup ? "ca bg-gray" : "ca";
+                        }
+                        <a class="@attclass" href="javascript:" id="bookthumbsup">@txt</a>
                     </td>
                 </tr>
             </tbody>
@@ -101,12 +109,13 @@
 
 </div>
 <script>
+    $(function () {
+        var id = @Model.Book.BookId;
     @if (!isaddbook)
     {
         <text>
     $("#bookshelf").click(function() {
             var url = "@Url.Action("BookShelf", "Book")";
-            var id = @Model.Book.BookId;
         $.post(url, { id: id }, function(rs) {
             if (rs && rs.status == 0) {
                 $('#bookshelf').unbind("click");
@@ -117,5 +126,25 @@
     });
     </text>
     }
+        @if (!isThumbsup) {
+            <text>
+         $("#bookthumbsup").click(function () {
+                url = "@Url.Action("Thumbsup", "Book")";
+                $.post(url, { id: id }, function (rs) {
+                    if (rs && rs.status == 0) {
+                        $('#bookthumbsup').unbind("click");
+                        $("#bookthumbsup").html("已推荐")
+                        $("#bookthumbsup").addClass("bg-gray");
+                    }
+                });
+            });
+            </text>
+        }
+           
+
+
+    });
+
+
 
 </script>

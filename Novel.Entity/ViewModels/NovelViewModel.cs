@@ -10,6 +10,7 @@ namespace Novel.Entity.Models
     {
         public Book Book { get; set; }
         public List<BookItemViewModel> Items { get; set; }
+        public bool IsThumbsup { get; set; }
     }
 
     public class BookItemViewModel

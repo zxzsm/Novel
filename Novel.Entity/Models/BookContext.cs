@@ -22,6 +22,7 @@ namespace Novel.Entity.Models
         public virtual DbSet<BookItem> BookItem { get; set; }
         public virtual DbSet<BookReptileTask> BookReptileTask { get; set; }
         public virtual DbSet<BookShelf> BookShelf { get; set; }
+        public virtual DbSet<BookThumbsup> BookThumbsup { get; set; }
         public virtual DbSet<Sign> Sign { get; set; }
         public virtual DbSet<UserInfo> UserInfo { get; set; }
         public virtual DbSet<UserRead> UserRead { get; set; }
@@ -139,6 +140,15 @@ namespace Novel.Entity.Models
                 entity.Property(e => e.CreateTime).HasColumnType("datetime");
 
                 entity.Property(e => e.UpdateTime).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<BookThumbsup>(entity =>
+            {
+                entity.Property(e => e.Date).HasColumnType("datetime");
+
+                entity.Property(e => e.Ip)
+                    .IsRequired()
+                    .HasMaxLength(50);
             });
 
             modelBuilder.Entity<Sign>(entity =>

@@ -51,7 +51,7 @@ namespace Novel.Service
             return contentViewModel;
         }
 
-        public BookIndex UpdateBookIndex(Book book, bool isRead = false, bool isRecommend = false, bool isSaveChange = true)
+        public BookIndex UpdateBookIndex(Book book, bool isRead = false, bool isSaveChange = true)
         {
             if (book == null)
             {
@@ -67,8 +67,7 @@ namespace Novel.Service
                     BookName = book.BookName,
                     Date = now.Date,
                     DataYm = int.Parse(now.ToString("yyyyMM")),
-                    ReadVolume = 0,
-                    Recommend = 0
+                    ReadVolume = 0
                 };
                 Db.BookIndex.Add(bookIndex);
             }
@@ -77,21 +76,16 @@ namespace Novel.Service
                 bookIndex.ReadVolume++;
                 book.ReadVolume++;
             }
-            if (isRecommend)
-            {
-                bookIndex.Recommend++;
-                book.Recommend++;
-            }
             if (isSaveChange)
             {
                 Db.SaveChanges();
             }
             return bookIndex;
         }
-        public BookIndex UpdateBookIndex(int bookid, bool isRead = false, bool isRecommend = false, bool isSaveChange = true)
+        public BookIndex UpdateBookIndex(int bookid, bool isRead = false, bool isSaveChange = true)
         {
             var book = Db.Book.FirstOrDefault(m => m.BookId == bookid);
-            return UpdateBookIndex(book, isRead, isRecommend, isSaveChange);
+            return UpdateBookIndex(book, isRead, isSaveChange);
         }
 
         public NovelViewModel GetBook(int id)
@@ -131,6 +125,43 @@ namespace Novel.Service
         public List<BookCategory> GetCategories()
         {
             return Db.BookCategory.ToList();
+        }
+
+        public BookThumbsup AddBookThumbsup(int bookid, string ip, DateTime date, int? userid = null)
+        {
+            BookThumbsup bookThumbsup = GetBookThumbsup(bookid, ip, date, userid);
+            if (bookThumbsup == null)
+            {
+                bookThumbsup = new BookThumbsup
+                {
+                    Ip = ip,
+                    Date = date,
+                    UserId = userid,
+                    BookId=bookid
+                };
+                Db.BookThumbsup.Add(bookThumbsup);
+            }
+            else
+            {
+                bookThumbsup.Ip = ip;
+            }
+            Db.SaveChanges();
+            return bookThumbsup;
+        }
+
+        public BookThumbsup GetBookThumbsup(int bookid, string ip, DateTime date, int? userid = null)
+        {
+            var q = Db.BookThumbsup.Where(m => m.Date == date && m.BookId == bookid);
+            BookThumbsup bookThumbsup = null;
+            if (userid.HasValue)
+            {
+                bookThumbsup = q.FirstOrDefault(m => m.UserId == userid);
+            }
+            else
+            {
+                bookThumbsup = q.FirstOrDefault(m => m.Ip == ip);
+            }
+            return bookThumbsup;
         }
     }
 }

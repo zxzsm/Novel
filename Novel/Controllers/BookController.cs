@@ -34,7 +34,8 @@ namespace Novel.Controllers
         {
             using (BookService service = new BookService())
             {
-                service.UpdateBookIndex(id, isRecommend: true, isSaveChange: true);
+                var ip = GetClientIp();
+                service.AddBookThumbsup(id,ip, DateTime.Today, null);
             }
             return Json(new ApiResult { data = "", status = 0, msg = "请求成功" });
         }

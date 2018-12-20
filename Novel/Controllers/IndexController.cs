@@ -34,6 +34,7 @@ namespace Novel.Controllers
             using (BookService service = new BookService())
             {
                 NovelViewModel bookViewModel = service.GetBook(id);
+                bookViewModel.IsThumbsup = service.GetBookThumbsup(id,GetClientIp(), DateTime.Today) != null;
                 ViewData["Title"] = bookViewModel.Book.BookName;
                 return View(bookViewModel);
             }
@@ -78,7 +79,7 @@ namespace Novel.Controllers
         {
             return View();
         }
-      
+
         public IActionResult Search(SearchViewModel viewModel)
         {
             using (BookService service = new BookService())

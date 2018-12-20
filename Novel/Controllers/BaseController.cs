@@ -57,5 +57,15 @@ namespace Novel.Controllers
             t = JsonUtil.DeserializeJsonToObject<T>(v);
             return t;
         }
+
+        protected string GetClientIp()
+        {
+            var ip = Request.Headers["X-Forwarded-For"].FirstOrDefault();
+            if (string.IsNullOrEmpty(ip))
+            {
+                ip = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            }
+            return ip;
+        }
     }
 }
