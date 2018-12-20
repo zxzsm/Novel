@@ -72,7 +72,7 @@
                             string bookshelftext = isaddbook ? "已入书架" : "加入书架";
                             string attclass = isaddbook ? "ca bg-gray" : "ca";
                         }
-                        <a class="@attclass" href="javascript:" id="addbook">@bookshelftext</a>
+                        <a class="@attclass" href="javascript:" id="bookshelf">@bookshelftext</a>
                         <a class="ca" href="javascript:">推荐此书</a>
                     </td>
                 </tr>
@@ -104,14 +104,14 @@
     @if (!isaddbook)
     {
         <text>
-         $("#addbook").click(function() {
-            var url = "@Url.Action("AddBookShelf", "Index")";
-            var id = 0;
+    $("#bookshelf").click(function() {
+            var url = "@Url.Action("BookShelf", "Book")";
+            var id = @Model.Book.BookId;
         $.post(url, { id: id }, function(rs) {
             if (rs && rs.status == 0) {
-                $('#addbook').unbind("click");
-                $("#addbook").html("已入书架")
-                $("#addbook").addClass("bg-gray");
+                $('#bookshelf').unbind("click");
+                $("#bookshelf").html("已入书架")
+                $("#bookshelf").addClass("bg-gray");
             }
             });
     });

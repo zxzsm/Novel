@@ -10,6 +10,8 @@ namespace Novel.Controllers
 {
     public class BaseController : Controller
     {
+
+        protected const int SAVECOOKIESTIME = 1051200;
         /// <summary>
         /// 设置本地cookie
         /// </summary>

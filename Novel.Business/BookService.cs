@@ -31,20 +31,7 @@ namespace Novel.Service
                 ItemName = bookItem.ItemName
             };
             var now = DateTime.Now;
-            BookIndex bookIndex = Db.BookIndex.FirstOrDefault(m => m.BookId == book.BookId && m.Date == now.Date);
-            if (bookIndex == null)
-            {
-                bookIndex = new BookIndex
-                {
-                    BookId = book.BookId,
-                    BookName = book.BookName,
-                    Date = now.Date,
-                    DataYm = int.Parse(now.ToString("yyyyMM")),
-                    ReadVolume = 0,
-                    Recommend = 0
-                };
-                Db.BookIndex.Add(bookIndex);
-            }
+            UpdateBookIndex(book, isRead: true, isSaveChange: false);
 
             //上一章
             var preItem = Db.BookItem.Where(m => m.BookId == book.BookId && m.ItemId < itemId).OrderByDescending(m => m.ItemId).FirstOrDefault();
@@ -60,10 +47,51 @@ namespace Novel.Service
                 contentViewModel.NextId = nextItem.ItemId;
                 contentViewModel.NextName = nextItem.ItemName;
             }
-            bookIndex.ReadVolume++;
-            book.ReadVolume++;
             Db.SaveChanges();
             return contentViewModel;
+        }
+
+        public BookIndex UpdateBookIndex(Book book, bool isRead = false, bool isRecommend = false, bool isSaveChange = true)
+        {
+            if (book == null)
+            {
+                return null;
+            }
+            var now = DateTime.Now;
+            BookIndex bookIndex = Db.BookIndex.FirstOrDefault(m => m.BookId == book.BookId && m.Date == now.Date);
+            if (bookIndex == null)
+            {
+                bookIndex = new BookIndex
+                {
+                    BookId = book.BookId,
+                    BookName = book.BookName,
+                    Date = now.Date,
+                    DataYm = int.Parse(now.ToString("yyyyMM")),
+                    ReadVolume = 0,
+                    Recommend = 0
+                };
+                Db.BookIndex.Add(bookIndex);
+            }
+            if (isRead)
+            {
+                bookIndex.ReadVolume++;
+                book.ReadVolume++;
+            }
+            if (isRecommend)
+            {
+                bookIndex.Recommend++;
+                book.Recommend++;
+            }
+            if (isSaveChange)
+            {
+                Db.SaveChanges();
+            }
+            return bookIndex;
+        }
+        public BookIndex UpdateBookIndex(int bookid, bool isRead = false, bool isRecommend = false, bool isSaveChange = true)
+        {
+            var book = Db.Book.FirstOrDefault(m => m.BookId == bookid);
+            return UpdateBookIndex(book, isRead, isRecommend, isSaveChange);
         }
 
         public NovelViewModel GetBook(int id)

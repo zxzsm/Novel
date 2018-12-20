@@ -16,7 +16,6 @@ namespace Novel.Controllers
 {
     public class IndexController : BaseController
     {
-        const int SAVECOOKIESTIME = 1051200;
         // GET: /<controller>/
         public IActionResult Index()
         {
@@ -49,7 +48,7 @@ namespace Novel.Controllers
                 contentViewModel = service.GetContentViewModel(itemId);
                 ViewData["Title"] = contentViewModel.BookName + "-" + contentViewModel.ItemName;
             }
-           
+
             SetReadBookCookies(contentViewModel);
             return View(contentViewModel);
         }
@@ -79,18 +78,7 @@ namespace Novel.Controllers
         {
             return View();
         }
-        [HttpPost]
-        public JsonResult AddBookShelf(int id)
-        {
-            List<int> shelves = GetCookies<List<int>>("bookshelves", new List<int>());
-            if (!shelves.Any(p => p == id))
-            {
-                shelves.Add(id);
-            }
-            SetCookies("bookshelves", JsonUtil.SerializeObject(shelves), SAVECOOKIESTIME);
-            shelves = GetCookies<List<int>>("bookshelves", new List<int>());
-            return Json(new ApiResult { data = shelves, status = 0, msg = "请求成功" });
-        }
+      
         public IActionResult Search(SearchViewModel viewModel)
         {
             using (BookService service = new BookService())
