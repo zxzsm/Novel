@@ -85,11 +85,10 @@
 
 @using (Html.BeginForm("SearchKeyword", "Index", FormMethod.Post, new { @class = "pure-form" }))
 {
-    <div id="loading"></div>
     <div id="serarch">
         <div class="pure-g">
             <div class="pure-u-1" style="margin:20px 0px;text-align:center;">
-                <input id="keyword" name="keyword" type="text" v-model="keyword" style="width: 50%;">
+                <input id="keyword" name="keyword" type="text" v-model="keyword" style="width: 30%;">
                 <input type="button" class="pure-button button-error" value="搜索" v-on:click="search()" />
             </div>
 
@@ -142,7 +141,7 @@
                 <table class="pure-table tbnb">
                     <tr v-for="item in bookitems">
                         <td>
-                            <a href="" title="item.bookName" alt="item.bookName">
+                            <a :href="geturl(item.bookId)" :title="item.bookName" :alt="item.bookName">
                                 <img v-bind:src="item.bookImage" class="img">
                             </a>
                         </td>
@@ -156,8 +155,7 @@
                                         <td> {{item.bookAuthor}}</td>
                                     </tr>
                                     <tr>
-                                        <td class="bookinfo-intro" style="overflow:hidden">
-                                            <p>{{item.bookSummary}}</p>
+                                        <td class="bookinfo-intro" style="overflow:hidden"  v-html="item.bookSummary">
                                         </td>
                                     </tr>
                                     <tr>
@@ -186,6 +184,8 @@
 
     </div>
     <script type="text/javascript">
+        $("#headsearch input").hide();
+        $("#headsearch button").hide();
         @{
             int serializing = (int)BookState.Serializing;
             int end = (int)BookState.End;
@@ -194,7 +194,7 @@
             var t = jdata.Select(m => new { name = m.CategoryName, value = m.CategoryId });
             var json = JsonUtil.SerializeObject(jdata.Select(m => new { name = m.CategoryName, value = m.CategoryId}));
          }
-        $(".container").mLoading({
+        $("#container").mLoading({
             text: "",//加载文字，默认值：加载中...
             icon: "",//加载图标，默认值：一个小型的base64的gif图片
             html: false,//设置加载内容是否是html格式，默认值是false
@@ -252,7 +252,7 @@
                     },
                     search: function () {
                         var _self = this;
-                        $(".container").mLoading("show");
+                        $("#container").mLoading("show");
                         $.post("@Url.Action("SearchKeyword", "Index")", {
                             keyword: _self.keyword,
                             pageIndex: _self.page,
@@ -260,7 +260,7 @@
                         }, function (rs) {
                             _self.bookitems = rs.items;
                             _self.pageCount = rs.pageCount;
-                            $(".container").mLoading("hide");
+                            $("#container").mLoading("hide");
                         });
                     },
                     geturl: function (id) {

@@ -75,7 +75,7 @@ namespace Novel.Controllers
             SetCookies("historyreadbooks", JsonUtil.SerializeObject(bookReadViewModels), SAVECOOKIESTIME);
         }
 
-        public IActionResult My()
+        public IActionResult BookShelf()
         {
             return View();
         }

@@ -74,14 +74,11 @@ namespace Novel
                             name: "default",
                             template: "/",
                             defaults: new { controller = "Index", action = "Index" });
-                routes.MapRoute(
-                            name: "default2",
-                            template: "search/",
-                            defaults: new { controller = "Index", action = "Search" });
+           
                 routes.MapRoute(
                             name: "default3",
-                            template: "searchkeyword/",
-                            defaults: new { controller = "Index", action = "SearchKeyword" });
+                            template: "{action}/",
+                            defaults: new { controller = "Index" });
                 routes.MapRoute(
                            name: "default4",
                            template: "{controller}/{action}",
