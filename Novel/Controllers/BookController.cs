@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Novel.Entity;
+using Novel.Entity.ViewModels;
 using Novel.Service;
 using Novel.Utilities;
 
@@ -21,12 +22,12 @@ namespace Novel.Controllers
         [HttpPost]
         public JsonResult BookShelf(int id)
         {
-            List<int> shelves = GetCookies<List<int>>("bookshelves", new List<int>());
-            if (!shelves.Any(p => p == id))
+            List<MyBookShelfViewModel> shelves = GetCookies("bookshelves", new List<MyBookShelfViewModel>());
+            if (!shelves.Any(p => p.bookid == id))
             {
-                shelves.Add(id);
+                shelves.Add(new MyBookShelfViewModel { bookid = id });
+                SetCookies("bookshelves", JsonUtil.SerializeObject(shelves), SAVECOOKIESTIME);
             }
-            SetCookies("bookshelves", JsonUtil.SerializeObject(shelves), SAVECOOKIESTIME);
             return Json(new ApiResult { data = shelves, status = 0, msg = "请求成功" });
         }
         [HttpPost]
@@ -35,7 +36,7 @@ namespace Novel.Controllers
             using (BookService service = new BookService())
             {
                 var ip = GetClientIp();
-                service.AddBookThumbsup(id,ip, DateTime.Today, null);
+                service.AddBookThumbsup(id, ip, DateTime.Today, null);
             }
             return Json(new ApiResult { data = "", status = 0, msg = "请求成功" });
         }

@@ -137,7 +137,7 @@ namespace Novel.Service
                     Ip = ip,
                     Date = date,
                     UserId = userid,
-                    BookId=bookid
+                    BookId = bookid
                 };
                 Db.BookThumbsup.Add(bookThumbsup);
             }
@@ -162,6 +162,47 @@ namespace Novel.Service
                 bookThumbsup = q.FirstOrDefault(m => m.Ip == ip);
             }
             return bookThumbsup;
+        }
+
+        public void GetReadBookHistory(List<BookReadViewModel> readViewModels)
+        {
+            if (readViewModels == null && readViewModels.Count == 0)
+            {
+                return;
+            }
+            var q = Db.BookItem.Where(m => readViewModels.Any(p => p.bookid == m.BookId));
+            foreach (var item in readViewModels)
+            {
+                var book = Db.Book.FirstOrDefault(m => m.BookId == item.bookid);
+                if (book != null)
+                {
+                    item.bookauthor = book.BookAuthor;
+                    item.bookname = book.BookName;
+                }
+                var currentItem = q.Where(m => m.ItemId == item.currentreaditemid).FirstOrDefault();
+                if (currentItem != null)
+                {
+                    item.currentitemname = currentItem.ItemName;
+                    item.currentreaditemid = currentItem.ItemId;
+                }
+                var lastItem = q.Where(m => m.BookId == item.bookid).OrderByDescending(m => m.Pri).Select(m => new { m.ItemName, m.ItemId, m.UpdateTime }).FirstOrDefault();
+                if (lastItem != null)
+                {
+                    item.lastitemname = lastItem.ItemName;
+                    item.lastitemid = lastItem.ItemId;
+                    item.update = lastItem.UpdateTime.AsDateTime();
+                }
+            }
+        }
+
+        public PaginatedList<Book> GetBookShlef(List<int> shelevs, int pageIndex, int pageSize)
+        {
+            var q = Db.Book.Where(m => shelevs.Any(p => p == m.BookId));
+            int total = 0;
+            int totalPage = 0;
+            Func<Book, bool> whereLambda = m => shelevs.Any(p => p == m.BookId);
+            var t = LoadPagerEntities(10, 1, m => m.UpdateTime, out total, out totalPage, whereLambda: whereLambda);
+            return new PaginatedList<Book>(t.ToList(), total, pageIndex, pageSize);
         }
     }
 }

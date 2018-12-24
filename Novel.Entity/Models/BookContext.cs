@@ -31,7 +31,8 @@ namespace Novel.Entity.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(StringCommon.ConnectionString);
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Data Source=118.25.74.102;Initial Catalog=Book;Persist Security Info=True;User ID=sa;Password=1qaz!QAZ@WSX;");
             }
         }
 
@@ -90,6 +91,9 @@ namespace Novel.Entity.Models
 
             modelBuilder.Entity<BookIndex>(entity =>
             {
+                entity.HasKey(e => e.Id)
+                    .ForSqlServerIsClustered(false);
+
                 entity.Property(e => e.BookName)
                     .IsRequired()
                     .HasMaxLength(50);
@@ -101,7 +105,16 @@ namespace Novel.Entity.Models
 
             modelBuilder.Entity<BookItem>(entity =>
             {
-                entity.HasKey(e => e.ItemId);
+                entity.HasKey(e => e.ItemId)
+                    .HasName("PK_BookItem_1")
+                    .ForSqlServerIsClustered(false);
+
+                entity.HasIndex(e => e.ItemId)
+                    .HasName("PK_BookItem")
+                    .ForSqlServerIsClustered();
+
+                entity.HasIndex(e => new { e.ItemId, e.ItemName, e.BookId })
+                    .HasName("IX_BookItem");
 
                 entity.Property(e => e.CreateTime)
                     .HasColumnType("datetime")
@@ -110,6 +123,8 @@ namespace Novel.Entity.Models
                 entity.Property(e => e.ItemName)
                     .IsRequired()
                     .HasMaxLength(100);
+
+                entity.Property(e => e.Pri).HasColumnName("PRI");
 
                 entity.Property(e => e.UpdateTime).HasColumnType("datetime");
             });

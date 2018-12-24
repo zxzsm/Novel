@@ -30,11 +30,11 @@ namespace Novel.Controllers
 
         public IActionResult Novel(int id)
         {
-            ViewData["bookshelves"] = GetCookies<List<int>>("bookshelves", new List<int>());
+            ViewData["bookshelves"] = GetCookies("bookshelves", new List<MyBookShelfViewModel>());
             using (BookService service = new BookService())
             {
                 NovelViewModel bookViewModel = service.GetBook(id);
-                bookViewModel.IsThumbsup = service.GetBookThumbsup(id,GetClientIp(), DateTime.Today) != null;
+                bookViewModel.IsThumbsup = service.GetBookThumbsup(id, GetClientIp(), DateTime.Today) != null;
                 ViewData["Title"] = bookViewModel.Book.BookName;
                 return View(bookViewModel);
             }
@@ -60,23 +60,44 @@ namespace Novel.Controllers
             var r = bookReadViewModels.FirstOrDefault(m => m.bookid == contentViewModel.BookId);
             if (r == null)
             {
+                if (bookReadViewModels.Count > 20)
+                {
+                    bookReadViewModels.Remove(bookReadViewModels.Last());
+                }
                 r = new BookReadViewModel
                 {
                     bookid = contentViewModel.BookId,
-                    bookname = contentViewModel.BookName,
-                    bookurl = Url.Action("Novel", new { id = contentViewModel.BookId }),
                 };
-                bookReadViewModels.Add(r);
             }
-            r.currentitemname = contentViewModel.ItemName;
+            else
+            {
+                bookReadViewModels.Remove(r);
+            }
+            bookReadViewModels.Insert(0, r);
             r.currentreaditemid = contentViewModel.ItemId;
-            r.currentitemurl = Url.Action("Content", new { itemId = contentViewModel.ItemId });
-            r.update = DateTime.Now;
+            r.lastreadtime = DateTime.Now;
             SetCookies("historyreadbooks", JsonUtil.SerializeObject(bookReadViewModels), SAVECOOKIESTIME);
         }
 
         public IActionResult BookShelf()
         {
+            var t = GetCookies("historyreadbooks", new List<BookReadViewModel>());
+            var shelves = GetCookies<List<int>>("bookshelves", new List<int>());
+            using (BookService bookService = new BookService())
+            {
+                bookService.GetReadBookHistory(t);
+                ViewData["BookShelves"] = bookService.GetBookShlef(shelves, 1, 10);
+            }
+            if (t.Count > 0)
+            {
+                foreach (var item in t)
+                {
+                    item.lasitemurl = Url.Action("Content", new { itemId = item.lastitemid });
+                    item.currentitemurl= Url.Action("Content", new { itemId = item.currentreaditemid });
+                    item.bookurl = Url.Action("Novel", new { id = item.bookid });
+                }
+            }
+            ViewData["HistoryReadBooks"] = t;
             return View();
         }
 

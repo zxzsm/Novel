@@ -14,6 +14,16 @@ namespace Novel.Entity.ViewModels
         public int currentreaditemid { get; set; }
         public string currentitemname { get; set; }
         public string currentitemurl { get; set; }
+        public int lastitemid { get; set; }
+        public string lastitemname { get; set; }
+        public string lasitemurl { get; set; }
+        /// <summary>
+        /// 上次阅读时间
+        /// </summary>
+        public DateTime lastreadtime { get; set; }
+        /// <summary>
+        /// 最后一次更新时间
+        /// </summary>
         public DateTime update { get; set; }
     }
 }
