@@ -195,14 +195,42 @@ namespace Novel.Service
             }
         }
 
-        public PaginatedList<Book> GetBookShlef(List<int> shelevs, int pageIndex, int pageSize)
+        public PaginatedList<MyBookShelfViewModel> GetBookShlef(List<MyBookShelfViewModel> shelevs, int pageIndex, int pageSize)
         {
-            var q = Db.Book.Where(m => shelevs.Any(p => p == m.BookId));
+            var q = Db.Book.Where(m => shelevs.Any(p => p.bookid == m.BookId));
             int total = 0;
             int totalPage = 0;
-            Func<Book, bool> whereLambda = m => shelevs.Any(p => p == m.BookId);
+            Func<Book, bool> whereLambda = m => shelevs.Any(p => p.bookid == m.BookId);
             var t = LoadPagerEntities(10, 1, m => m.UpdateTime, out total, out totalPage, whereLambda: whereLambda);
-            return new PaginatedList<Book>(t.ToList(), total, pageIndex, pageSize);
+            var result = t.Select(m => new MyBookShelfViewModel
+            {
+                bookid = m.BookId,
+                bookname = m.BookName,
+                bookauthor = m.BookAuthor,
+                bookimage=m.BookImage,
+                update = m.UpdateTime.AsDateTime()
+            }).ToList();
+            foreach (var item in result)
+            {
+                if (item.currentreaditemid<=0)
+                {
+                    continue;
+                }
+                var bookItem = Db.BookItem.FirstOrDefault(m => m.ItemId == item.currentreaditemid);
+                if (bookItem != null)
+                {
+                    item.currentitemname = bookItem.ItemName;
+                }
+                var maxPri = Db.BookItem.Where(m => m.BookId == item.bookid).Max(m => m.Pri);
+                bookItem = Db.BookItem.FirstOrDefault(m => m.BookId == item.bookid && m.Pri == maxPri);
+                if (bookItem != null)
+                {
+                    item.lastitemid = bookItem.ItemId;
+                    item.lastitemname = bookItem.ItemName;
+                    item.update = bookItem.UpdateTime.AsDateTime();
+                }
+            }
+            return new PaginatedList<MyBookShelfViewModel>(result, total, pageIndex, pageSize);
         }
     }
 }

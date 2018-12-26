@@ -11,6 +11,7 @@ namespace Novel.Entity.ViewModels
         public string bookauthor { get; set; }
 
         public string bookname { get; set; }
+        public string bookimage { get; set; }
         public int currentreaditemid { get; set; }
         public string currentitemname { get; set; }
         public string currentitemurl { get; set; }

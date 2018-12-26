@@ -23,6 +23,10 @@ html, button, input, select, textarea,
     margin-left: -70px;
 }
 
+    .novel .author {
+        font-size: 14px;
+        color: #999;
+    }
 
 .title a, a, a:active, a:link {
     text-decoration: none;
@@ -92,6 +96,7 @@ html, button, input, select, textarea,
 .button-secondary {
     background: rgb(66, 184, 221); /* this is a light blue */
 }
+
 .orange {
     background: linear-gradient(left, #f7911e, #f15d24);
     background: -webkit-linear-gradient(left, #f7911e, #f15d24);
@@ -119,6 +124,7 @@ html, button, input, select, textarea,
     background: -o-linear-gradient(left, #fbb339, #fcec22);
     background: -moz-linear-gradient(left, #fbb339, #fcec22);
 }
+
 .linear {
     height: 3px;
     width: 100px;
