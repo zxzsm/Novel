@@ -41,10 +41,9 @@
         <table class="pure-table tbnb">
             <tbody>
                 <tr>
-                    <td>
+                    <td colspan="2">
                         <h2 class="content-subhead" style="margin:0px;">@Model.Book.BookName</h2>
                     </td>
-                    <td></td>
                 </tr>
                 <tr>
                     <td>作者</td>
@@ -66,7 +65,9 @@
                     @{
                         BookItemViewModel lastItem = Model.Items.OrderByDescending(m => m.ItemId).FirstOrDefault();
                     }
-                    <td><a href="@Url.Action("Content", new { itemId = lastItem.ItemId })">@lastItem.ItemName</a></td>
+                    <td>
+                        <a href="@Url.Action("Content", new { itemId = lastItem.ItemId })">@lastItem.ItemName</a>
+                    </td>
                 </tr>
                 <tr>
                     <td colspan="2">

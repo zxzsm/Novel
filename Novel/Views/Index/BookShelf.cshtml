@@ -1,22 +1,43 @@
-﻿@using Novel.Entity.ViewModels
+﻿@using Novel.Entity
+@using Novel.Entity.ViewModels
 @{
     ViewData["Title"] = "我的书架";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <style>
-    .cr{
-        color:orangered;
+    .cr {
+        color: orangered;
     }
 </style>
 <div class="pure-g btitle fr">
     <div class="pure-u-1">
         <h2 class="content-subhead">我的书架</h2>
     </div>
-    <div class="pure-u-1-4">
-        <div class="novel">
-        </div>
+    @{ var mybookShelves = ViewData["BookShelves"] as PaginatedList<MyBookShelfViewModel>;}
+    @if (mybookShelves != null)
+    {
+        foreach (var item in mybookShelves)
+        {
+            <div class="pure-u-1-4">
+                <div class="novel">
+                    <a href="@Url.Action("Novel",new { id=item.bookid })" alt="@item.bookname">
+                        <img class="img" src="@item.bookimage">
+                    </a>
+                    <p class="title">
+                        <a href="@Url.Action("Novel",new { id=item.bookid })">
+                            @item.bookname
+                        </a>
+                        <br />
+                        <span class="author">@item.bookauthor</span>
+                    </p>
+                </div>
+            </div>
+        }
+    }
 
-    </div>
+
+
+
     <div class="pure-u-1">
         <h2 class="content-subhead">我的阅读历史</h2>
         <table class="pure-table  pure-table-bordered" style="width:100%;">
@@ -50,6 +71,5 @@
             </tbody>
         </table>
     </div>
-
 </div>
 

@@ -56,7 +56,8 @@ namespace Novel.Controllers
 
         private void SetReadBookCookies(ContentViewModel contentViewModel)
         {
-            List<BookReadViewModel> bookReadViewModels = GetCookies("historyreadbooks", new List<BookReadViewModel>());
+            var bookReadViewModels = GetCookies("historyreadbooks", new List<BookReadViewModel>());
+            var shelves = GetCookies("bookshelves", new List<MyBookShelfViewModel>());
             var r = bookReadViewModels.FirstOrDefault(m => m.bookid == contentViewModel.BookId);
             if (r == null)
             {
@@ -73,6 +74,12 @@ namespace Novel.Controllers
             {
                 bookReadViewModels.Remove(r);
             }
+            var mybook = shelves.FirstOrDefault(p => p.bookid == contentViewModel.BookId);
+            if (mybook != null)
+            {
+                mybook.currentreaditemid = contentViewModel.BookId;
+                SetCookies("bookshelves", JsonUtil.SerializeObject(shelves), SAVECOOKIESTIME);
+            }
             bookReadViewModels.Insert(0, r);
             r.currentreaditemid = contentViewModel.ItemId;
             r.lastreadtime = DateTime.Now;
@@ -82,7 +89,7 @@ namespace Novel.Controllers
         public IActionResult BookShelf()
         {
             var t = GetCookies("historyreadbooks", new List<BookReadViewModel>());
-            var shelves = GetCookies<List<int>>("bookshelves", new List<int>());
+            var shelves = GetCookies("bookshelves", new List<MyBookShelfViewModel>());
             using (BookService bookService = new BookService())
             {
                 bookService.GetReadBookHistory(t);
@@ -93,7 +100,7 @@ namespace Novel.Controllers
                 foreach (var item in t)
                 {
                     item.lasitemurl = Url.Action("Content", new { itemId = item.lastitemid });
-                    item.currentitemurl= Url.Action("Content", new { itemId = item.currentreaditemid });
+                    item.currentitemurl = Url.Action("Content", new { itemId = item.currentreaditemid });
                     item.bookurl = Url.Action("Novel", new { id = item.bookid });
                 }
             }
