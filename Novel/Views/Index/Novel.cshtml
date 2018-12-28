@@ -112,18 +112,24 @@
 
 </div>
 <div class="bar-list">
-    <div class="right-bar" style="position:fixed;bottom:0px;right:20%">
-        返回顶部
+    <div class="top-bar">
+        <a class="mp mp-buttom" href="#footer" style="display:block;">
+            <img src="~/files/mp-bottom.png" style="width:100%" />
+        </a>
+        <a class="mp mp-top" href="#container" style="display:none;">
+            <img src="~/files/mp-top.png" style="width:100%" />
+        </a>
     </div>
 </div>
 <script>
 
     $(function () {
 
-        var id = @Model.Book.BookId;
+
     @if (!isaddbook)
     {
         <text>
+         id = @Model.Book.BookId;
         $("#bookshelf").click(function () {
             var url = "@Url.Action("BookShelf", "Book")";
         $.post(url, { id: id }, function(rs) {
@@ -138,6 +144,7 @@
     }
         @if (!isThumbsup) {
             <text>
+        id = @Model.Book.BookId;
         $("#bookthumbsup").click(function () {
                 url = "@Url.Action("Thumbsup", "Book")";
                 $.post(url, { id: id }, function (rs) {
@@ -153,6 +160,16 @@
 
 
 
+    });
+
+    //判断滚动条是否到达窗口底部
+    $(window).bind('scroll', function () {    //绑定滚动事件
+        if ($(document).scrollTop() == 0) {
+            $(".mp-top").hide();
+        }
+        else {
+            $(".mp-top").show();
+        }
     });
 
 

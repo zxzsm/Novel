@@ -97,35 +97,29 @@ html, button, input, select, textarea,
     background: rgb(66, 184, 221); /* this is a light blue */
 }
 
-.orange {
-    background: linear-gradient(left, #f7911e, #f15d24);
-    background: -webkit-linear-gradient(left, #f7911e, #f15d24);
-    background: -o-linear-gradient(left, #f7911e, #f15d24);
-    background: -moz-linear-gradient(left, #f7911e, #f15d24);
+.top-bar {
+    position: fixed;
+    bottom: 0px;
+    /* width: 100px; */
+    right: 10px;
+}
+.bottom-bar {
+    position: fixed;
+    top: 120px;
+    /* width: 100px; */
+    right: 10px;
 }
 
-.blue {
-    background: linear-gradient(left, #0511fd, #28a8e3);
-    background: -webkit-linear-gradient(left, #0511fd, #28a8e3);
-    background: -o-linear-gradient(left, #0511fd, #28a8e3);
-    background: -moz-linear-gradient(left, #0511fd, #28a8e3);
+.mp {
+    display: block;
+    width: 40px;
+    height: 40px;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #F9F7F5;
+    box-shadow: 1px 2px 2px rgba(0,0,0,.2);
+    border-radius: 5px;
 }
-
-.green {
-    background: linear-gradient(left, #069323, #87c53e);
-    background: -webkit-linear-gradient(left, #069323, #87c53e);
-    background: -o-linear-gradient(left, #069323, #87c53e);
-    background: -moz-linear-gradient(left, #069323, #87c53e);
-}
-
-.yellow {
-    background: linear-gradient(left, #fbb339, #fcec22);
-    background: -webkit-linear-gradient(left, #fbb339, #fcec22);
-    background: -o-linear-gradient(left, #fbb339, #fcec22);
-    background: -moz-linear-gradient(left, #fbb339, #fcec22);
-}
-
-.linear {
-    height: 3px;
-    width: 100px;
-}
+    .mp:hover {
+        background-color: #fff;
+    }
