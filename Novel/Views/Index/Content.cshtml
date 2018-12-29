@@ -4,12 +4,12 @@
 @{
     //颜色集合
     var bgColors = new List<BGReadColorViewModel> {
-                                    new BGReadColorViewModel{ color="rgba(250,245,235,.8)",colortitle="默认" },
-                                    new BGReadColorViewModel{ color="#F6EDD4",colortitle="牛皮纸" },
-                                    new BGReadColorViewModel{ color="#EBF5E9",colortitle="淡绿色" },
-                                    new BGReadColorViewModel{ color="#F6E8E7",colortitle="淡粉色" },
-                                    new BGReadColorViewModel{ color="#E6E6E4",colortitle="灰色" }
-                                };
+                    new BGReadColorViewModel{ color="rgba(250,245,235,.8)",colortitle="默认" },
+                    new BGReadColorViewModel{ color="#F6EDD4",colortitle="牛皮纸" },
+                    new BGReadColorViewModel{ color="#EBF5E9",colortitle="淡绿色" },
+                    new BGReadColorViewModel{ color="#F6E8E7",colortitle="淡粉色" },
+                    new BGReadColorViewModel{ color="#E6E6E4",colortitle="灰色" }
+                };
     var selectedColor = "";
     selectedColor = string.IsNullOrWhiteSpace(selectedColor) ? bgColors.First().color : selectedColor;
     //字体集合
@@ -23,38 +23,9 @@
     fontSize = fontSize == 0 ? 16 : fontSize;
     var fontSizeStr = fontSize + "px";
 }
-<style>
-    .btitle {
-        border: 2px solid white;
-        border-radius: 5px;
-        padding: 20px 10px;
-        margin: 10px 0px;
-    }
 
-    .f14 {
-        font-size: 14px;
-    }
-
-    .ncontent {
-        width: 80%;
-        margin: 0 auto;
-        line-height: 2em;
-    }
-
-    .nfooter {
-        width: 80%;
-        text-align: center;
-        margin: 5% 0px 1% 0px;
-    }
-
-        .nfooter a {
-            margin: 0px 20px;
-        }
-
-    a {
-        cursor: pointer;
-    }
-</style>
+<link href="~/css/content.css" rel="stylesheet" />
+<script src="~/js/content.js"></script>
 <div class="pure-g">
     <div class="pure-u-1 fr" style="margin-top:10px;box-shadow: 0 5px 20px rgba(0,0,0,.2);background-color:@selectedColor" id="icontent">
         <div class="pure-u-1" style="padding:10px;">
@@ -99,7 +70,7 @@
         <h3 class="content-subhead">设置</h3>
         <div class="close">
             <a>
-                <img src="~/files/guanbi.png" style="width:100%;"/>
+                <img src="~/files/guanbi.png" style="width:100%;" />
             </a>
         </div>
         <table class="pure-table tbnb customertb">
@@ -153,127 +124,3 @@
     </div>
 
 </div>
-<style>
-    .customertb tr td:first-child {
-        padding: 20px 0px 20px 20px;
-        text-align: right;
-    }
-
-    .c-setting {
-        position: fixed;
-        margin-left: 15%;
-        background: #FAF9F3;
-        z-index: 9999;
-        width: 40%;
-        letter-spacing: 0em;
-        border-radius: 10px;
-        box-shadow: 0 5px 20px rgba(0,0,0,.2);
-    }
-
-        .c-setting table {
-            font-size: 14px;
-        }
-    .close{
-        position:absolute;
-        right:20px;
-        top:10px;
-    }
-        .close a{
-            width:30px;
-            height:30px;
-            display:block;
-        }
-        .rbd {
-            border: 1px solid #e6e6e6;
-            border-radius: 25px;
-            padding: 5px 14px;
-            margin-right: 20px;
-            margin-left: 15px;
-        }
-    .rbgselected {
-        background-image: url(/files/selected.png);
-        background-size: 20px;
-        background-position: center;
-        background-repeat: no-repeat;
-    }
-
-    .af {
-        padding: 10px 15px;
-        margin-left: 15px;
-        border: 1px #e6e6e6 solid;
-    }
-
-    .afs {
-        background-color: #e6e6e6;
-    }
-
-    .fs {
-        width: 30px;
-        height: 30px;
-        display: inline-block;
-        margin-left: 15px;
-    }
-
-    .sfs {
-        text-align: center;
-        vertical-align: top;
-        line-height: 30px;
-        height: 30px;
-        width: 40px;
-        display: inline-block;
-        font-family: Microsoft YaHei;
-        color: #a6a6a6;
-        font-size: 18px;
-        font-weight: 400;
-    }
-</style>
-<script type="text/javascript">
-    $(document).keyup(function (event) {
-        var e = event || window.event || arguments.callee.caller.arguments[0];
-        if (e.keyCode == 37 && $("#pre")) {
-            $("#pre")[0].click();
-        }
-        else if (e.keyCode == 39 && $("#next")) {
-            $("#next")[0].click();
-        }
-    });
-    //判断滚动条是否到达窗口底部
-    $(window).bind('scroll', function () {    //绑定滚动事件
-        var h = $("#header").height() + 100;
-        if ($(document).scrollTop() >= h) {
-            $(".mp-top").show();
-            $(".left-bar").css("top", "0px");
-        }
-        else {
-            $(".left-bar").css("top", "180px");
-            $(".mp-top").hide();
-        }
-    });
-
-    function bgselected(obj) {
-        $(".rbgselected").removeClass("rbgselected");
-        $(obj).addClass("rbgselected");
-        $("#icontent").css("background-color", $(obj).css("background-color"))
-    }
-    function afselected(obj, val) {
-        $(".afs").removeClass("afs");
-        $(obj).addClass("afs");
-        $(".ncontent").css("font-family", val);
-    }
-    function cfontSize(str) {
-        var fontSize = parseInt($(".sfs").html());
-        if (str == "+") {
-            fontSize += 2;
-        } else {
-            fontSize -= 2;
-        }
-        if (fontSize < 16) {
-            fontSize = 16;
-        }
-        else if (fontSize > 26) {
-            fontSize = 26;
-        }
-        $(".sfs").html(fontSize);
-        $(".ncontent").css("font-size", fontSize + "px");
-    }
-</script>

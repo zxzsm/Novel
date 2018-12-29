@@ -1,0 +1,108 @@
+﻿.btitle {
+    border: 2px solid white;
+    border-radius: 5px;
+    padding: 20px 10px;
+    margin: 10px 0px;
+}
+
+.f14 {
+    font-size: 14px;
+}
+
+.ncontent {
+    width: 80%;
+    margin: 0 auto;
+    line-height: 2em;
+}
+
+.nfooter {
+    width: 80%;
+    text-align: center;
+    margin: 5% 0px 1% 0px;
+}
+
+    .nfooter a {
+        margin: 0px 20px;
+    }
+
+a {
+    cursor: pointer;
+}
+
+.customertb tr td:first-child {
+    padding: 20px 0px 20px 20px;
+    text-align: right;
+}
+
+.c-setting {
+    position: fixed;
+    margin-left: 15%;
+    background: #FAF9F3;
+    z-index: 9999;
+    width: 40%;
+    letter-spacing: 0em;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,.2);
+    display:none;
+}
+
+    .c-setting table {
+        font-size: 14px;
+    }
+
+.close {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+}
+
+    .close a {
+        width: 30px;
+        height: 30px;
+        display: block;
+    }
+
+.rbd {
+    border: 1px solid #e6e6e6;
+    border-radius: 25px;
+    padding: 5px 14px;
+    margin-right: 20px;
+    margin-left: 15px;
+}
+
+.rbgselected {
+    background-image: url(/files/selected.png);
+    background-size: 20px;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.af {
+    padding: 10px 15px;
+    margin-left: 15px;
+    border: 1px #e6e6e6 solid;
+}
+
+.afs {
+    background-color: #e6e6e6;
+}
+
+.fs {
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    margin-left: 15px;
+}
+
+.sfs {
+    text-align: center;
+    vertical-align: top;
+    line-height: 30px;
+    height: 30px;
+    width: 40px;
+    display: inline-block;
+    font-family: Microsoft YaHei;
+    color: #a6a6a6;
+    font-size: 18px;
+    font-weight: 400;
+}
