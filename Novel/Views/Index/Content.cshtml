@@ -2,22 +2,26 @@
 @model Novel.Entity.Models.ContentViewModel
 @using Novel.Entity.ViewModels
 @{
-
+    //颜色集合
     var bgColors = new List<BGReadColorViewModel> {
-                                                                            new BGReadColorViewModel{ color="rgba(250,245,235,.8)",colortitle="默认" },
-                                                                            new BGReadColorViewModel{ color="#F6EDD4",colortitle="牛皮纸" },
-                                                                            new BGReadColorViewModel{ color="#EBF5E9",colortitle="淡绿色" },
-                                                                            new BGReadColorViewModel{ color="#F6E8E7",colortitle="淡粉色" },
-                                                                            new BGReadColorViewModel{ color="#E6E6E4",colortitle="灰色" }
-                                                                        };
+                                    new BGReadColorViewModel{ color="rgba(250,245,235,.8)",colortitle="默认" },
+                                    new BGReadColorViewModel{ color="#F6EDD4",colortitle="牛皮纸" },
+                                    new BGReadColorViewModel{ color="#EBF5E9",colortitle="淡绿色" },
+                                    new BGReadColorViewModel{ color="#F6E8E7",colortitle="淡粉色" },
+                                    new BGReadColorViewModel{ color="#E6E6E4",colortitle="灰色" }
+                                };
     var selectedColor = "";
     selectedColor = string.IsNullOrWhiteSpace(selectedColor) ? bgColors.First().color : selectedColor;
+    //字体集合
     var fontFamilies = new Dictionary<string, string> { {  "默认",  "Microsoft YaHei" },
-                             {  "楷书",  "Kaiti" }};
+{  "楷书",  "Kaiti" }};
     var selectedFontFamily = "";
 
     selectedFontFamily = string.IsNullOrWhiteSpace(selectedFontFamily) ? fontFamilies.First().Key : selectedFontFamily;
 
+    var fontSize = 0;
+    fontSize = fontSize == 0 ? 16 : fontSize;
+    var fontSizeStr = fontSize + "px";
 }
 <style>
     .btitle {
@@ -46,6 +50,7 @@
         .nfooter a {
             margin: 0px 20px;
         }
+
     a {
         cursor: pointer;
     }
@@ -59,7 +64,7 @@
 
         <div class="pure-u-1">
             <div>
-                <div class="ncontent" style="font-family:@fontFamilies[selectedFontFamily]">
+                <div class="ncontent" style="font-family:@fontFamilies[selectedFontFamily];font-size:@fontSizeStr">
                     @Html.Raw(HttpUtility.HtmlDecode(Model.Content))
                 </div>
                 <div class="nfooter">
@@ -79,7 +84,7 @@
     </div>
     <div class="bar-list">
         <div class="top-bar">
-            <a class="mp mp-buttom" id="setting"  style="display:inline-block;width:20px;height:20px;">
+            <a class="mp mp-buttom" id="setting" style="display:inline-block;width:20px;height:20px;">
                 <img src="~/files/setting.png" style="width:100%" />
             </a>
             <a class="mp mp-buttom" href="#footer" style="display:block;">
@@ -92,6 +97,11 @@
     </div>
     <div class="c-setting">
         <h3 class="content-subhead">设置</h3>
+        <div class="close">
+            <a>
+                <img src="~/files/guanbi.png" style="width:100%;"/>
+            </a>
+        </div>
         <table class="pure-table tbnb customertb">
             <tr>
                 <td>阅读背景</td>
@@ -99,14 +109,13 @@
 
                     @foreach (var item in bgColors)
                     {
-
                         if (item.color == selectedColor)
                         {
                             <a onclick="bgselected(this)" class="rbd rbgselected " style="background-color: @item.color;" title="@item.colortitle" />
                         }
                         else
                         {
-                            <a  onclick="bgselected(this)" class="rbd  " style="background-color: @item.color;" title="@item.colortitle" />
+                            <a onclick="bgselected(this)" class="rbd  " style="background-color: @item.color;" title="@item.colortitle" />
                         }
 
                     }
@@ -119,13 +128,25 @@
                     {
                         if (selectedFontFamily == item.Key)
                         {
-                            <a  onclick="afselected(this,'@item.Value')" class="af afs" title="@item.Key">@item.Key</a>
+                            <a onclick="afselected(this,'@item.Value')" class="af afs" title="@item.Key">@item.Key</a>
                         }
                         else
                         {
-                            <a  onclick="afselected(this,'@item.Value')" class="af " title="@item.Key">@item.Key</a>
+                            <a onclick="afselected(this,'@item.Value')" class="af " title="@item.Key">@item.Key</a>
                         }
                     }
+                </td>
+            </tr>
+            <tr>
+                <td>字体大小</td>
+                <td>
+                    <a class="fs" onclick="cfontSize('-')">
+                        <img src="~/files/zitijian.png" style="width:100%" />
+                    </a>
+                    <span class="sfs">16</span>
+                    <a class="fs" style="margin-left:0px;" onclick="cfontSize('+')">
+                        <img src="~/files/zitijia.png" style="width:100%" />
+                    </a>
                 </td>
             </tr>
         </table>
@@ -152,16 +173,23 @@
         .c-setting table {
             font-size: 14px;
         }
-
-    .rbd {
-        border: 1px solid #e6e6e6;
-        border-radius: 25px;
-        padding: 5px 14px;
-        margin-right: 20px;
-        margin-left: 15px;
+    .close{
+        position:absolute;
+        right:20px;
+        top:10px;
     }
-
-
+        .close a{
+            width:30px;
+            height:30px;
+            display:block;
+        }
+        .rbd {
+            border: 1px solid #e6e6e6;
+            border-radius: 25px;
+            padding: 5px 14px;
+            margin-right: 20px;
+            margin-left: 15px;
+        }
     .rbgselected {
         background-image: url(/files/selected.png);
         background-size: 20px;
@@ -177,6 +205,26 @@
 
     .afs {
         background-color: #e6e6e6;
+    }
+
+    .fs {
+        width: 30px;
+        height: 30px;
+        display: inline-block;
+        margin-left: 15px;
+    }
+
+    .sfs {
+        text-align: center;
+        vertical-align: top;
+        line-height: 30px;
+        height: 30px;
+        width: 40px;
+        display: inline-block;
+        font-family: Microsoft YaHei;
+        color: #a6a6a6;
+        font-size: 18px;
+        font-weight: 400;
     }
 </style>
 <script type="text/javascript">
@@ -211,5 +259,21 @@
         $(".afs").removeClass("afs");
         $(obj).addClass("afs");
         $(".ncontent").css("font-family", val);
+    }
+    function cfontSize(str) {
+        var fontSize = parseInt($(".sfs").html());
+        if (str == "+") {
+            fontSize += 2;
+        } else {
+            fontSize -= 2;
+        }
+        if (fontSize < 16) {
+            fontSize = 16;
+        }
+        else if (fontSize > 26) {
+            fontSize = 26;
+        }
+        $(".sfs").html(fontSize);
+        $(".ncontent").css("font-size", fontSize + "px");
     }
 </script>
