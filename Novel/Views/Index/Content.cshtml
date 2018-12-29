@@ -2,6 +2,22 @@
 @model Novel.Entity.Models.ContentViewModel
 @using Novel.Entity.ViewModels
 @{
+
+    var bgColors = new List<BGReadColorViewModel> {
+                                                                            new BGReadColorViewModel{ color="rgba(250,245,235,.8)",colortitle="默认" },
+                                                                            new BGReadColorViewModel{ color="#F6EDD4",colortitle="牛皮纸" },
+                                                                            new BGReadColorViewModel{ color="#EBF5E9",colortitle="淡绿色" },
+                                                                            new BGReadColorViewModel{ color="#F6E8E7",colortitle="淡粉色" },
+                                                                            new BGReadColorViewModel{ color="#E6E6E4",colortitle="灰色" }
+                                                                        };
+    var selectedColor = "";
+    selectedColor = string.IsNullOrWhiteSpace(selectedColor) ? bgColors.First().color : selectedColor;
+    var fontFamilies = new Dictionary<string, string> { {  "默认",  "Microsoft YaHei" },
+                             {  "楷书",  "Kaiti" }};
+    var selectedFontFamily = "";
+
+    selectedFontFamily = string.IsNullOrWhiteSpace(selectedFontFamily) ? fontFamilies.First().Key : selectedFontFamily;
+
 }
 <style>
     .btitle {
@@ -30,9 +46,12 @@
         .nfooter a {
             margin: 0px 20px;
         }
+    a {
+        cursor: pointer;
+    }
 </style>
 <div class="pure-g">
-    <div class="pure-u-1 fr" style="margin-top:10px;box-shadow: 0 5px 20px rgba(0,0,0,.2);" id="icontent">
+    <div class="pure-u-1 fr" style="margin-top:10px;box-shadow: 0 5px 20px rgba(0,0,0,.2);background-color:@selectedColor" id="icontent">
         <div class="pure-u-1" style="padding:10px;">
             <a href="@Url.Action("Novel",new { id=Model.BookId })" class="f14"> @Model.BookName</a>&nbsp;/<a href="@Url.Action("Content",new { itemId=Model.ItemId })" class="f14"> @Model.ItemName</a>
         </div>
@@ -40,7 +59,7 @@
 
         <div class="pure-u-1">
             <div>
-                <div class="ncontent">
+                <div class="ncontent" style="font-family:@fontFamilies[selectedFontFamily]">
                     @Html.Raw(HttpUtility.HtmlDecode(Model.Content))
                 </div>
                 <div class="nfooter">
@@ -60,7 +79,7 @@
     </div>
     <div class="bar-list">
         <div class="top-bar">
-            <a class="mp mp-buttom" id="setting" href="javascript:" style="display:inline-block;width:20px;height:20px;">
+            <a class="mp mp-buttom" id="setting"  style="display:inline-block;width:20px;height:20px;">
                 <img src="~/files/setting.png" style="width:100%" />
             </a>
             <a class="mp mp-buttom" href="#footer" style="display:block;">
@@ -73,52 +92,58 @@
     </div>
     <div class="c-setting">
         <h3 class="content-subhead">设置</h3>
-        <table class="pure-table tbnb">
+        <table class="pure-table tbnb customertb">
             <tr>
                 <td>阅读背景</td>
                 <td>
-                    @{
-                        var bgColors = new List<BGReadColorViewModel> {
-                                                                new BGReadColorViewModel{ color="rgba(250,245,235,.8)",colortitle="默认" },
-                                                                new BGReadColorViewModel{ color="#F6EDD4",colortitle="牛皮纸" },
-                                                                new BGReadColorViewModel{ color="#EBF5E9",colortitle="淡绿色" },
-                                                                new BGReadColorViewModel{ color="#F6E8E7",colortitle="淡粉色" },
-                                                                new BGReadColorViewModel{ color="#E6E6E4",colortitle="灰色" }
-                                                            };
-                        var selectedColor = "";
-                        selectedColor = string.IsNullOrWhiteSpace(selectedColor) ? bgColors.First().color : selectedColor;
-                        var fontFamilies = new List<string> { "sans-serif", "宋体", "微软雅黑", "楷书" };
-                    }
+
                     @foreach (var item in bgColors)
                     {
 
                         if (item.color == selectedColor)
                         {
-                            <a href="javacript:" onclick="bgselected(this)" class="rbd rbgselected " style="background-color: @item.color;" title="@item.colortitle" />
+                            <a onclick="bgselected(this)" class="rbd rbgselected " style="background-color: @item.color;" title="@item.colortitle" />
                         }
                         else
                         {
-                            <a href="javacript:" onclick="bgselected(this)" class="rbd  " style="background-color: @item.color;" title="@item.colortitle" />
+                            <a  onclick="bgselected(this)" class="rbd  " style="background-color: @item.color;" title="@item.colortitle" />
                         }
 
                     }
                 </td>
             </tr>
             <tr>
-                <td>阅读背景</td>
-                <td></td>
+                <td>字体</td>
+                <td>
+                    @foreach (var item in fontFamilies)
+                    {
+                        if (selectedFontFamily == item.Key)
+                        {
+                            <a  onclick="afselected(this,'@item.Value')" class="af afs" title="@item.Key">@item.Key</a>
+                        }
+                        else
+                        {
+                            <a  onclick="afselected(this,'@item.Value')" class="af " title="@item.Key">@item.Key</a>
+                        }
+                    }
+                </td>
             </tr>
         </table>
     </div>
 
 </div>
 <style>
+    .customertb tr td:first-child {
+        padding: 20px 0px 20px 20px;
+        text-align: right;
+    }
+
     .c-setting {
         position: fixed;
-        margin-left: 20%;
+        margin-left: 15%;
         background: #FAF9F3;
         z-index: 9999;
-        width: 30%;
+        width: 40%;
         letter-spacing: 0em;
         border-radius: 10px;
         box-shadow: 0 5px 20px rgba(0,0,0,.2);
@@ -133,13 +158,25 @@
         border-radius: 25px;
         padding: 5px 14px;
         margin-right: 20px;
+        margin-left: 15px;
     }
+
 
     .rbgselected {
         background-image: url(/files/selected.png);
         background-size: 20px;
         background-position: center;
         background-repeat: no-repeat;
+    }
+
+    .af {
+        padding: 10px 15px;
+        margin-left: 15px;
+        border: 1px #e6e6e6 solid;
+    }
+
+    .afs {
+        background-color: #e6e6e6;
     }
 </style>
 <script type="text/javascript">
@@ -169,5 +206,10 @@
         $(".rbgselected").removeClass("rbgselected");
         $(obj).addClass("rbgselected");
         $("#icontent").css("background-color", $(obj).css("background-color"))
+    }
+    function afselected(obj, val) {
+        $(".afs").removeClass("afs");
+        $(obj).addClass("afs");
+        $(".ncontent").css("font-family", val);
     }
 </script>

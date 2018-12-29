@@ -67,7 +67,10 @@ html, button, input, select, textarea,
     border: 2px solid #e6e6e6;
     border-radius: 5px;
 }
-
+.bs {
+    box-shadow: 0 5px 20px rgba(0,0,0,.2);
+    border-radius: 5px;
+}
 .tbnb {
     border-width: 0px;
 }
@@ -106,7 +109,7 @@ html, button, input, select, textarea,
     /* width: 100px; */
     right: 30px;
 }
- 
+
 
 .mp {
     display: block;
