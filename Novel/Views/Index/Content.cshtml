@@ -4,30 +4,47 @@
 @{
     //颜色集合
     var bgColors = new List<BGReadColorViewModel> {
-                    new BGReadColorViewModel{ color="rgba(250,245,235,.8)",colortitle="默认" },
-                    new BGReadColorViewModel{ color="#F6EDD4",colortitle="牛皮纸" },
-                    new BGReadColorViewModel{ color="#EBF5E9",colortitle="淡绿色" },
-                    new BGReadColorViewModel{ color="#F6E8E7",colortitle="淡粉色" },
-                    new BGReadColorViewModel{ color="#E6E6E4",colortitle="灰色" }
-                };
-    var selectedColor = "";
-    selectedColor = string.IsNullOrWhiteSpace(selectedColor) ? bgColors.First().color : selectedColor;
+new BGReadColorViewModel{ color="rgba(250,245,235,.8)",colortitle="默认" },
+new BGReadColorViewModel{ color="#F6EDD4",colortitle="牛皮纸" },
+new BGReadColorViewModel{ color="#EBF5E9",colortitle="淡绿色" },
+new BGReadColorViewModel{ color="#F6E8E7",colortitle="淡粉色" },
+new BGReadColorViewModel{ color="#E6E6E4",colortitle="灰色" }
+};
+    var readSetting = ViewData["ReadSetting"] as BookReadSettingViewModel;
+    if (readSetting == null)
+    {
+        readSetting = new BookReadSettingViewModel();
+    }
+    var selectedColor = readSetting.bgcolor;
+    var bgColor = string.Empty;
+    var s = bgColors.FirstOrDefault(m => m.colortitle == selectedColor);
+    if (s == null)
+    {
+        selectedColor = bgColors.First().colortitle;
+        bgColor = bgColors.First().color;
+    }
+    else
+    {
+        bgColor = s.color;
+    }
+
     //字体集合
-    var fontFamilies = new Dictionary<string, string> { {  "默认",  "Microsoft YaHei" },
-{  "楷书",  "Kaiti" }};
-    var selectedFontFamily = "";
+    var fontFamilies = new Dictionary<string, string> { { "默认", "Microsoft YaHei" }, { "楷书", "Kaiti" } };
+
+    var selectedFontFamily = readSetting.fontfamily;
 
     selectedFontFamily = string.IsNullOrWhiteSpace(selectedFontFamily) ? fontFamilies.First().Key : selectedFontFamily;
 
-    var fontSize = 0;
+    var fontSize = readSetting.fontsize;
     fontSize = fontSize == 0 ? 16 : fontSize;
     var fontSizeStr = fontSize + "px";
 }
 
 <link href="~/css/content.css" rel="stylesheet" />
+<script src="~/js/js.cookie.js"></script>
 <script src="~/js/content.js"></script>
 <div class="pure-g">
-    <div class="pure-u-1 fr" style="margin-top:10px;box-shadow: 0 5px 20px rgba(0,0,0,.2);background-color:@selectedColor" id="icontent">
+    <div class="pure-u-1 fr" style="margin-top:10px;box-shadow: 0 5px 20px rgba(0,0,0,.2);background-color:@bgColor" id="icontent">
         <div class="pure-u-1" style="padding:10px;">
             <a href="@Url.Action("Novel",new { id=Model.BookId })" class="f14"> @Model.BookName</a>&nbsp;/<a href="@Url.Action("Content",new { itemId=Model.ItemId })" class="f14"> @Model.ItemName</a>
         </div>
@@ -80,7 +97,7 @@
 
                     @foreach (var item in bgColors)
                     {
-                        if (item.color == selectedColor)
+                        if (item.colortitle == selectedColor)
                         {
                             <a onclick="bgselected(this)" class="rbd rbgselected " style="background-color: @item.color;" title="@item.colortitle" />
                         }
@@ -114,7 +131,7 @@
                     <a class="fs" onclick="cfontSize('-')">
                         <img src="~/files/zitijian.png" style="width:100%" />
                     </a>
-                    <span class="sfs">16</span>
+                    <span class="sfs">@fontSize</span>
                     <a class="fs" style="margin-left:0px;" onclick="cfontSize('+')">
                         <img src="~/files/zitijia.png" style="width:100%" />
                     </a>

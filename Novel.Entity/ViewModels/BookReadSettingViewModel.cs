@@ -11,7 +11,7 @@ namespace Novel.Entity.ViewModels
     {
         public string bgcolor { get; set; }
         public string fontfamily { get; set; }
-        public string fontsize { get; set; }
+        public int fontsize { get; set; }
 
     }
 }

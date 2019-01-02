@@ -48,6 +48,7 @@ namespace Novel.Controllers
             {
                 contentViewModel = service.GetContentViewModel(itemId);
                 ViewData["Title"] = contentViewModel.BookName + "-" + contentViewModel.ItemName;
+                ViewData["ReadSetting"] = GetCookies("rsetting", new BookReadSettingViewModel());
             }
 
             SetReadBookCookies(contentViewModel);
