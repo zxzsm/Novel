@@ -1,0 +1,28 @@
+﻿body {
+}
+
+.logo {
+    background: url('/files/logo.png') no-repeat scroll 0 0 transparent;
+    width: 120px;
+    height: 80px;
+    position: relative;
+    display: block;
+    text-indent: -9999em;
+    margin-left: 1%;
+}
+
+.fr {
+    border: 2px solid #e6e6e6;
+    border-radius: 5px;
+}
+
+.shadow {
+    box-shadow: 0 5px 20px rgba(0,0,0,.2);
+}
+.content-subhead {
+    font-weight: 300;
+    color: #888;
+    position: relative;
+    margin-left: 1%;
+    color: #FD8000;
+}

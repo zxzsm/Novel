@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="wwwroot\lib\" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\Novel.Business\Novel.Service.csproj" />
+    <ProjectReference Include="..\Novel.Common\Novel.Common.csproj" />
+    <ProjectReference Include="..\Novel.Entity\Novel.Entity.csproj" />
+    <ProjectReference Include="..\Novel.Utilities\Novel.Utilities.csproj" />
+  </ItemGroup>
+
+</Project>

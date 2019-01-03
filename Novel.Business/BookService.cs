@@ -11,6 +11,10 @@ namespace Novel.Service
 {
     public class BookService : BaseRepository<Book>
     {
+        public List<Book> GetIndexBooks(int category)
+        {
+            return Db.Book.Take(8).ToList();
+        }
         public ContentViewModel GetContentViewModel(int itemId)
         {
             ContentViewModel contentViewModel = null;
@@ -207,12 +211,12 @@ namespace Novel.Service
                 bookid = m.BookId,
                 bookname = m.BookName,
                 bookauthor = m.BookAuthor,
-                bookimage=m.BookImage,
+                bookimage = m.BookImage,
                 update = m.UpdateTime.AsDateTime()
             }).ToList();
             foreach (var item in result)
             {
-                if (item.currentreaditemid<=0)
+                if (item.currentreaditemid <= 0)
                 {
                     continue;
                 }
