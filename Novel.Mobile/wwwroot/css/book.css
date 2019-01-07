@@ -1,0 +1,89 @@
+﻿.book-detail-info {
+    position: relative;
+    background: #fff;
+}
+
+.book-layout {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    padding: 1rem;
+}
+
+.book-cover {
+    width: 8em;
+    height: 10em;
+    border-radius: 2px;
+    box-shadow: none;
+    float: left;
+    margin-right: 10px;
+    border-radius: 7px;
+}
+
+.book-title {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin: 0;
+    font-weight: 300;
+    color: #FD8000;
+}
+
+.book-cell {
+    overflow: hidden;
+    line-height: 2.5rem;
+}
+
+    .book-cell div {
+        width: 100%;
+    }
+
+.book-author {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.book-last-item {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.tag-small {
+    display: inline-block;
+    vertical-align: bottom;
+}
+
+.book-detail-btn {
+    text-align: center;
+    height: 2.5rem;
+}
+
+.ca {
+    background-color: #FD8000;
+    padding: 10px 3rem;
+    color: white !important;
+}
+
+.bg-gray {
+    background-color: #e6e6e6;
+    color: black !important;
+}
+.book-summary {
+    text-indent: 2em;
+    font-weight: 100;
+    letter-spacing: 0.01em;
+}
+.item {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    padding: 0.7rem;
+    border-bottom: 1px #e6e6e6 solid;
+}
+
+    .item:first-child {
+        border-top: 1px #e6e6e6 solid;
+    }

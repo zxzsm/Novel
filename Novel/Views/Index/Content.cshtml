@@ -51,21 +51,19 @@ new BGReadColorViewModel{ color="#E6E6E4",colortitle="灰色" }
         <div class="pure-u-1" style="text-align:center;"><h2 class="content-subhead">@Model.ItemName</h2></div>
 
         <div class="pure-u-1">
-            <div>
-                <div class="ncontent" style="font-family:@fontFamilies[selectedFontFamily];font-size:@fontSizeStr">
-                    @Html.Raw(HttpUtility.HtmlDecode(Model.Content))
-                </div>
-                <div class="nfooter">
-                    @if (Model.PreId > 0)
-                    {
-                        <a class="f14" id="pre" href="@Url.Action("Content",new { itemId=Model.PreId })" title="@Model.BookName-@Model.PreItemName">上一章</a>
-                    }
-                    @if (Model.NextId > 0)
-                    {
-                        <a class="f14" id="next" href="@Url.Action("Content",new { itemId=Model.NextId })" title="@Model.BookName-@Model.NextName">下一章</a>
-                    }
+            <div class="ncontent" style="font-family:@fontFamilies[selectedFontFamily];font-size:@fontSizeStr">
+                @Html.Raw(HttpUtility.HtmlDecode(Model.Content))
+            </div>
+            <div class="nfooter">
+                @if (Model.PreId > 0)
+                {
+                    <a class="f14" id="pre" href="@Url.Action("Content",new { itemId=Model.PreId })" title="@Model.BookName-@Model.PreItemName">上一章</a>
+                }
+                @if (Model.NextId > 0)
+                {
+                    <a class="f14" id="next" href="@Url.Action("Content",new { itemId=Model.NextId })" title="@Model.BookName-@Model.NextName">下一章</a>
+                }
 
-                </div>
             </div>
 
         </div>

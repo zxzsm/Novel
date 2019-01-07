@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0" />
+    <link href="~/css/common.css" rel="stylesheet" />
+    <link href="~/css/book.css" rel="stylesheet" />
+    <link href="~/css/pure-min.css" rel="stylesheet" />
+    <script src="~/js/jquery.min.js"></script>
+    <style>
+        .header {
+            position: relative;
+            box-sizing: border-box;
+            height: 3rem;
+        }
+
+        .rt {
+            width: 1.8rem;
+            padding: 10px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a class="rt" href="javascript:history.go(-1)">
+            <img src="~/files/return.png" style="width:100%" />
+        </a>
+        <a class="rt" style="float:right;" href="/">
+            <img src="~/files/home.png" style="width:100%" />
+        </a>
+    </header>
+    <div class="body">
+        @RenderBody()
+    </div>
+</body>
+</html>

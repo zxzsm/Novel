@@ -11,14 +11,7 @@
     margin-left: 1%;
 }
 
-.fr {
-    border: 2px solid #e6e6e6;
-    border-radius: 5px;
-}
 
-.shadow {
-    box-shadow: 0 5px 20px rgba(0,0,0,.2);
-}
 .content-subhead {
     font-weight: 300;
     color: #888;

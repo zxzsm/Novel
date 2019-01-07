@@ -1,0 +1,14 @@
+﻿.ncontent {
+    line-height: 2rem;
+    width: 90%;
+    margin: 0 auto;
+}
+.nfooter {
+    text-align: center;
+    margin: 5% 0px;
+    width: 100%;
+}
+
+    .nfooter a {
+        margin: 0px 20px;
+    }

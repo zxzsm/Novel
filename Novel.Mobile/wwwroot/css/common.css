@@ -1,0 +1,23 @@
+﻿a:link, a:active, a:visited {
+    text-decoration: none;
+    color: black;
+}
+
+a:hover {
+    color: #FD8000;
+}
+
+.fr {
+    border: 2px solid #e6e6e6;
+    border-radius: 5px;
+}
+
+.shadow {
+    box-shadow: 0 5px 20px rgba(0,0,0,.2);
+}
+
+.content-subhead {
+    font-weight: 300;
+    position: relative;
+    color: #FD8000;
+}

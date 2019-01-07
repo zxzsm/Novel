@@ -79,7 +79,7 @@
     @foreach (var item in Model.Fantasy)
     {
         <div class="pure-g">
-            <div class="pure-u-1-1 shadow fr" style="margin-top:1%;">
+            <div class="pure-u-1-1 shadow" style="margin-top:1%;">
                 <a class="book-layout" href="@Url.Action("Novel",new { id=item.BookId })">
                     <img class="pure-img book-cover" src="@item.BookImage" alt="@item.BookName">
                     <div class="book-cell">

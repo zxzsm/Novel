@@ -1,0 +1,107 @@
+﻿@using Novel.Entity.Models
+@using Novel.Entity.ViewModels
+@model NovelViewModel
+
+@{
+    ViewData["Title"] = "Novel";
+    Layout = "_LayoutBook";
+}
+<div class="book-detail-info">
+    <div class="book-layout">
+        <img src="@Model.Book.BookImage" class="book-cover">
+        <div class="book-cell">
+            <div>
+                <h2 class="book-title">@Model.Book.BookName</h2>
+            </div>
+            <div>
+                <span class="book-author">
+                    @Model.Book.BookAuthor
+                </span>
+            </div>
+            <div>
+                @{
+                    string state = Model.Book.BookState.HasValue && Model.Book.BookState.Value == 1 ? "完结" : "连载中";
+                }
+                <span class="tag-small">@state</span>
+            </div>
+            <div>
+                @{
+                    BookItemViewModel lastItem = Model.Items.OrderByDescending(m => m.ItemId).FirstOrDefault();
+                }
+                <a href="@Url.Action("Content", new { itemId = lastItem.ItemId })" class="book-last-item">@lastItem.ItemName</a>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="book-detail-btn">
+        @{
+            var bookshelves = ViewData["bookshelves"] as List<MyBookShelfViewModel>;
+            bool isaddbook = bookshelves.Any(m => m.bookid == Model.Book.BookId);
+            string txt = isaddbook ? "已入书架" : "加入书架";
+            string attclass = isaddbook ? "ca bg-gray" : "ca";
+        }
+        <a class="@attclass" href="javascript:" id="bookshelf">@txt</a>
+        @{
+            bool isThumbsup = Model.IsThumbsup;
+            txt = isThumbsup ? "已推荐" : "推荐此书";
+            attclass = isThumbsup ? "ca bg-gray" : "ca";
+        }
+        <a class="@attclass" href="javascript:" id="bookthumbsup">@txt</a>
+    </div>
+    <div class="book-summary">
+        @Html.Raw(Model.Book.BookSummary)
+    </div>
+</div>
+<div class="pure-g">
+    <div class="pure-u-1">
+        <h3 class="content-subhead">目录</h3>
+    </div>
+    <div class="pure-u-1">
+
+        @foreach (var item in Model.Items)
+        {
+            <a class="item" href="@Url.Action("Content",new { itemId=item.ItemId })" title="@item.ItemName">
+                @item.ItemName
+            </a>
+        }
+    </div>
+</div>
+<script>
+
+    $(function () {
+
+
+    @if (!isaddbook)
+    {
+        <text>
+         id = @Model.Book.BookId;
+        $("#bookshelf").click(function () {
+            var url = "@Url.Action("BookShelf", "Book")";
+        $.post(url, { id: id }, function(rs) {
+            if (rs && rs.status == 0) {
+                $('#bookshelf').unbind("click");
+                $("#bookshelf").html("已入书架")
+                $("#bookshelf").addClass("bg-gray");
+            }
+            });
+    });
+    </text>
+    }
+        @if (!isThumbsup) {
+            <text>
+        id = @Model.Book.BookId;
+        $("#bookthumbsup").click(function () {
+                url = "@Url.Action("Thumbsup", "Book")";
+                $.post(url, { id: id }, function (rs) {
+                    if (rs && rs.status == 0) {
+                        $('#bookthumbsup').unbind("click");
+                        $("#bookthumbsup").html("已推荐")
+                        $("#bookthumbsup").addClass("bg-gray");
+                    }
+                });
+            });
+            </text>
+        }
+    });
+</script>
