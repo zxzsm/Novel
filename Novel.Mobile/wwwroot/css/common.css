@@ -21,3 +21,10 @@ a:hover {
     position: relative;
     color: #FD8000;
 }
+
+.rt {
+    width: 1.8rem;
+    padding: 10px;
+    border-radius: 5px;
+    display: inline-block;
+}
