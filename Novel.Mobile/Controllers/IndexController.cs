@@ -47,7 +47,7 @@ namespace Novel.Mobile.Controllers
             using (BookService service = new BookService())
             {
                 contentViewModel = service.GetContentViewModel(itemId);
-                ViewData["Title"] = contentViewModel.BookName + "-" + contentViewModel.ItemName;
+                ViewData["Title"] = contentViewModel.ItemName+"_" + contentViewModel.BookName;
                 ViewData["ReadSetting"] = GetCookies("rsetting", new BookReadSettingViewModel());
             }
 
