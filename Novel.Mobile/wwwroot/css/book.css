@@ -7,21 +7,20 @@
     position: relative;
     display: block;
     overflow: hidden;
-    padding: 1rem;
+    width: 100%;
+    padding: 0 0 1rem 0;
 }
 
 .book-cover {
+    margin-left:10px;
     width: 8em;
     height: 10em;
-    border-radius: 2px;
     box-shadow: none;
     float: left;
-    margin-right: 10px;
     border-radius: 7px;
 }
 
 .book-title {
-    overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     margin: 0;
@@ -35,7 +34,7 @@
 }
 
     .book-cell div {
-        width: 100%;
+        padding-left: 5px;
     }
 
 .book-author {
@@ -45,7 +44,6 @@
 }
 
 .book-last-item {
-    overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
 }
@@ -62,19 +60,23 @@
 
 .ca {
     background-color: #FD8000;
-    padding: 10px 3rem;
     color: white !important;
+    display: inline-block;
+    line-height:2.5rem;
+    width: 40%;
 }
 
 .bg-gray {
     background-color: #e6e6e6;
     color: black !important;
 }
+
 .book-summary {
     text-indent: 2em;
     font-weight: 100;
     letter-spacing: 0.01em;
 }
+
 .item {
     white-space: nowrap;
     overflow: hidden;

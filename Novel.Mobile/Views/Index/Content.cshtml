@@ -2,11 +2,13 @@
 @model Novel.Entity.Models.ContentViewModel
 @using Novel.Entity.ViewModels
 @{
-    ViewData["Title"] = "Content";
     Layout = "_LayoutContent";
 }
 <script src="~/js/content.js"></script>
 <div class="pure-g">
+    <div class="pure-u-1" style="padding:10px;">
+       <a href="/">首页</a>/ <a href="@Url.Action("Novel",new { id=Model.BookId })"> @Model.BookName</a>&nbsp;/<a href="@Url.Action("Content",new { itemId=Model.ItemId })"> @Model.ItemName</a>
+    </div>
     <div class="pure-u-1" style="text-align:center;"><h2 class="content-subhead">@Model.ItemName</h2></div>
     <div class="pure-u-1">
         <div class="ncontent">

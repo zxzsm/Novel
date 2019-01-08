@@ -84,7 +84,7 @@
                     <img class="pure-img book-cover" src="@item.BookImage" alt="@item.BookName">
                     <div class="book-cell">
                         <h4 class="book-title">@item.BookName</h4>
-                        <p class="book-desc">@item.BookSummary</p>
+                        <p class="book-desc">@Html.Raw(item.BookSummary)</p>
                         <div class="book-meta">
                             <div class="book-meta1">
                                 <span class="book-author">

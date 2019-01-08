@@ -1,13 +1,4 @@
-﻿$(document).keyup(function (event) {
-    var e = event || window.event || arguments.callee.caller.arguments[0];
-    if (e.keyCode == 37 && $("#pre")) {
-        $("#pre")[0].click();
-    }
-    else if (e.keyCode == 39 && $("#next")) {
-        $("#next")[0].click();
-    }
-});
-function bgselected(obj) {
+﻿function bgselected(obj) {
     $(".rbgselected").removeClass("rbgselected");
     $(obj).addClass("rbgselected");
     var bgcolor = $(obj).css("background-color");
@@ -46,7 +37,16 @@ $(function () {
     $(".close").click(function () {
         $(".c-setting").hide();
     });
-
+    $(document).swipeLeft(function () {
+        if ($("#next")) {
+            $("#next")[0].click();
+        }
+    });
+    $(document).swipeRight(function () {
+        if ($("#pre")) {
+            $("#pre")[0].click();
+        }
+    });
 });
 
 function rsetting(name, value) {
@@ -58,5 +58,5 @@ function rsetting(name, value) {
         setting = JSON.parse(setting);
     }
     setting[name] = value;
-    $.cookie("rsetting", JSON.stringify(setting), { expires: 365*10 });
+    $.cookie("rsetting", JSON.stringify(setting), { expires: 365 * 10 });
 }
