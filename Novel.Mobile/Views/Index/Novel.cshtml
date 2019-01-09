@@ -1,10 +1,13 @@
 ﻿@using Novel.Entity.Models
 @using Novel.Entity.ViewModels
+@using Novel.Common
+
 @model NovelViewModel
 
 @{
     Layout = "_LayoutBook";
 }
+<link href="~/css/book.css?v=@CssVersion.M_Book_Ver" rel="stylesheet" />
 <div class="book-detail-info">
     <div class="book-layout">
         <img src="@Model.Book.BookImage" class="book-cover">
@@ -64,6 +67,16 @@
                 @item.ItemName
             </a>
         }
+    </div>
+</div>
+<div class="bar-list">
+    <div class="top-bar">
+        <a class="mp mp-buttom" href="#footer" style="display:block;">
+            <img src="~/files/mp-bottom.png" style="width:100%" />
+        </a>
+        <a class="mp mp-top" href="#body" style="display:none;">
+            <img src="~/files/mp-top.png" style="width:100%" />
+        </a>
     </div>
 </div>
 <script>

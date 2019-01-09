@@ -9,66 +9,6 @@
         color: inherit;
         outline: 0;
     }
-    .book-cell {
-        overflow: hidden;
-    }
-    .book-layout {
-        position: relative;
-        display: block;
-        overflow: hidden;
-        padding: 1rem;
-        -webkit-transition: padding-left .15s;
-        transition: padding-left .15s;
-    }
-    .book-desc {
-        line-height: 1.1875rem;
-        display: -webkit-box;
-        height: 2.25rem;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2;
-        font-size: .875rem;
-        line-height: 1.125rem;
-        overflow: hidden;
-        margin: .375rem 0;
-        color: #969ba3;
-        word-break: break-all;
-    }
-
-    .book-title {
-        line-height: 1.4;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        margin: 0;
-    }
-
-    .book-meta {
-        font-size: .75rem;
-        overflow: hidden;
-    }
-
-    .book-meta1 {
-        float: left;
-    }
-
-    .book-author {
-        font-size: .8125rem;
-        display: block;
-        overflow: hidden;
-        max-width: 10em;
-        max-width: calc(100vw - 2rem - (176rem / 16));
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        color: #969ba3;
-    }
-    .book-cover {
-        font-size: 0;
-        float: left;
-        width: 4.125rem;
-        height: 5.5rem;
-        margin-right: .5rem;
-        box-shadow: 0 1px 3px rgba(0,0,0,.3);
-    }
 </style>
 <div style="margin:1%;">
     <div class="pure-g">
@@ -76,10 +16,10 @@
             <h3 class="content-subhead">玄幻奇幻</h3>
         </div>
     </div>
-    @foreach (var item in Model.Fantasy)
-    {
-        <div class="pure-g">
-            <div class="pure-u-1-1 shadow" style="margin-top:1%;">
+    <div class="pure-g">
+        @foreach (var item in Model.Fantasy)
+        {
+            <div class="pure-u-1-1 mtop">
                 <a class="book-layout" href="@Url.Action("Novel",new { id=item.BookId })">
                     <img class="pure-img book-cover" src="@item.BookImage" alt="@item.BookName">
                     <div class="book-cell">
@@ -95,8 +35,9 @@
                     </div>
                 </a>
             </div>
+
+        }
         </div>
-    }
-</div>
+    </div>
 
 

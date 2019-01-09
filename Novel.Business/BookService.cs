@@ -113,6 +113,14 @@ namespace Novel.Service
                     pageIndex = 1,
                 };
             }
+            if (viewModel.pageIndex==0)
+            {
+                viewModel.pageIndex = 1;
+            }
+            if (viewModel.pageSize==0)
+            {
+                viewModel.pageSize = 10;
+            }
 
             Func<Book, bool> func = null;
             if (!viewModel.keyword.IsEmpty())

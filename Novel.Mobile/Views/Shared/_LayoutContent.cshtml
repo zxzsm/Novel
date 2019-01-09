@@ -1,19 +1,34 @@
-﻿<!DOCTYPE html>
-
+﻿
+@using Novel.Common
+<!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]_书客来</title>
-    <link href="~/css/common.css" rel="stylesheet" />
+    <link href="~/css/common.css?v=@CssVersion.M_Common_Ver" rel="stylesheet" />
     <link href="~/css/pure-min.css" rel="stylesheet" />
-    <link href="~/css/content.css" rel="stylesheet" />
+    <link href="~/css/content.css?v=@CssVersion.M_Content_Ver" rel="stylesheet" />
     <script src="~/js/zepto.min.js"></script>
     <script src="~/js/touch.js"></script>
+    <script src="~/js/common.js"></script>
 </head>
 <body>
-    <div class="body">
+    <div class="body" id="body">
         @RenderBody()
     </div>
-  
+    @*<div class="bar-list">
+        <div class="top-bar">
+            <a class="mp mp-buttom" href="#footer" style="display:block;">
+                <img src="~/files/mp-bottom.png" style="width:100%" />
+            </a>
+            <a class="mp mp-top" href="#body" style="display:none;">
+                <img src="~/files/mp-top.png" style="width:100%" />
+            </a>
+        </div>
+    </div>*@
+    <footer class="border-top footer text-muted" id="footer">
+        <div class="container">
+        </div>
+    </footer>
 </body>
 </html>

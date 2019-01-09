@@ -1,11 +1,15 @@
-﻿<!DOCTYPE html>
+﻿
+@using Novel.Common
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
     <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0" />
-    <link href="~/css/index.css" rel="stylesheet" />
+    <link href="~/css/index.css?v=@CssVersion.M_Index_Ver" rel="stylesheet" />
+    <link href="~/css/common.css?v=@CssVersion.M_Common_Ver" rel="stylesheet" />
+    <link href="~/css/common-item.css?v=@CssVersion.M_CommonItem_Ver" rel="stylesheet" />
     <link href="~/css/pure-min.css" rel="stylesheet" />
 </head>
 <body>
@@ -20,7 +24,7 @@
         </div>
         <div class="pure-g">
             <div class="pure-u-1 pure-u-md-1">
-                @using (Html.BeginForm("Search", "Index", FormMethod.Post, new { style = "margin:1%;", @class = "pure-form", id = "headsearch" }))
+                @using (Html.BeginForm("Search", "Index", FormMethod.Get, new { style = "margin:1%;", @class = "pure-form", id = "headsearch" }))
                 {
                     @Html.TextBox("keyword", null, new { @class = "pure-u-1" });
                 }

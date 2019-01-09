@@ -4,12 +4,13 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Novel.Entity;
 using Novel.Entity.Models;
 using Novel.Entity.ViewModels;
 using Novel.Service;
 using Novel.Utilities;
-
+using Microsoft.AspNetCore.Mvc.Rendering;
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Novel.Mobile.Controllers
@@ -47,7 +48,7 @@ namespace Novel.Mobile.Controllers
             using (BookService service = new BookService())
             {
                 contentViewModel = service.GetContentViewModel(itemId);
-                ViewData["Title"] = contentViewModel.ItemName+"_" + contentViewModel.BookName;
+                ViewData["Title"] = contentViewModel.ItemName + "_" + contentViewModel.BookName;
                 ViewData["ReadSetting"] = GetCookies("rsetting", new BookReadSettingViewModel());
             }
 
@@ -114,12 +115,21 @@ namespace Novel.Mobile.Controllers
             using (BookService service = new BookService())
             {
                 var d = service.GetBooks(viewModel);
-                ViewData["BookCategory"] = service.GetCategories();
-                using (BookContext bookContext = new BookContext())
+                var initDatas = new
                 {
-                    var t = bookContext.Book.ToList();
-                    ViewData["Books"] = t;
-                }
+                    currentPageIndex = d.PageIndex,
+                    viewModel.pageSize,
+                    pageCount = d.TotalPages,
+                    items = d.Select(m => new
+                    {
+                        m.BookName,
+                        m.BookSummary,
+                        m.BookAuthor,
+                        m.BookImage,
+                        Url = Url.Action("Novel", new { id = m.BookId })
+                    }).ToList()
+                };
+                ViewData["InitDatas"] = JsonUtil.SerializeObject(initDatas);
                 return View(viewModel);
             }
         }
@@ -134,7 +144,14 @@ namespace Novel.Mobile.Controllers
                     currentPageIndex = d.PageIndex,
                     viewModel.pageSize,
                     pageCount = d.TotalPages,
-                    items = d.ToList()
+                    items = d.Select(m => new
+                    {
+                        m.BookName,
+                        m.BookSummary,
+                        m.BookAuthor,
+                        m.BookImage,
+                        Url = Url.Action("Novel", new { id = m.BookId })
+                    }).ToList()
                 });
             }
         }

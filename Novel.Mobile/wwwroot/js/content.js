@@ -1,4 +1,5 @@
-﻿function bgselected(obj) {
+﻿
+function bgselected(obj) {
     $(".rbgselected").removeClass("rbgselected");
     $(obj).addClass("rbgselected");
     var bgcolor = $(obj).css("background-color");
