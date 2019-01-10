@@ -10,7 +10,7 @@ namespace Novel.Common
         public const double M_Common_Ver= 0.3;
         public const double M_CommonItem_Ver = 0.1;
         public const double M_Content_Ver = 0.1;
-        public const double M_Index_Ver = 0.1;
+        public const double M_Index_Ver = 0.2;
         public const double M_Search_Ver = 0.1;
     }
 }

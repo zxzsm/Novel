@@ -256,7 +256,7 @@
                         $.post("@Url.Action("SearchKeyword", "Index")", {
                             keyword: _self.keyword,
                             pageIndex: _self.page,
-                            pageSize: 5
+                            pageSize: 10
                         }, function (rs) {
                             _self.bookitems = rs.items;
                             _self.pageCount = rs.pageCount;
@@ -276,7 +276,7 @@
                         c[i].selectd = false;
                         this.categories.push(c[i]);
                     }
-                    this.search(1, 20);
+                    this.search();
                 }
             });
     </script>

@@ -108,7 +108,7 @@ namespace Novel.Controllers
             ViewData["HistoryReadBooks"] = t;
             return View();
         }
-
+        [HttpGet]
         public IActionResult Search(SearchViewModel viewModel)
         {
             using (BookService service = new BookService())

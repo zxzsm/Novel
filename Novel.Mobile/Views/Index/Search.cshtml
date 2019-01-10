@@ -4,13 +4,14 @@
 }
 
 <script src="~/js/vue.min.js"></script>
+<script src="~/js/touch.js"></script>
 <link href="~/css/common-item.css?v=@CssVersion.M_CommonItem_Ver" rel="stylesheet" />
 
 <div class="pure-g" style="width:100%;">
     <div class="pure-u-1 pure-u-md-1">
         @using (Html.BeginForm("Search", "Index", FormMethod.Get, new { style = "margin:1%;", @class = "pure-form", id = "headsearch" }))
         {
-            @Html.TextBox("keyword", null, new { @class = "pure-u-1" });
+            <input  type="text" name="keyword" class="pure-u-1"v-model="keyword"/>
         }
     </div>
 </div>
@@ -38,17 +39,22 @@
             el: "#body",
             data: {
                 bookitems: [],
-                keyword: "",
-                page: 1,
-                pageCount:0
+                keyword: "@ViewData["keyword"]",
+                page: 0,
+                pageCount: 1,
+                isrequestload: true
             },
             methods: {
                 search: function () {
+                    if (!this.isrequestload) {
+                        return;
+                    }
                     var _self = this;
                     this.page = this.page + 1;
                     if (this.page > this.pageCount) {
                         return;
                     }
+                    this.isrequestload = false;
                     $.post("@Url.Action("SearchKeyword", "Index")", {
                         keyword: _self.keyword,
                         pageIndex: _self.page,
@@ -57,17 +63,47 @@
                         for (var i = 0; i < rs.items.length; i++) {
                             _self.bookitems.push(rs.items[i]);
                         }
+                        debugger;
+                        _self.page = rs.pageIndex;
                         _self.pageCount = rs.pageCount;
-                        _self.pageIndex = rs.currentPageIndex;
+                        _self.isrequestload = false;
                     });
                 }
             },
             created: function () {
                 var data = @Html.Raw(ViewData["InitDatas"]);
                 this.bookitems = data.items;
-                this.pageIndex = data.currentPageIndex;
+                this.page = data.currentPageIndex;
                 this.pageCount = data.pageCount;
             }
         });
+    function getScrollTop() {
+        var scrollTop = 0;
+        if (document.documentElement && document.documentElement.scrollTop) {
+            scrollTop = document.documentElement.scrollTop;
+        } else if (document.body) {
+            scrollTop = document.body.scrollTop;
+        }
+        return scrollTop;
+    }
+    //获取窗口可视范围的高度
+    function getClientHeight() {
+        var clientHeight = 0;
+        if (document.body.clientHeight && document.documentElement.clientHeight) {
+            var clientHeight = (document.body.clientHeight < document.documentElement.clientHeight) ? document.body.clientHeight : document.documentElement.clientHeight;
+        } else {
+            var clientHeight = (document.body.clientHeight > document.documentElement.clientHeight) ? document.body.clientHeight : document.documentElement.clientHeight;
+        }
+        return clientHeight;
+    }
+    var clientHeight = getClientHeight();
+    $(function () {
 
+        $(document).swipe(function () {
+            var scrollTop = getScrollTop();
+            if (scrollTop > clientHeight * 0.1) {
+                app.search();
+            }
+        });
+    });
 </script>

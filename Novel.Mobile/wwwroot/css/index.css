@@ -2,13 +2,10 @@
 }
 
 .logo {
-    background: url('/files/logo.png') no-repeat scroll 0 0 transparent;
-    width: 120px;
-    height: 80px;
-    position: relative;
+    font-size: 2rem;
+    margin: 0.5rem;
     display: block;
-    text-indent: -9999em;
-    margin-left: 1%;
+    color: #FD8000 !important; 
 }
 
 

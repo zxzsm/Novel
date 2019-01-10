@@ -1,0 +1,105 @@
+﻿@using Novel.Entity
+@using Novel.Entity.ViewModels
+@{
+    ViewData["Title"] = "我的书架";
+    Layout = "_LayoutBook";
+}
+<link href="~/css/common-item.css" rel="stylesheet" />
+<link href="~/css/mybook.css" rel="stylesheet" />
+<script src="~/js/mybook.js"></script>
+<div class="pure-g">
+    <div class="pure-u-1">
+        <nav class="btn-group btn-group-small">
+
+            <h3 class="btn-group-cell" role="navigation" aria-label="已选择"><a href="javascript:" id="mbook" class="btn-tab active" style="border-right:0px;">我的书架</a></h3>
+
+            <h3 class="btn-group-cell" role="navigation" aria-label=""><a href="javascript:" id="hbook" class="btn-tab">最近阅读</a></h3>
+
+        </nav>
+    </div>
+
+</div>
+<div class="pure-g" id="mybook">
+    @{ var mybookShelves = ViewData["BookShelves"] as PaginatedList<MyBookShelfViewModel>;}
+    @if (mybookShelves != null)
+    {
+        foreach (var item in mybookShelves)
+        {
+            string url = item.currentreaditemid == 0 ? item.bookurl : item.currentitemurl;
+            <div class="pure-u-1">
+                <a class="book-layout" href="@url">
+                    <img class="pure-img book-cover" src="@item.bookimage" alt="@item.bookname">
+                    <div class="book-cell">
+                        <h4 class="book-title">@item.bookname</h4>
+                        <div class="book-meta">
+                            <div class="book-meta1">
+                                <span class="book-author">
+                                    @item.bookauthor
+                                </span>
+
+                                <span class="book-author">
+                                    最新章节:
+                                    @item.lastitemname
+                                </span>
+                                <span class="book-author">
+                                    @if (item.currentreaditemid > 0)
+                                    {
+                                        <text> 读至:</text>@item.currentitemname
+                                    }
+                                    else
+                                    {
+                                        <text>尚未阅读</text>
+                                    }
+
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+    }
+</div>
+
+<div class="pure-g" id="myhistory">
+    @{ var bookReadViewModels = ViewData["HistoryReadBooks"] as List<BookReadViewModel>;}
+    @if (bookReadViewModels != null)
+    {
+        foreach (var item in bookReadViewModels)
+        {
+            string url = item.currentreaditemid == 0 ? item.bookurl : item.currentitemurl;
+            <div class="pure-u-1">
+                <a class="book-layout" href="@url">
+                    <img class="pure-img book-cover" src="@item.bookimage" alt="@item.bookname">
+                    <div class="book-cell">
+                        <h4 class="book-title">@item.bookname</h4>
+                        <div class="book-meta">
+                            <div class="book-meta1">
+                                <span class="book-author">
+                                    @item.bookauthor
+                                </span>
+
+                                <span class="book-author">
+                                    最新章节:
+                                    @item.lastitemname
+                                </span>
+                                <span class="book-author">
+                                    @if (item.currentreaditemid > 0)
+                                    {
+                                        <text> 读至:</text>@item.currentitemname
+                                    }
+                                    else
+                                    {
+                                        <text>尚未阅读</text>
+                                    }
+
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+    }
+</div>
+

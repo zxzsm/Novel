@@ -47,8 +47,6 @@
     font-size: .8125rem;
     display: block;
     overflow: hidden;
-    max-width: 10em;
-    max-width: calc(100vw - 2rem - (176rem / 16));
     white-space: nowrap;
     text-overflow: ellipsis;
     color: #969ba3;

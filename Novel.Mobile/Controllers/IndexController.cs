@@ -58,14 +58,14 @@ namespace Novel.Mobile.Controllers
 
         private void SetReadBookCookies(ContentViewModel contentViewModel)
         {
-            var bookReadViewModels = GetCookies("historyreadbooks", new List<BookReadViewModel>());
-            var shelves = GetCookies("bookshelves", new List<MyBookShelfViewModel>());
-            var r = bookReadViewModels.FirstOrDefault(m => m.bookid == contentViewModel.BookId);
+            var historyBooks = GetCookies("historyreadbooks", new List<BookReadViewModel>());
+            var myShelves = GetCookies("bookshelves", new List<MyBookShelfViewModel>());
+            var r = historyBooks.FirstOrDefault(m => m.bookid == contentViewModel.BookId);
             if (r == null)
             {
-                if (bookReadViewModels.Count > 20)
+                if (historyBooks.Count > 20)
                 {
-                    bookReadViewModels.Remove(bookReadViewModels.Last());
+                    historyBooks.Remove(historyBooks.Last());
                 }
                 r = new BookReadViewModel
                 {
@@ -74,29 +74,41 @@ namespace Novel.Mobile.Controllers
             }
             else
             {
-                bookReadViewModels.Remove(r);
+                historyBooks.Remove(r);
             }
-            var mybook = shelves.FirstOrDefault(p => p.bookid == contentViewModel.BookId);
+            var mybook = myShelves.FirstOrDefault(p => p.bookid == contentViewModel.BookId);
             if (mybook != null)
             {
-                mybook.currentreaditemid = contentViewModel.BookId;
-                SetCookies("bookshelves", JsonUtil.SerializeObject(shelves), SAVECOOKIESTIME);
+                mybook.currentreaditemid = contentViewModel.ItemId;
+                mybook.lastreadtime = DateTime.Now;
+                SetCookies("bookshelves", JsonUtil.SerializeObject(myShelves), SAVECOOKIESTIME);
             }
-            bookReadViewModels.Insert(0, r);
+            
             r.currentreaditemid = contentViewModel.ItemId;
             r.lastreadtime = DateTime.Now;
-            SetCookies("historyreadbooks", JsonUtil.SerializeObject(bookReadViewModels), SAVECOOKIESTIME);
+            historyBooks.Insert(0, r);
+            
+            SetCookies("historyreadbooks", JsonUtil.SerializeObject(historyBooks), SAVECOOKIESTIME);
         }
 
         public IActionResult BookShelf()
         {
             var t = GetCookies("historyreadbooks", new List<BookReadViewModel>());
             var shelves = GetCookies("bookshelves", new List<MyBookShelfViewModel>());
+            PaginatedList<MyBookShelfViewModel> shelfViewModels = null;
             using (BookService bookService = new BookService())
             {
                 bookService.GetReadBookHistory(t);
-                ViewData["BookShelves"] = bookService.GetBookShlef(shelves, 1, 10);
+                shelfViewModels = bookService.GetBookShlef(shelves, 1, 20);
+
             }
+            foreach (var item in shelfViewModels)
+            {
+                item.lasitemurl = Url.Action("Content", new { itemId = item.lastitemid });
+                item.currentitemurl = Url.Action("Content", new { itemId = item.currentreaditemid });
+                item.bookurl = Url.Action("Novel", new { id = item.bookid });
+            }
+            ViewData["BookShelves"] = shelfViewModels;
             if (t.Count > 0)
             {
                 foreach (var item in t)
@@ -129,6 +141,7 @@ namespace Novel.Mobile.Controllers
                         Url = Url.Action("Novel", new { id = m.BookId })
                     }).ToList()
                 };
+                ViewData["keyword"] = viewModel.keyword;
                 ViewData["InitDatas"] = JsonUtil.SerializeObject(initDatas);
                 return View(viewModel);
             }
@@ -139,7 +152,7 @@ namespace Novel.Mobile.Controllers
             using (BookService service = new BookService())
             {
                 var d = service.GetBooks(viewModel);
-                return Json(new
+                var data = new
                 {
                     currentPageIndex = d.PageIndex,
                     viewModel.pageSize,
@@ -152,7 +165,8 @@ namespace Novel.Mobile.Controllers
                         m.BookImage,
                         Url = Url.Action("Novel", new { id = m.BookId })
                     }).ToList()
-                });
+                };
+                return base.Json(data);
             }
         }
 

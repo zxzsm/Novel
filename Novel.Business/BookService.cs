@@ -113,11 +113,11 @@ namespace Novel.Service
                     pageIndex = 1,
                 };
             }
-            if (viewModel.pageIndex==0)
+            if (viewModel.pageIndex == 0)
             {
                 viewModel.pageIndex = 1;
             }
-            if (viewModel.pageSize==0)
+            if (viewModel.pageSize == 0)
             {
                 viewModel.pageSize = 10;
             }
@@ -190,14 +190,19 @@ namespace Novel.Service
                 {
                     item.bookauthor = book.BookAuthor;
                     item.bookname = book.BookName;
+                    item.bookimage = book.BookImage;
                 }
-                var currentItem = q.Where(m => m.ItemId == item.currentreaditemid).FirstOrDefault();
-                if (currentItem != null)
+                if (item.currentreaditemid > 0)
                 {
-                    item.currentitemname = currentItem.ItemName;
-                    item.currentreaditemid = currentItem.ItemId;
+                    var currentItem = q.Where(m => m.ItemId == item.currentreaditemid).FirstOrDefault();
+                    if (currentItem != null)
+                    {
+                        item.currentitemname = currentItem.ItemName;
+                        item.currentreaditemid = currentItem.ItemId;
+                    }
                 }
-                var lastItem = q.Where(m => m.BookId == item.bookid).OrderByDescending(m => m.Pri).Select(m => new { m.ItemName, m.ItemId, m.UpdateTime }).FirstOrDefault();
+                var maxPri = q.Where(m => m.BookId == item.bookid).Max(m => m.Pri);
+                var lastItem = q.Where(m => m.BookId == item.bookid && m.Pri == maxPri).FirstOrDefault();
                 if (lastItem != null)
                 {
                     item.lastitemname = lastItem.ItemName;
@@ -213,7 +218,7 @@ namespace Novel.Service
             int total = 0;
             int totalPage = 0;
             Func<Book, bool> whereLambda = m => shelevs.Any(p => p.bookid == m.BookId);
-            var t = LoadPagerEntities(10, 1, m => m.UpdateTime, out total, out totalPage, whereLambda: whereLambda);
+            var t = LoadPagerEntities(pageSize, pageIndex, m => m.UpdateTime, out total, out totalPage, whereLambda: whereLambda);
             var result = t.Select(m => new MyBookShelfViewModel
             {
                 bookid = m.BookId,
@@ -224,14 +229,21 @@ namespace Novel.Service
             }).ToList();
             foreach (var item in result)
             {
-                if (item.currentreaditemid <= 0)
+                var shelfViewModel = shelevs.FirstOrDefault(m => m.bookid == item.bookid);
+                if (shelfViewModel != null)
                 {
-                    continue;
+                    item.currentreaditemid = shelfViewModel.currentreaditemid;
+                    item.lastitemid = shelfViewModel.lastitemid;
+                    item.lastreadtime = shelfViewModel.lastreadtime;
                 }
-                var bookItem = Db.BookItem.FirstOrDefault(m => m.ItemId == item.currentreaditemid);
-                if (bookItem != null)
+                BookItem bookItem = null;
+                if (item.currentreaditemid > 0)
                 {
-                    item.currentitemname = bookItem.ItemName;
+                    bookItem = Db.BookItem.FirstOrDefault(m => m.ItemId == item.currentreaditemid);
+                    if (bookItem != null)
+                    {
+                        item.currentitemname = bookItem.ItemName;
+                    }
                 }
                 var maxPri = Db.BookItem.Where(m => m.BookId == item.bookid).Max(m => m.Pri);
                 bookItem = Db.BookItem.FirstOrDefault(m => m.BookId == item.bookid && m.Pri == maxPri);

@@ -59,7 +59,7 @@
                 </div>*@
 
             <div class="pure-u-4-5">
-                @using (Html.BeginForm("Search", "Index", FormMethod.Post, new { style = "margin:25px 0px 0px 10%;", @class = "pure-form", id = "headsearch" }))
+                @using (Html.BeginForm("Search", "Index", FormMethod.Get, new { style = "margin:25px 0px 0px 10%;", @class = "pure-form", id = "headsearch" }))
                 {
                     @Html.TextBox("keyword", null, new { style = "width:40%;margin-let:10%" });
                     <button type="submit" class="pure-button button-error">搜索</button>
