@@ -194,7 +194,7 @@ namespace Novel.Service
                 }
                 if (item.currentreaditemid > 0)
                 {
-                    var currentItem = q.Where(m => m.ItemId == item.currentreaditemid).FirstOrDefault();
+                    var currentItem = q.FirstOrDefault(m => m.ItemId == item.currentreaditemid);
                     if (currentItem != null)
                     {
                         item.currentitemname = currentItem.ItemName;
@@ -202,7 +202,7 @@ namespace Novel.Service
                     }
                 }
                 var maxPri = q.Where(m => m.BookId == item.bookid).Max(m => m.Pri);
-                var lastItem = q.Where(m => m.BookId == item.bookid && m.Pri == maxPri).FirstOrDefault();
+                var lastItem = q.FirstOrDefault(m => m.BookId == item.bookid && m.Pri == maxPri);
                 if (lastItem != null)
                 {
                     item.lastitemname = lastItem.ItemName;

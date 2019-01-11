@@ -6,7 +6,41 @@
 }
 <link href="~/css/common-item.css" rel="stylesheet" />
 <link href="~/css/mybook.css" rel="stylesheet" />
+<script src="~/js/zepto.cookie.min.js"></script>
 <script src="~/js/mybook.js"></script>
+<style>
+    .book-layout {
+        width: 85%;
+        display: inline-block;
+    }
+    .aside {
+        position: fixed;
+        z-index: 3;
+        -webkit-transition: visibility .25s;
+        transition: visibility .25s;
+        bottom: 0;
+        width: 100%;
+    }
+
+    .btn-button {
+        background-color: #FD8000;
+        color: white !important;
+        display: inline-block;
+        line-height: 2.5rem;
+        width: 100%;
+        text-align: center;
+    }
+    .ch {
+        display: inline-block;
+        position: relative;
+        margin: 0 .5rem 0 1rem;
+        zoom: 150%
+    }
+    .fl{
+        display:flex;
+        align-items:center;
+    }
+</style>
 <div class="pure-g">
     <div class="pure-u-1">
         <nav class="btn-group btn-group-small">
@@ -26,8 +60,10 @@
         foreach (var item in mybookShelves)
         {
             string url = item.currentreaditemid == 0 ? item.bookurl : item.currentitemurl;
-            <div class="pure-u-1">
+            <div class="pure-u-1 fl">
+                <input type="checkbox" class="ch" id="item_@item.bookid" value="@item.bookid">
                 <a class="book-layout" href="@url">
+
                     <img class="pure-img book-cover" src="@item.bookimage" alt="@item.bookname">
                     <div class="book-cell">
                         <h4 class="book-title">@item.bookname</h4>
@@ -68,7 +104,8 @@
         foreach (var item in bookReadViewModels)
         {
             string url = item.currentreaditemid == 0 ? item.bookurl : item.currentitemurl;
-            <div class="pure-u-1">
+            <div class="pure-u-1 fl">
+                <input type="checkbox" class="ch" id="item_@item.bookid" value="@item.bookid">
                 <a class="book-layout" href="@url">
                     <img class="pure-img book-cover" src="@item.bookimage" alt="@item.bookname">
                     <div class="book-cell">
@@ -102,4 +139,49 @@
         }
     }
 </div>
-
+<div class="pure-g">
+    <div class="pure-u-1" style="margin-top: 2rem;"></div>
+</div>
+<div class="pure-g">
+    <div class="pure-u-1">
+        <div class="aside">
+            <nav class="btn-group">
+                <a class="btn-button" href="javascript:" onclick="deleted()">删除</a>
+            </nav>
+        </div>
+    </div>
+</div>
+<script>
+    function edit() {
+        $(".regular-checkbox + label").show();
+    }
+    function deleted() {
+        var display = $("#mybook").css('display');
+        var cookiename = "";
+        var checkedList = $("#mybook input[type='checkbox']:checked");
+        if (display != "none") {
+            checkedList = $("#mybook input[type='checkbox']:checked");
+            cookiename = "bookshelves";
+        }
+        else {
+            checkedList = $("#myhistory input[type='checkbox']:checked");
+            cookiename = "historyreadbooks";
+        }
+        if (checkedList.length > 0 && confirm('确实要删除吗?')) {
+            var data = JSON.parse($.fn.cookie(cookiename));
+            checkedList.each(function () {
+                debugger;
+                for (var i = 0; i < data.length; i++) {
+                    if ($(this).val() == data[i].bookid) {
+                        data.splice(i, 1);
+                        $($(this).parent()).remove();
+                        break;
+                    }
+                }
+            });
+            var s = JSON.stringify(data);
+            $.fn.cookie(cookiename, s, { expires: 365 * 2 });
+            //location.reload()
+        }
+    }
+</script>
