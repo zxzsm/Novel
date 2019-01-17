@@ -182,7 +182,7 @@ namespace Novel.Service
             {
                 return;
             }
-            var q = Db.BookItem.Where(m => readViewModels.Any(p => p.bookid == m.BookId));
+           // var q = Db.BookItem.Where(m => readViewModels.Any(p => p.bookid == m.BookId));
             foreach (var item in readViewModels)
             {
                 var book = Db.Book.FirstOrDefault(m => m.BookId == item.bookid);
@@ -194,15 +194,15 @@ namespace Novel.Service
                 }
                 if (item.currentreaditemid > 0)
                 {
-                    var currentItem = q.FirstOrDefault(m => m.ItemId == item.currentreaditemid);
+                    var currentItem = Db.BookItem.FirstOrDefault(m => m.ItemId == item.currentreaditemid);
                     if (currentItem != null)
                     {
                         item.currentitemname = currentItem.ItemName;
                         item.currentreaditemid = currentItem.ItemId;
                     }
                 }
-                var maxPri = q.Where(m => m.BookId == item.bookid).Max(m => m.Pri);
-                var lastItem = q.FirstOrDefault(m => m.BookId == item.bookid && m.Pri == maxPri);
+                var maxPri = Db.BookItem.Where(m => m.BookId == item.bookid).Max(m => m.Pri);
+                var lastItem = Db.BookItem.FirstOrDefault(m => m.BookId == item.bookid && m.Pri == maxPri);
                 if (lastItem != null)
                 {
                     item.lastitemname = lastItem.ItemName;

@@ -16,7 +16,6 @@
 }
 
 .nfooter {
-    width: 80%;
     text-align: center;
     margin: 5% 0px 1% 0px;
 }
@@ -36,14 +35,19 @@ a {
 
 .c-setting {
     position: fixed;
-    margin-left: 15%;
     background: #FAF9F3;
-    z-index: 9999;
-    width: 40%;
+    z-index: 99;
+    width: 450px;
+    height:250px;
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
     letter-spacing: 0em;
     border-radius: 10px;
     box-shadow: 0 5px 20px rgba(0,0,0,.2);
-    display:none;
+    display: none;
 }
 
     .c-setting table {

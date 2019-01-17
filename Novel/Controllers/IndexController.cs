@@ -58,7 +58,7 @@ namespace Novel.Controllers
         private void SetReadBookCookies(ContentViewModel contentViewModel)
         {
             var bookReadViewModels = GetCookies("historyreadbooks", new List<BookReadViewModel>());
-            var shelves = GetCookies("bookshelves", new List<MyBookShelfViewModel>());
+           
             var r = bookReadViewModels.FirstOrDefault(m => m.bookid == contentViewModel.BookId);
             if (r == null)
             {
@@ -75,15 +75,18 @@ namespace Novel.Controllers
             {
                 bookReadViewModels.Remove(r);
             }
+            r.currentreaditemid = contentViewModel.ItemId;
+            r.lastreadtime = DateTime.Now;
+            bookReadViewModels.Insert(0, r);
+
+            var shelves = GetCookies("bookshelves", new List<MyBookShelfViewModel>());
             var mybook = shelves.FirstOrDefault(p => p.bookid == contentViewModel.BookId);
             if (mybook != null)
             {
                 mybook.currentreaditemid = contentViewModel.BookId;
                 SetCookies("bookshelves", JsonUtil.SerializeObject(shelves), SAVECOOKIESTIME);
             }
-            bookReadViewModels.Insert(0, r);
-            r.currentreaditemid = contentViewModel.ItemId;
-            r.lastreadtime = DateTime.Now;
+      
             SetCookies("historyreadbooks", JsonUtil.SerializeObject(bookReadViewModels), SAVECOOKIESTIME);
         }
 

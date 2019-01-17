@@ -76,6 +76,10 @@ namespace Novel.Mobile.Controllers
             {
                 historyBooks.Remove(r);
             }
+            r.currentreaditemid = contentViewModel.ItemId;
+            r.lastreadtime = DateTime.Now;
+            historyBooks.Insert(0, r);
+
             var mybook = myShelves.FirstOrDefault(p => p.bookid == contentViewModel.BookId);
             if (mybook != null)
             {
@@ -83,11 +87,6 @@ namespace Novel.Mobile.Controllers
                 mybook.lastreadtime = DateTime.Now;
                 SetCookies("bookshelves", JsonUtil.SerializeObject(myShelves), SAVECOOKIESTIME);
             }
-            
-            r.currentreaditemid = contentViewModel.ItemId;
-            r.lastreadtime = DateTime.Now;
-            historyBooks.Insert(0, r);
-            
             SetCookies("historyreadbooks", JsonUtil.SerializeObject(historyBooks), SAVECOOKIESTIME);
         }
 
