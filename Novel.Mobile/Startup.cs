@@ -50,7 +50,7 @@ namespace Novel.Mobile
                     options.SerializerSettings.ContractResolver = new DefaultContractResolver();
                     //忽略循环引用
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                }); ;
+                });
             services.AddDbContext<BookContext>(options => options.UseSqlServer(StringCommon.ConnectionString));
             services.AddRouting(options => options.LowercaseUrls = true);
         }

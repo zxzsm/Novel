@@ -1,0 +1,117 @@
+﻿.pure-table {
+    font-size: 14px;
+}
+
+    .pure-table td a {
+        padding: 5px;
+        margin-left: 10px;
+    }
+
+.sa, .sa:hover {
+    background-color: red;
+    color: white;
+}
+
+.img {
+    height: 180px;
+}
+
+.bookinfo {
+    width: 500px;
+}
+
+.bookinfo-intro {
+    padding: 0em 1em !important;
+}
+
+    .bookinfo-intro p {
+        height: 48px;
+        overflow: hidden;
+        line-height: 24px;
+    }
+
+.title {
+    margin-left: 0px !important;
+    padding: 0px !important;
+}
+
+.pagination {
+    letter-spacing: 0em;
+    list-style: none outside none;
+    font-size: 14px;
+    position: relative;
+    margin-left: 30%;
+}
+
+    .pagination li {
+        list-style-type: none;
+        float: left;
+        padding: 8px;
+    }
+
+        .pagination li a {
+            padding: 8px;
+        }
+
+.pselectd {
+    background-color: red;
+}
+
+    .pselectd a {
+        color: white;
+    }
+
+        .pselectd a:link {
+            background-color: yellow;
+            border: 0px solid white;
+        }
+
+.book-layout {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    width: 95%;
+    margin: 1em;
+    -webkit-transition: padding-left .15s;
+    transition: padding-left .15s;
+}
+
+.book-cover {
+    font-size: 0;
+    float: left;
+    width: 10%;
+    margin-right: .5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,.3);
+    margin-left: 0;
+    border-radius: 7px;
+}
+
+.book-cell {
+    overflow: hidden;
+}
+
+.book-title {
+    line-height: 1.4;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin: 0;
+}
+
+.book-desc {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    font-size: .875rem;
+    line-height: 1.125rem;
+    overflow: hidden;
+    color: #969ba3;
+    word-break: break-all;
+    margin: 0.5em 0;
+    height: 5em;
+}
+
+.book-meta {
+    font-size: .75rem;
+    overflow: hidden;
+}

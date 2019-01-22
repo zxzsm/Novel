@@ -10,85 +10,13 @@
 <script src="~/js/paginate.js"></script>
 <link href="~/css/jquery.mloading.css" rel="stylesheet" />
 <script src="~/js/jquery.mloading.js"></script>
-<style>
-    .pure-table {
-        font-size: 14px;
-    }
+<link href="~/css/search.css" rel="stylesheet" />
 
-        .pure-table td a {
-            padding: 5px;
-            margin-left: 10px;
-        }
-
-    .sa, .sa:hover {
-        background-color: red;
-        color: white;
-    }
-
-    .img {
-        height: 180px;
-    }
-
-    .bookinfo {
-        width: 500px;
-    }
-
-    .bookinfo-intro {
-        padding: 0em 1em !important;
-    }
-
-        .bookinfo-intro p {
-            height: 48px;
-            overflow: hidden;
-            line-height: 24px;
-        }
-
-    .title {
-        margin-left: 0px !important;
-        padding: 0px !important;
-    }
-
-    .pagination {
-        letter-spacing: 0em;
-        list-style: none outside none;
-        font-size: 14px;
-        position: relative;
-        margin-left: 30%;
-    }
-
-        .pagination li {
-            list-style-type: none;
-            float: left;
-            padding:8px;
-        }
-
-            .pagination li a {
-                padding: 8px;
-            }
-
-    .pselectd {
-        background-color: red;
-    }
-
-        .pselectd a {
-            color: white;
-           
-        }
-            .pselectd a:link {
-                background-color: yellow;
-                border: 0px solid white;
-            }
-
-</style>
-
-
-
-@using (Html.BeginForm("SearchKeyword", "Index", FormMethod.Post, new { @class = "pure-form" }))
-{
+<form class="pure-form" v-on:sumbit="">
     <div id="serarch">
         <div class="pure-g">
             <div class="pure-u-1" style="margin:20px 0px;text-align:center;">
-                <input id="keyword" name="keyword" type="text" v-model="keyword" style="width: 30%;">
+                <input id="keyword" name="keyword" type="text" v-model="keyword" style="width: 30%;" onsubmit="return false;">
                 <input type="button" class="pure-button button-error" value="搜索" v-on:click="search()" />
             </div>
 
@@ -136,39 +64,54 @@
 
             </div>
         </div>
-        <div class="pure-g fr btitle">
-            <div style="width:100%">
-                <table class="pure-table tbnb">
-                    <tr v-for="item in bookitems">
-                        <td>
-                            <a :href="geturl(item.bookId)" :title="item.bookName" :alt="item.bookName">
-                                <img v-bind:src="item.bookImage" class="img">
-                            </a>
-                        </td>
-                        <td>
-                            <table class="pure-table tbnb bookinfo">
-                                <tbody>
-                                    <tr>
-                                        <td> <a class="title" target="_blank" v-bind:href="geturl(item.bookId)">{{item.bookName}}</a></td>
-                                    </tr>
-                                    <tr>
-                                        <td> {{item.bookAuthor}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="bookinfo-intro" style="overflow:hidden"  v-html="item.bookSummary">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><a class="title" target="_blank" v-bind:href="geturl(item.bookId)">{{item.bookName}}</a></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-                        </td>
-
-                    </tr>
-                </table>
+        <div class="pure-g fr ">
+            <div class="pure-u-1-1 mtop" v-for="item in bookitems">
+                <a class="book-layout" v-bind:href="item.Url">
+                    <img class="pure-img book-cover" v-bind:src="item.BookImage" v-bind:alt="item.BookName">
+                    <div class="book-cell">
+                        <h4 class="book-title">{{item.BookName}}</h4>
+                        <p class="book-desc" v-html="item.BookSummary"></p>
+                        <div class="book-meta">
+                            <div class="book-meta1">
+                                <span class="book-author">
+                                    {{item.BookAuthor}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
             </div>
+            @*<div style="width:100%">
+                    <table class="pure-table tbnb">
+                        <tr v-for="item in bookitems">
+                            <td>
+                                <a :href="geturl(item.bookId)" :title="item.bookName" :alt="item.bookName">
+                                    <img v-bind:src="item.bookImage" class="img">
+                                </a>
+                            </td>
+                            <td>
+                                <table class="pure-table tbnb bookinfo">
+                                    <tbody>
+                                        <tr>
+                                            <td> <a class="title" target="_blank" v-bind:href="geturl(item.bookId)">{{item.bookName}}</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td> {{item.bookAuthor}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bookinfo-intro" style="overflow:hidden" v-html="item.bookSummary"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><a class="title" target="_blank" v-bind:href="geturl(item.bookId)">{{item.bookName}}</a></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </td>
+
+                        </tr>
+                    </table>
+                </div>*@
             <div style="width:100%;">
                 <paginate v-model="page"
                           :page-count="pageCount"
@@ -183,7 +126,9 @@
         </div>
 
     </div>
-    <script type="text/javascript">
+</form>
+
+<script type="text/javascript">
         $("#headsearch input").hide();
         $("#headsearch button").hide();
         @{
@@ -279,5 +224,4 @@
                     this.search();
                 }
             });
-    </script>
-}
+</script>

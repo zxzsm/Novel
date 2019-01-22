@@ -118,11 +118,7 @@ namespace Novel.Controllers
             {
                 var d = service.GetBooks(viewModel);
                 ViewData["BookCategory"] = service.GetCategories();
-                using (BookContext bookContext = new BookContext())
-                {
-                    var t = bookContext.Book.ToList();
-                    ViewData["Books"] = t;
-                }
+                ViewData["Title"] = viewModel.keyword+"_搜索_书客来";
                 return View(viewModel);
             }
         }

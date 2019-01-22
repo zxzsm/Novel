@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.WebEncoders;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Novel.Entity;
 using Novel.Entity.Models;
 using System.Text.Encodings.Web;
@@ -37,7 +39,12 @@ namespace Novel
             });
 
             StringCommon.ConnectionString = Configuration.GetConnectionString("BookDatabase");
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddJsonOptions(options =>
+            {
+                options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                //忽略循环引用
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            }); ;
             services.AddDbContext<BookContext>(options => options.UseSqlServer(StringCommon.ConnectionString));
             services.AddRouting(options => options.LowercaseUrls = true);
         }
@@ -74,7 +81,7 @@ namespace Novel
                             name: "default",
                             template: "/",
                             defaults: new { controller = "Index", action = "Index" });
-           
+
                 routes.MapRoute(
                             name: "default3",
                             template: "{action}/",
