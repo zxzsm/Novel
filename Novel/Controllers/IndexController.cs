@@ -133,7 +133,14 @@ namespace Novel.Controllers
                     currentPageIndex = d.PageIndex,
                     viewModel.pageSize,
                     pageCount = d.TotalPages,
-                    items = d.ToList()
+                    items = d.Select(m => new
+                    {
+                        m.BookName,
+                        m.BookSummary,
+                        m.BookAuthor,
+                        m.BookImage,
+                        Url = Url.Action("Novel", new { id = m.BookId })
+                    }).ToList()
                 });
             }
         }

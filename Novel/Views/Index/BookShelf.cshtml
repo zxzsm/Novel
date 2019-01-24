@@ -8,6 +8,11 @@
     .cr {
         color: orangered;
     }
+    .pure-table tr td a {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 </style>
 <div class="pure-g btitle fr">
     <div class="pure-u-1">
@@ -39,34 +44,26 @@
 
 
     <div class="pure-u-1">
-        <h2 class="content-subhead">我的阅读历史</h2>
+        <h2 class="content-subhead">最近阅读</h2>
         <table class="pure-table  pure-table-bordered" style="width:100%;">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th><input type="checkbox" /></th>
                     <th style="width:28%;">书名</th>
                     <th style="width:30%">阅读进度</th>
                     <th style="width:30%">最近更新章节</th>
-                    <th>操作</th>
                 </tr>
             </thead>
             <tbody>
-                @{ int count = 1; }
                 @foreach (var item in ViewData["HistoryReadBooks"] as List<BookReadViewModel>)
                 {
 
                     <tr>
-                        <td>@count</td>
-                        <td><a href="@item.bookurl"> @item.bookname</a>(<small class="cr">@item.bookauthor</small> ) </td>
+                        <td><input type="checkbox" data-id="@item.bookid" /></td>
+                        <td><a href="@item.bookurl"> @item.bookname</a>(<small class="cr">@item.bookauthor</small>) </td>
                         <td><a href="@item.currentitemurl">@item.currentitemname</a></td>
                         <td><a href="@item.lasitemurl">@item.lastitemname</a></td>
-                        <td>
-                            <a href="@item.currentitemurl">
-                                <small>删除</small>
-                            </a>
-                        </td>
                     </tr>
-                    count = count + 1;
                 }
             </tbody>
         </table>

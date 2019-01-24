@@ -26,6 +26,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{4FD5014C-3DA9-4BB6-ABBB-A097F375641E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Novel.WebApi", "Novel.WebApi\Novel.WebApi.csproj", "{4887C05B-4D30-4625-AC38-B8C0D78244D6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +58,10 @@ Global
 		{5E8272C4-1DE0-419A-8D90-80F2EB95CFB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E8272C4-1DE0-419A-8D90-80F2EB95CFB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E8272C4-1DE0-419A-8D90-80F2EB95CFB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4887C05B-4D30-4625-AC38-B8C0D78244D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4887C05B-4D30-4625-AC38-B8C0D78244D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4887C05B-4D30-4625-AC38-B8C0D78244D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4887C05B-4D30-4625-AC38-B8C0D78244D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,6 +73,7 @@ Global
 		{DDF8A0BF-D669-4718-B011-A72E2CB17D4C} = {896963DC-F0AE-4966-957A-51B269265011}
 		{8B8101D3-9467-48B2-BCFA-90EAA7E600F5} = {896963DC-F0AE-4966-957A-51B269265011}
 		{5E8272C4-1DE0-419A-8D90-80F2EB95CFB8} = {663FC1BF-DE8A-499D-8191-22E8FB204857}
+		{4887C05B-4D30-4625-AC38-B8C0D78244D6} = {663FC1BF-DE8A-499D-8191-22E8FB204857}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BA5D93D8-588F-4E13-A649-6E19CB220E0A}
