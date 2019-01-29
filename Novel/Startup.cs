@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -6,10 +7,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.WebEncoders;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Novel.Entity;
 using Novel.Entity.Models;
+using System.Linq;
+using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
 
@@ -47,6 +51,8 @@ namespace Novel
             }); ;
             services.AddDbContext<BookContext>(options => options.UseSqlServer(StringCommon.ConnectionString));
             services.AddRouting(options => options.LowercaseUrls = true);
+
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

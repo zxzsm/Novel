@@ -86,12 +86,6 @@ namespace Novel.Service
             }
             return bookIndex;
         }
-        public BookIndex UpdateBookIndex(int bookid, bool isRead = false, bool isSaveChange = true)
-        {
-            var book = Db.Book.FirstOrDefault(m => m.BookId == bookid);
-            return UpdateBookIndex(book, isRead, isSaveChange);
-        }
-
         public NovelViewModel GetBook(int id)
         {
             NovelViewModel bookViewModel = new NovelViewModel();
@@ -133,12 +127,10 @@ namespace Novel.Service
             var t = LoadPagerEntities(viewModel.pageSize, viewModel.pageIndex, m => m.UpdateTime, out total, out totalPage, whereLambda: func, isAsc: false);
             return new PaginatedList<Book>(t.ToList(), total, viewModel.pageIndex, viewModel.pageSize);
         }
-
         public List<BookCategory> GetCategories()
         {
             return Db.BookCategory.ToList();
         }
-
         public BookThumbsup AddBookThumbsup(int bookid, string ip, DateTime date, int? userid = null)
         {
             BookThumbsup bookThumbsup = GetBookThumbsup(bookid, ip, date, userid);
