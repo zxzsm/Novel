@@ -7,6 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="baidu-site-verification" content="BU3OVsxuwT" />
     <title>@ViewData["Title"]</title>
+    <meta name="robots" content="all">
+    <meta name="googlebot" content="all">
+    <meta name="baiduspider" content="all">
+    <meta name="keywords" content="@Html.Raw(ViewData["keywords"])" />
+    <meta name="description" content="@Html.Raw(ViewData["description"])">
     <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0" />
     <link href="~/css/index.css?v=@CssVersion.M_Index_Ver" rel="stylesheet" />
     <link href="~/css/common.css?v=@CssVersion.M_Common_Ver" rel="stylesheet" />

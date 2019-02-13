@@ -25,6 +25,8 @@ namespace Novel.Mobile.Controllers
             {
                 var t = bookContext.Book.ToList();
                 viewModel.Fantasy = t;
+                ViewData["keywords"] = "小说,小说网,免费小说网,书客来手机版,玄幻奇幻小说,武侠小说,都市言情小说,仙侠小说,历史军事小说,网游竞技小说";
+                ViewData["description"] = "小说阅读,精彩小说尽在书客来手机版.书客来提供玄幻奇幻小说,武侠小说,都市言情小说,仙侠小说,历史军事小说,网游竞技小说,首发小说,最新章节免费";
             }
             return View(viewModel);
         }
@@ -37,6 +39,8 @@ namespace Novel.Mobile.Controllers
                 NovelViewModel bookViewModel = service.GetBook(id);
                 bookViewModel.IsThumbsup = service.GetBookThumbsup(id, GetClientIp(), DateTime.Today) != null;
                 ViewData["Title"] = bookViewModel.Book.BookName;
+                ViewData["keywords"] = bookViewModel.Book.BookName + "," + bookViewModel.Book.BookName + "最新章节," + bookViewModel.Book.BookAuthor;
+                ViewData["description"] = bookViewModel.Book.BookName + "最新章节由网友提供," + bookViewModel.Book.BookName + "情节跌宕起伏、扣人心弦,是一本情节与文笔俱佳的网络小说,书客来手机版免费提供" + bookViewModel.Book.BookName + "凉爽干净的文字章节在线阅读。";
                 return View(bookViewModel);
             }
 
@@ -49,6 +53,8 @@ namespace Novel.Mobile.Controllers
             {
                 contentViewModel = service.GetContentViewModel(itemId);
                 ViewData["Title"] = contentViewModel.ItemName + "_" + contentViewModel.BookName;
+                ViewData["keywords"] = contentViewModel.BookName + "," + contentViewModel.ItemName;
+                ViewData["description"] = "书客来手机版提供了小说" + contentViewModel.BookName + "凉爽干净的文字章节:" + contentViewModel.ItemName + "在线阅读。";
                 ViewData["ReadSetting"] = GetCookies("rsetting", new BookReadSettingViewModel());
             }
 

@@ -28,7 +28,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{4FD5
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Novel.WebApi", "Novel.WebApi\Novel.WebApi.csproj", "{4887C05B-4D30-4625-AC38-B8C0D78244D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Novel.OAuth", "Novel.OAuth\Novel.OAuth.csproj", "{E4B88D3D-CF61-45CB-9F37-509B165DB2E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Novel.OAuth", "Novel.OAuth\Novel.OAuth.csproj", "{E4B88D3D-CF61-45CB-9F37-509B165DB2E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Novel.Test", "Novel.Test\Novel.Test.csproj", "{F9E11D7E-57D0-4EB1-8C51-0061BE35F0D9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -68,6 +70,10 @@ Global
 		{E4B88D3D-CF61-45CB-9F37-509B165DB2E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4B88D3D-CF61-45CB-9F37-509B165DB2E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4B88D3D-CF61-45CB-9F37-509B165DB2E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9E11D7E-57D0-4EB1-8C51-0061BE35F0D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9E11D7E-57D0-4EB1-8C51-0061BE35F0D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9E11D7E-57D0-4EB1-8C51-0061BE35F0D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9E11D7E-57D0-4EB1-8C51-0061BE35F0D9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -81,6 +87,7 @@ Global
 		{5E8272C4-1DE0-419A-8D90-80F2EB95CFB8} = {663FC1BF-DE8A-499D-8191-22E8FB204857}
 		{4887C05B-4D30-4625-AC38-B8C0D78244D6} = {663FC1BF-DE8A-499D-8191-22E8FB204857}
 		{E4B88D3D-CF61-45CB-9F37-509B165DB2E9} = {663FC1BF-DE8A-499D-8191-22E8FB204857}
+		{F9E11D7E-57D0-4EB1-8C51-0061BE35F0D9} = {663FC1BF-DE8A-499D-8191-22E8FB204857}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BA5D93D8-588F-4E13-A649-6E19CB220E0A}
