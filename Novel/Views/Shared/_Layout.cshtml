@@ -4,10 +4,20 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
+    <meta name="baidu-site-verification" content="BU3OVsxuwT" />
     <link href="~/lib/pure-min.css" rel="stylesheet" />
     <link href="~/css/site.css" rel="stylesheet" />
     <link href="~/css/index.css" rel="stylesheet" />
     <script src="~/js/jquery.min.js"></script>
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?ab5fde24d9f48c331919f54e4c2b3e8f";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
     <style>
 
 
@@ -86,7 +96,7 @@
             </div>
 
         </div>
-        <div class="body" >
+        <div class="body">
             @RenderBody()
         </div>
     </div>
@@ -95,5 +105,7 @@
         </div>
     </footer>
     @RenderSection("Scripts", required: false)
+
 </body>
+
 </html>
