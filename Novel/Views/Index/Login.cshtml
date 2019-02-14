@@ -1,0 +1,15 @@
+﻿
+@{
+    ViewData["Title"] = "登陆";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<form class="pure-form" method="post" action="@Url.Action("Sign")">
+    <fieldset>
+        <legend>登陆</legend>
+
+        <input type="text" placeholder="用户名" name="UserName">
+        <input type="password" placeholder="密码" name="UserPassword">
+        <button type="submit" class="pure-button pure-button-primary">登录</button>
+    </fieldset>
+</form>
+

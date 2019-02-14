@@ -1,0 +1,5 @@
+﻿# robots.txt 
+User-agent: *
+Disallow: 
+Sitemap: http://www.shukelai.com
+Sitemap: https://www.shukelai.com

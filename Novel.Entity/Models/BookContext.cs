@@ -24,6 +24,8 @@ namespace Novel.Entity.Models
         public virtual DbSet<BookShelf> BookShelf { get; set; }
         public virtual DbSet<BookThumbsup> BookThumbsup { get; set; }
         public virtual DbSet<Sign> Sign { get; set; }
+        public virtual DbSet<TaskToDo> TaskToDo { get; set; }
+        public virtual DbSet<User> User { get; set; }
         public virtual DbSet<UserInfo> UserInfo { get; set; }
         public virtual DbSet<UserRead> UserRead { get; set; }
 
@@ -37,7 +39,7 @@ namespace Novel.Entity.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("ProductVersion", "2.2.0-rtm-35687");
+            modelBuilder.HasAnnotation("ProductVersion", "2.2.1-servicing-10028");
 
             modelBuilder.Entity<Book>(entity =>
             {
@@ -104,13 +106,7 @@ namespace Novel.Entity.Models
 
             modelBuilder.Entity<BookItem>(entity =>
             {
-                entity.HasKey(e => e.ItemId)
-                    .HasName("PK_BookItem_1")
-                    .ForSqlServerIsClustered(false);
-
-                entity.HasIndex(e => e.ItemId)
-                    .HasName("PK_BookItem")
-                    .ForSqlServerIsClustered();
+                entity.HasKey(e => e.ItemId);
 
                 entity.HasIndex(e => new { e.ItemId, e.ItemName, e.BookId })
                     .HasName("IX_BookItem");
@@ -170,6 +166,24 @@ namespace Novel.Entity.Models
                 entity.Property(e => e.CreateTime).HasColumnType("datetime");
 
                 entity.Property(e => e.UpdateTime).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<TaskToDo>(entity =>
+            {
+                entity.Property(e => e.EndTime).HasColumnType("datetime");
+
+                entity.Property(e => e.Remark).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.Property(e => e.UserName)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.UserPassword)
+                    .IsRequired()
+                    .HasMaxLength(50);
             });
 
             modelBuilder.Entity<UserInfo>(entity =>

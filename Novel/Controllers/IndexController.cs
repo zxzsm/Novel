@@ -2,7 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using System.Web;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Novel.Entity;
 using Novel.Entity.Models;
@@ -95,7 +100,7 @@ namespace Novel.Controllers
 
             SetCookies("historyreadbooks", JsonUtil.SerializeObject(bookReadViewModels), SAVECOOKIESTIME);
         }
-
+        [Authorize]
         public IActionResult BookShelf()
         {
             var t = GetCookies("historyreadbooks", new List<BookReadViewModel>());
@@ -152,5 +157,30 @@ namespace Novel.Controllers
         }
 
 
+        public IActionResult Login()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Sign(User user)
+        {
+            var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+            //可以放用户唯一标识。 然后再BaseController中使用User.Identity.Name获取， 再查询数据库/缓存获取用户信息
+            identity.AddClaim(new Claim(ClaimTypes.Name, user.UserName)); //取值 User.Identity.Name
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme, 
+                new ClaimsPrincipal(identity),new AuthenticationProperties {
+                    IsPersistent = true,
+                    ExpiresUtc=DateTime.UtcNow.AddMinutes(10),
+                    AllowRefresh=true
+                });
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("Index");
+        }
     }
 }

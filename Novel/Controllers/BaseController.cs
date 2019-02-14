@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Novel.Utilities;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,8 @@ namespace Novel.Controllers
     {
 
         protected const int SAVECOOKIESTIME = 1051200;
+
+
         /// <summary>
         /// 设置本地cookie
         /// </summary>
@@ -29,7 +32,7 @@ namespace Novel.Controllers
         /// 删除指定的cookie
         /// </summary>
         /// <param name="key">键</param>
-        protected void DeleteCookies(string key)
+        protected virtual void DeleteCookies(string key)
         {
             HttpContext.Response.Cookies.Delete(key);
         }
@@ -39,7 +42,7 @@ namespace Novel.Controllers
         /// </summary>
         /// <param name="key">键</param>
         /// <returns>返回对应的值</returns>
-        protected string GetCookies(string key)
+        protected virtual string GetCookies(string key)
         {
             HttpContext.Request.Cookies.TryGetValue(key, out string value);
             if (string.IsNullOrEmpty(value))
@@ -47,7 +50,7 @@ namespace Novel.Controllers
             return value;
         }
 
-        protected T GetCookies<T>(string key, T t = default(T)) where T : class
+        protected virtual T GetCookies<T>(string key, T t = default(T)) where T : class
         {
             string v = GetCookies(key);
             if (string.IsNullOrWhiteSpace(v))

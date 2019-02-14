@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +14,12 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Novel.Entity;
 using Novel.Entity.Models;
+using System;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
+using System.Threading.Tasks;
 
 namespace Novel
 {
@@ -42,37 +46,51 @@ namespace Novel
                 options.TextEncoderSettings = new TextEncoderSettings(UnicodeRanges.BasicLatin, UnicodeRanges.CjkUnifiedIdeographs);
             });
 
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+              .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options => {
+                  //options.AccessDeniedPath = "/Account/Forbidden/";
+                  options.LoginPath = "/login.html";
+              });
+
             StringCommon.ConnectionString = Configuration.GetConnectionString("BookDatabase");
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddJsonOptions(options =>
+            services.AddMvc(
+                options =>
+                {
+                    options.Filters.Add(typeof(GlobalExceptionFilter)); // an instance
+                }
+                ).SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddJsonOptions(options =>
             {
                 options.SerializerSettings.ContractResolver = new DefaultContractResolver();
                 //忽略循环引用
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            }); ;
+            });
             services.AddDbContext<BookContext>(options => options.UseSqlServer(StringCommon.ConnectionString));
             services.AddRouting(options => options.LowercaseUrls = true);
-
-           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
+            Func<StatusCodeContext, Task> handler = async context =>
             {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
-
+                var response = context.HttpContext.Response;
+                if (response.StatusCode < 500)
+                {
+                    await response.WriteAsync($"Client error ({response.StatusCode})");
+                }
+                else
+                {
+                    await response.WriteAsync($"Server error ({response.StatusCode})");
+                }   
+            };
+            app.UseStatusCodePages(handler);
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-
+            //注意app.UseAuthentication方法一定要放在下面的app.UseMvc方法前面，否者后面就算调用HttpContext.SignInAsync进行用户登录后，使用
+            //HttpContext.User还是会显示用户没有登录，并且HttpContext.User.Claims读取不到登录用户的任何信息。
+            //这说明Asp.Net OWIN框架中MiddleWare的调用顺序会对系统功能产生很大的影响，各个MiddleWare的调用顺序一定不能反
+            app.UseAuthentication();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -90,7 +108,7 @@ namespace Novel
 
                 routes.MapRoute(
                             name: "default3",
-                            template: "{action}/",
+                            template: "{action}.html/",
                             defaults: new { controller = "Index" });
                 routes.MapRoute(
                            name: "default4",
