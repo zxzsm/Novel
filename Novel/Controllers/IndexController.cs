@@ -157,26 +157,38 @@ namespace Novel.Controllers
         }
 
 
-        public IActionResult Login()
+        public IActionResult Login(string ReturnUrl = "")
         {
+            ViewData["returnurl"] = ReturnUrl;
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Sign(User user)
+        public async Task<JsonResult> Sign(UserInfo user, string returnurl = "")
         {
-            var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
-            //可以放用户唯一标识。 然后再BaseController中使用User.Identity.Name获取， 再查询数据库/缓存获取用户信息
-            identity.AddClaim(new Claim(ClaimTypes.Name, user.UserName)); //取值 User.Identity.Name
-            await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme, 
-                new ClaimsPrincipal(identity),new AuthenticationProperties {
-                    IsPersistent = true,
-                    ExpiresUtc=DateTime.UtcNow.AddMinutes(10),
-                    AllowRefresh=true
-                });
-            return RedirectToAction("Index");
-        }
+            user.UserName = user.UserName.AsTrim();
+            user.Uesrpwd = user.Uesrpwd.AsTrim();
+            using (UserService userService = new UserService())
+            {
+                var t = userService.GetUserInfo(user);
+                if (t == null)
+                {
+                    return Json(ApiResult<object>.Fail("用户未找到"));
+                }
+                var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+                //可以放用户唯一标识。 然后再BaseController中使用User.Identity.Name获取， 再查询数据库/缓存获取用户信息
+                identity.AddClaim(new Claim(ClaimTypes.Name, user.UserName)); //取值 User.Identity.Name
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(identity), new AuthenticationProperties
+                    {
+                        IsPersistent = true,
+                        ExpiresUtc = DateTime.UtcNow.AddMonths(1),
+                        AllowRefresh = true
+                    });
+                return Json(ApiResult<UserInfo>.OK(user));
+            }
 
+        }
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();

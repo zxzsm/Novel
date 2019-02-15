@@ -10,5 +10,10 @@ namespace Novel.Utilities
         {
             return string.IsNullOrWhiteSpace(value);
         }
+
+        public static string AsTrim(this string value)
+        {
+            return string.IsNullOrWhiteSpace(value) ? "" : value.Trim();
+        }
     }
 }

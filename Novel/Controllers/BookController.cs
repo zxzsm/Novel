@@ -28,7 +28,7 @@ namespace Novel.Controllers
                 shelves.Add(new MyBookShelfViewModel { bookid = id });
                 SetCookies("bookshelves", JsonUtil.SerializeObject(shelves), SAVECOOKIESTIME);
             }
-            return Json(new ApiResult { data = shelves, status = 0, msg = "请求成功" });
+            return Json(new ApiResult<List<MyBookShelfViewModel>> { data = shelves, status = 0, msg = "请求成功" });
         }
         [HttpPost]
         public JsonResult Thumbsup(int id)
@@ -38,7 +38,7 @@ namespace Novel.Controllers
                 var ip = GetClientIp();
                 service.AddBookThumbsup(id, ip, DateTime.Today, null);
             }
-            return Json(new ApiResult { data = "", status = 0, msg = "请求成功" });
+            return Json(new ApiResult<string> { data = "", status = 0, msg = "请求成功" });
         }
     }
 }

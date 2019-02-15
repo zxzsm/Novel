@@ -25,7 +25,6 @@ namespace Novel.Entity.Models
         public virtual DbSet<BookThumbsup> BookThumbsup { get; set; }
         public virtual DbSet<Sign> Sign { get; set; }
         public virtual DbSet<TaskToDo> TaskToDo { get; set; }
-        public virtual DbSet<User> User { get; set; }
         public virtual DbSet<UserInfo> UserInfo { get; set; }
         public virtual DbSet<UserRead> UserRead { get; set; }
 
@@ -175,16 +174,6 @@ namespace Novel.Entity.Models
                 entity.Property(e => e.Remark).HasMaxLength(50);
             });
 
-            modelBuilder.Entity<User>(entity =>
-            {
-                entity.Property(e => e.UserName)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.UserPassword)
-                    .IsRequired()
-                    .HasMaxLength(50);
-            });
 
             modelBuilder.Entity<UserInfo>(entity =>
             {
