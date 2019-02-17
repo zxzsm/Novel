@@ -57,12 +57,38 @@
         .container a {
             transition: color .5s,background-color .5s
         }
+        .ui {
+            float: right;
+            margin-top: 5px;
+            font-size: 15px;
+        }
     </style>
 </head>
 <body>
     <div class="background"></div>
     <div class="container " id="container">
+        <div class="pure-g">
+            <div class="pure-u-4-5">
 
+            </div>
+            <div class="pure-u-1-5 ">
+                <div class="ui">
+                    &nbsp;
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        <a href="@Url.Action("Login","Index")" style="color:red;">请登陆</a>
+                        <a href="@Url.Action("Register","Index")">注册</a>
+                    }
+                    else
+                    {
+                        <a href="/">@User.Identity.Name</a> 
+                        <a href="@Url.Action("Logout","Index")">退出</a>
+                    }
+                </div>
+               
+
+            </div>
+        </div>
         <div class="pure-g" id="header">
             <div class="pure-u-1-5">
                 <a class="logo" href="/">

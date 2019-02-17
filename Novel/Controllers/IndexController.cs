@@ -154,6 +154,10 @@ namespace Novel.Controllers
         }
         public IActionResult Login(string ReturnUrl = "")
         {
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index");
+            }
             ViewData["returnurl"] = ReturnUrl;
             return View();
         }
@@ -164,10 +168,14 @@ namespace Novel.Controllers
             user.Uesrpwd = user.Uesrpwd.AsTrim();
             using (UserService userService = new UserService())
             {
-                var t = userService.GetUserInfo(user);
+                var t = userService.GetUserInfo(user.UserName);
                 if (t == null)
                 {
                     return Json(ApiResult<object>.Fail("用户未找到"));
+                }
+                if (t!=null&&t.Uesrpwd!=user.Uesrpwd)
+                {
+                    return Json(ApiResult<object>.Fail("密码错误"));
                 }
                 var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
                 //可以放用户唯一标识。 然后再BaseController中使用User.Identity.Name获取， 再查询数据库/缓存获取用户信息
@@ -182,7 +190,42 @@ namespace Novel.Controllers
                     });
                 return Json(ApiResult<UserInfo>.OK(user));
             }
-
+        }
+        public IActionResult Register()
+        {
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index");
+            }
+            return View();
+        }
+        [HttpPost]
+        public JsonResult RegisterUser(UserInfo info)
+        {
+            UserInfo t = null;
+            using (UserService userService = new UserService())
+            {
+                if (!userService.CheckUserInfo(info, true, true))
+                {
+                    return Json(ApiResult<object>.Fail("请检查信息是否填写完整"));
+                }
+                t = userService.GetUserInfo(info);
+                if (t != null)
+                {
+                    return Json(ApiResult<object>.Fail("该用户名已注册"));
+                }
+                t = userService.GetUserInfo(info.UserMoblie.AsTrim(), info.UserEmail.AsTrim());
+                if (t != null)
+                {
+                    return Json(ApiResult<object>.Fail("该手机号码和邮箱已注册"));
+                }
+                t = userService.AddUserInfo(info);
+            }
+            if (t == null)
+            {
+                return Json(ApiResult<object>.Fail("注册失败"));
+            }
+            return Json(ApiResult<object>.OK(null));
         }
         public async Task<IActionResult> Logout()
         {

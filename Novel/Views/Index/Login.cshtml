@@ -3,14 +3,47 @@
     ViewData["Title"] = "登陆";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<form class="pure-form" method="post" action="@Url.Action("Sign")">
-    <fieldset>
-        <legend>登陆</legend>
+<div style="width:40%;margin:5% auto 0 auto;">
+    <div class="pure-form pure-form-stacked">
+        <fieldset>
+            <div class="pure-g">
+                <div class="pure-u-1">
+                    <label for="username">用户名</label>
+                    <input id="username" class="pure-u-1" type="text">
+                </div>
 
-        <input type="text" placeholder="用户名" name="UserName">
-        <input type="password" placeholder="密码" name="Uesrpwd">
-        <button type="submit" class="pure-button pure-button-primary">登录</button>
-        <input hidden="hidden" name="returnurl" value="@ViewData["returnurl"]" />
-    </fieldset>
-</form>
+                <div class="pure-u-1">
+                    <label for="pwd">密码</label>
+                    <input id="pwd" class="pure-u-1" type="password">
+                </div>
+                <div class="pure-u-1 " style="text-align:center;margin-top:20px">
+                    <input type="button" class="pure-button pure-button-primary" value="提交" onclick="login()" />
+                </div>
+            </div>
+        </fieldset>
+        <input hidden="hidden" name="returnurl" id="returnurl" value="@ViewData["returnurl"]" />
+    </div>
+</div>
+<script>
+        function login() {
 
+        url = "@Url.Action("Sign", "Index")";
+        $.post(url, {
+            UserName: $("#username").val().trim(),
+            Uesrpwd: $("#pwd").val().trim(),
+        }, function (rs) {
+            if (rs && rs.status == 0) {
+                if (!$("#returnurl").val()) {
+                    window.location.href = "/"
+                }
+                else {
+                    window.location.href = $("#returnurl").val();
+                }
+            }
+            else {
+                alert(rs.msg);
+            }
+        });
+        }
+</script>
+    </div>

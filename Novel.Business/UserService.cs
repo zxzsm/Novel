@@ -15,6 +15,12 @@ namespace Novel.Service
             userInfo.Uesrpwd = userInfo.Uesrpwd.Trim();
             return Db.UserInfo.FirstOrDefault(m => m.UserName == userInfo.UserName && m.Uesrpwd == userInfo.Uesrpwd);
         }
+        public UserInfo GetUserInfo(string userName)
+        {
+            userName = userName.AsTrim();
+            return Db.UserInfo.FirstOrDefault(m => m.UserName == userName);
+        }
+
         public bool CheckUserInfo(UserInfo userInfo, bool needCheckEmail = false, bool needCheckMobile = false)
         {
             if (userInfo.UserName.IsEmpty())
@@ -34,6 +40,11 @@ namespace Novel.Service
                 return false;
             }
             return true;
+        }
+
+        public UserInfo GetUserInfo(string phone, string email)
+        {
+            return Db.UserInfo.FirstOrDefault(m => m.UserMoblie == phone && m.UserEmail == email);
         }
         public UserInfo AddUserInfo(UserInfo userInfo)
         {
