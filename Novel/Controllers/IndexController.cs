@@ -34,7 +34,6 @@ namespace Novel.Controllers
             ViewData["description"] = "小说阅读,精彩小说尽在书客来.书客来提供玄幻奇幻小说,武侠小说,都市言情小说,仙侠小说,历史军事小说,网游竞技小说,首发小说,最新章节免费";
             return View(viewModel);
         }
-
         public IActionResult Novel(int id)
         {
             ViewData["bookshelves"] = GetCookies("bookshelves", new List<MyBookShelfViewModel>());
@@ -49,7 +48,6 @@ namespace Novel.Controllers
             }
 
         }
-
         public IActionResult Content(int itemId)
         {
             ContentViewModel contentViewModel = null;
@@ -65,7 +63,6 @@ namespace Novel.Controllers
             SetReadBookCookies(contentViewModel);
             return View(contentViewModel);
         }
-
         private void SetReadBookCookies(ContentViewModel contentViewModel)
         {
             var bookReadViewModels = GetCookies("historyreadbooks", new List<BookReadViewModel>());
@@ -155,8 +152,6 @@ namespace Novel.Controllers
                 });
             }
         }
-
-
         public IActionResult Login(string ReturnUrl = "")
         {
             ViewData["returnurl"] = ReturnUrl;
