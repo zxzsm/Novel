@@ -15,5 +15,10 @@ namespace Novel.Utilities
         {
             return string.IsNullOrWhiteSpace(value) ? "" : value.Trim();
         }
+
+        public static int AsInt(this string value, int defaultValue = 0)
+        {
+            int m = 0; if (int.TryParse(value, out m)) return m; return defaultValue;
+        }
     }
 }

@@ -69,5 +69,31 @@ namespace Novel.Service
             Db.UserInfo.Add(userInfo);
             return Db.SaveChanges() > 0 ? userInfo : null;
         }
+
+        public BookShelf GetBookShelf(int userId, int bookId)
+        {
+            return Db.BookShelf.FirstOrDefault(m => m.UserId == userId && m.BookId == bookId);
+        }
+
+        public BookShelf AddBookShelf(int userId, int bookId)
+        {
+            if (userId<=0)
+            {
+                return null;
+            }
+            var m = GetBookShelf(userId, bookId);
+            if (m == null)
+            {
+                m = new BookShelf
+                {
+                    BookId = bookId,
+                    UserId = userId,
+                    CreateTime = DateTime.Now,
+                    UpdateTime = DateTime.Now
+                };
+                Db.BookShelf.Add(m);
+            }
+            return Db.SaveChanges() > 0 ? m : null;
+        }
     }
 }

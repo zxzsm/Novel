@@ -15,11 +15,9 @@ namespace Novel.Service
         {
             return Db.Book.Take(8).ToList();
         }
-        public ContentViewModel GetContentViewModel(int itemId)
+        public ContentViewModel GetContentViewModel(int itemId, int userId = 0)
         {
             ContentViewModel contentViewModel = null;
-
-
             var bookItem = Db.BookItem.FirstOrDefault(m => m.ItemId == itemId);
             var book = Db.Book.FirstOrDefault(m => m.BookId == bookItem.BookId);
             if (book == null)
@@ -50,6 +48,33 @@ namespace Novel.Service
             {
                 contentViewModel.NextId = nextItem.ItemId;
                 contentViewModel.NextName = nextItem.ItemName;
+            }
+
+            if (userId > 0)
+            {
+                var readBookHistories = Db.UserReadBookHistory.Where(m => m.UserId == userId).OrderBy(m=>m.UpdateTime);
+                var h = readBookHistories.FirstOrDefault(m => m.BookId == book.BookId);
+                if (h == null)
+                {
+                    if (readBookHistories.Count() > 20)
+                    {
+                        Db.UserReadBookHistory.Remove(readBookHistories.First());
+                    }
+                    h = new UserReadBookHistory { BookId=book.BookId,ReadItemId=itemId,CreateTime= now, UpdateTime= now, UserId=userId };
+                    Db.UserReadBookHistory.Add(h);
+                }
+                else
+                {
+                    h.ReadItemId = itemId;
+                    h.UpdateTime = now;
+                }
+
+                var shelf = Db.BookShelf.FirstOrDefault(m => m.UserId == userId && m.BookId == book.BookId);
+                if (shelf!=null)
+                {
+                    shelf.ReadItemId = itemId;
+                    shelf.UpdateTime = now;
+                }
             }
             Db.SaveChanges();
             return contentViewModel;
@@ -174,7 +199,7 @@ namespace Novel.Service
             {
                 return;
             }
-           // var q = Db.BookItem.Where(m => readViewModels.Any(p => p.bookid == m.BookId));
+            // var q = Db.BookItem.Where(m => readViewModels.Any(p => p.bookid == m.BookId));
             foreach (var item in readViewModels)
             {
                 var book = Db.Book.FirstOrDefault(m => m.BookId == item.bookid);

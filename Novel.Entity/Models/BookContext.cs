@@ -27,6 +27,7 @@ namespace Novel.Entity.Models
         public virtual DbSet<TaskToDo> TaskToDo { get; set; }
         public virtual DbSet<UserInfo> UserInfo { get; set; }
         public virtual DbSet<UserRead> UserRead { get; set; }
+        public virtual DbSet<UserReadBookHistory> UserReadBookHistory { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -174,7 +175,6 @@ namespace Novel.Entity.Models
                 entity.Property(e => e.Remark).HasMaxLength(50);
             });
 
-
             modelBuilder.Entity<UserInfo>(entity =>
             {
                 entity.HasKey(e => e.UserId);
@@ -203,6 +203,15 @@ namespace Novel.Entity.Models
                 entity.Property(e => e.CreateTime).HasColumnType("datetime");
 
                 entity.Property(e => e.UserId).ValueGeneratedOnAdd();
+            });
+
+            modelBuilder.Entity<UserReadBookHistory>(entity =>
+            {
+                entity.Property(e => e.CreateTime)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.UpdateTime).HasColumnType("datetime");
             });
         }
     }

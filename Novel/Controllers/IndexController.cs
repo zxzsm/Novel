@@ -36,16 +36,33 @@ namespace Novel.Controllers
         }
         public IActionResult Novel(int id)
         {
-            ViewData["bookshelves"] = GetCookies("bookshelves", new List<MyBookShelfViewModel>());
+            ViewData["isshelf"] = false;
+            int userId = 0;
+            if (User.Identity.IsAuthenticated && HttpContext.User.Claims.Any(m => m.Type == ClaimTypes.PrimarySid))
+            {
+                userId = HttpContext.User.Claims.First(m => m.Type == ClaimTypes.PrimarySid).Value.AsInt();
+            }
+            NovelViewModel bookViewModel = null;
             using (BookService service = new BookService())
             {
-                NovelViewModel bookViewModel = service.GetBook(id);
+                bookViewModel = service.GetBook(id);
                 bookViewModel.IsThumbsup = service.GetBookThumbsup(id, GetClientIp(), DateTime.Today) != null;
+
                 ViewData["Title"] = bookViewModel.Book.BookName;
                 ViewData["keywords"] = bookViewModel.Book.BookName + "," + bookViewModel.Book.BookName + "最新章节," + bookViewModel.Book.BookAuthor;
                 ViewData["description"] = bookViewModel.Book.BookName + "最新章节由网友提供," + bookViewModel.Book.BookName + "情节跌宕起伏、扣人心弦,是一本情节与文笔俱佳的网络小说,书客来免费提供" + bookViewModel.Book.BookName + "凉爽干净的文字章节在线阅读。";
-                return View(bookViewModel);
             }
+            if (userId > 0)
+            {
+                using (UserService userService = new UserService())
+                {
+                    var t = userService.GetBookShelf(userId, bookViewModel.Book.BookId);
+                    ViewData["isshelf"] = t != null;
+                }
+            }
+
+
+            return View(bookViewModel);
 
         }
         public IActionResult Content(int itemId)
@@ -53,50 +70,22 @@ namespace Novel.Controllers
             ContentViewModel contentViewModel = null;
             using (BookService service = new BookService())
             {
-                contentViewModel = service.GetContentViewModel(itemId);
+                int userId = 0;
+                if (User.Identity.IsAuthenticated && HttpContext.User.Claims.Any(m => m.Type == ClaimTypes.PrimarySid))
+                {
+                    userId = HttpContext.User.Claims.First(m => m.Type == ClaimTypes.PrimarySid).Value.AsInt();
+                }
+                contentViewModel = service.GetContentViewModel(itemId, userId);
                 ViewData["Title"] = contentViewModel.BookName + "-" + contentViewModel.ItemName;
                 ViewData["keywords"] = contentViewModel.BookName + "," + contentViewModel.ItemName;
                 ViewData["description"] = "书客来提供了小说" + contentViewModel.BookName + "凉爽干净的文字章节:" + contentViewModel.ItemName + "在线阅读。";
                 ViewData["ReadSetting"] = GetCookies("rsetting", new BookReadSettingViewModel());
             }
 
-            SetReadBookCookies(contentViewModel);
+
             return View(contentViewModel);
         }
-        private void SetReadBookCookies(ContentViewModel contentViewModel)
-        {
-            var bookReadViewModels = GetCookies("historyreadbooks", new List<BookReadViewModel>());
 
-            var r = bookReadViewModels.FirstOrDefault(m => m.bookid == contentViewModel.BookId);
-            if (r == null)
-            {
-                if (bookReadViewModels.Count > 20)
-                {
-                    bookReadViewModels.Remove(bookReadViewModels.Last());
-                }
-                r = new BookReadViewModel
-                {
-                    bookid = contentViewModel.BookId,
-                };
-            }
-            else
-            {
-                bookReadViewModels.Remove(r);
-            }
-            r.currentreaditemid = contentViewModel.ItemId;
-            r.lastreadtime = DateTime.Now;
-            bookReadViewModels.Insert(0, r);
-
-            var shelves = GetCookies("bookshelves", new List<MyBookShelfViewModel>());
-            var mybook = shelves.FirstOrDefault(p => p.bookid == contentViewModel.BookId);
-            if (mybook != null)
-            {
-                mybook.currentreaditemid = contentViewModel.BookId;
-                SetCookies("bookshelves", JsonUtil.SerializeObject(shelves), SAVECOOKIESTIME);
-            }
-
-            SetCookies("historyreadbooks", JsonUtil.SerializeObject(bookReadViewModels), SAVECOOKIESTIME);
-        }
         [Authorize]
         public IActionResult BookShelf()
         {
@@ -173,13 +162,14 @@ namespace Novel.Controllers
                 {
                     return Json(ApiResult<object>.Fail("用户未找到"));
                 }
-                if (t!=null&&t.Uesrpwd!=user.Uesrpwd)
+                if (t != null && t.Uesrpwd != user.Uesrpwd)
                 {
                     return Json(ApiResult<object>.Fail("密码错误"));
                 }
                 var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
                 //可以放用户唯一标识。 然后再BaseController中使用User.Identity.Name获取， 再查询数据库/缓存获取用户信息
-                identity.AddClaim(new Claim(ClaimTypes.Name, user.UserName)); //取值 User.Identity.Name
+                identity.AddClaim(new Claim(ClaimTypes.Name, t.UserName)); //取值 User.Identity.Name
+                identity.AddClaim(new Claim(ClaimTypes.PrimarySid, t.UserId.ToString()));
                 await HttpContext.SignInAsync(
                     CookieAuthenticationDefaults.AuthenticationScheme,
                     new ClaimsPrincipal(identity), new AuthenticationProperties

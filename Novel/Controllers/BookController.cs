@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Novel.Entity;
@@ -22,13 +23,21 @@ namespace Novel.Controllers
         [HttpPost]
         public JsonResult BookShelf(int id)
         {
-            List<MyBookShelfViewModel> shelves = GetCookies("bookshelves", new List<MyBookShelfViewModel>());
-            if (!shelves.Any(p => p.bookid == id))
+
+            if (!User.Identity.IsAuthenticated)
             {
-                shelves.Add(new MyBookShelfViewModel { bookid = id });
-                SetCookies("bookshelves", JsonUtil.SerializeObject(shelves), SAVECOOKIESTIME);
+                return Json(ApiResult<string>.Fail("请先登陆"));
             }
-            return Json(new ApiResult<List<MyBookShelfViewModel>> { data = shelves, status = 0, msg = "请求成功" });
+            int userId = 0;
+            if (HttpContext.User.Claims.Any(m => m.Type == ClaimTypes.PrimarySid))
+            {
+                userId = HttpContext.User.Claims.First(m => m.Type == ClaimTypes.PrimarySid).Value.AsInt();
+            }
+            using (UserService userService = new UserService())
+            {
+                userService.AddBookShelf(userId, id);
+            }
+            return Json(new ApiResult<List<MyBookShelfViewModel>> { data = null, status = 0, msg = "请求成功" });
         }
         [HttpPost]
         public JsonResult Thumbsup(int id)

@@ -72,8 +72,7 @@
                 <tr>
                     <td colspan="2">
                         @{
-                            var bookshelves = ViewData["bookshelves"] as List<MyBookShelfViewModel>;
-                            bool isaddbook = bookshelves.Any(m => m.bookid == Model.Book.BookId);
+                            bool isaddbook = (bool)ViewData["isshelf"];
                             string txt = isaddbook ? "已入书架" : "加入书架";
                             string attclass = isaddbook ? "ca bg-gray" : "ca";
 
@@ -137,6 +136,9 @@
                 $('#bookshelf').unbind("click");
                 $("#bookshelf").html("已入书架")
                 $("#bookshelf").addClass("bg-gray");
+            }
+            else {
+                alert(rs.msg);
             }
             });
     });
