@@ -46,20 +46,24 @@ namespace Novel.Service
 
         //分页
         public IQueryable<T> LoadPagerEntities<S>(int pageSize, int pageIndex, Func<T, S> orderByLambda, out int total, out int totalPage,
-            Func<T, bool> whereLambda = null, bool isAsc = true)
+            bool isAsc = true, params Func<T, bool>[] whereLambda)
         {
             if (pageIndex <= 0)
             {
                 pageIndex = 1;
             }
-            var tempData = Db.Set<T>().AsEnumerable();
-            if (whereLambda != null)
+            var tempData = Db.Set<T>().AsQueryable();
+            if (whereLambda != null && whereLambda.Length > 0)
             {
-                tempData = tempData.Where(whereLambda);
+                foreach (var item in whereLambda)
+                {
+                    Expression<Func<T, bool>> expression = t => item(t);
+                    tempData = tempData.Where(expression);
+                }
             }
             total = tempData.Count();
             totalPage = (int)Math.Ceiling(total / (double)pageSize);
-            if (pageIndex>totalPage)
+            if (pageIndex > totalPage)
             {
                 pageIndex = 1;
             }
@@ -78,6 +82,7 @@ namespace Novel.Service
             }
             return tempData.AsQueryable();
         }
+
 
         public void Dispose()
         {

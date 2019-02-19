@@ -1,0 +1,69 @@
+﻿@model Novel.Entity.ViewModels.SearchViewModel
+@using Novel.Entity.Models
+@{
+    ViewData["Title"] = "Book";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int index = 1;
+}
+
+<div class="row" id="content">
+    <div class="col-md-12">
+        <form class="form-inline" id="headsearch" style="margin:25px 0px 0px 0px;">
+            @Html.TextBoxFor(m=>m.keyword,new { @class="form-control", style="width:40%;"})
+            @{ 
+                List<SelectListItem> selectListItems = new List<SelectListItem> {
+                    new SelectListItem
+                    {
+                        Text="全部",
+                        Value=""
+                    },
+                    new SelectListItem
+                    {
+                        Text="有分类",
+                        Value="false"
+                    },new SelectListItem
+                    {
+                        Text="无分类",
+                        Value="true"
+                    }
+                };
+
+            }
+            @Html.DropDownListFor(m=>m.nocategory, selectListItems, new {@class="form-control" })
+            @*<select class="form-control" name="nocategory">
+                <option value="">全部</option>
+                <option value="false">有分类</option>
+                <option value="true">无分类</option>
+            </select>*@
+            <button type="submit" class="btn btn-primary">搜索</button>
+
+        </form>
+    </div>
+    <div class="col-md-12" style="margin:25px 0px 0px 0px;">
+        <table class="table  table-bordered">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>书名</th>
+                    <th>作者</th>
+                    <th>图片</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ViewData["Fantasy"] as List<Book>)
+                {
+                    <tr>
+                        <td>@index</td>
+                        <td>@item.BookName</td>
+                        <td>@item.BookAuthor</td>
+                        <td><img class="img" src="@item.BookImage" width="100"></td>
+                        <td><a href="@Url.Action("EditBook","Book",new {bookId=item.BookId })" class="btn btn-default" target="_blank">修改</a></td>
+                    </tr>
+                    index++;
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>

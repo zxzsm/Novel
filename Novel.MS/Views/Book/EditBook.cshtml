@@ -1,0 +1,83 @@
+﻿@model Novel.Entity.Models.NovelViewModel
+@using Novel.Entity.Models
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = Model.Book.BookName;
+}
+
+
+<div class="row">
+    <div class="col-md-12">
+        <form method="post" action="@Url.Action("SaveBook","Book")" onsubmit="return save()">
+            <div class="form-group">
+                <label for="bookname">书名</label>
+                <input type="text" class="form-control" id="BookName" name="BookName" placeholder="书名" value="@Model.Book.BookName">
+            </div>
+            <div class="form-group">
+                <img class="img-rounded" src="@Model.Book.BookImage" id="BookImage" name="BookImage" />
+            </div>
+            <div class="form-group">
+                <label for="BookAuthor">作者</label>
+                <input type="text" class="form-control" id="BookAuthor" name="BookAuthor" value="@Model.Book.BookAuthor">
+            </div>
+            <div class="form-group">
+                <label for="BookSummary">简介</label>
+                <textarea class="form-control" rows="5" id="BookSummary" name="BookSummary">@Model.Book.BookSummary</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="type">分类</label>
+                @{
+                    var cies = ViewData["BookCategories"] as List<BookCategory>;
+                    var selectCategory = ViewData["category"] as BookCategory;
+                }
+                @if (cies != null)
+                {
+                    foreach (var item in cies)
+                    {
+                        if (selectCategory != null && selectCategory.CategoryName == item.CategoryName)
+                        {
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" value="@item.CategoryId" name="category"
+                                           checked="checked">
+                                    @item.CategoryName
+                                </label>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" value="@item.CategoryId" name="category">
+                                    @item.CategoryName
+                                </label>
+                            </div>
+                        }
+
+                    }
+                }
+            </div>
+            <button type="submit" class="btn btn-default" >提交</button>
+            <input type="hidden" value="@Model.Book.BookId"  name="BookId" />
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function save() {
+        if ($.trim($("#BookName").val()) == "") {
+            alert("书名未填写")
+            return false;
+        }
+        if ($.trim($("#BookAuthor").val()) == "") {
+            alert("作者未填写")
+            return false;
+        }
+        if ($('input[name="category"]:checked').val() == "") {
+            alert("分类未选择");
+            return false;
+        }
+        return true;
+    }
+</script>

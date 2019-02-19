@@ -140,21 +140,108 @@ namespace Novel.Service
             {
                 viewModel.pageSize = 10;
             }
-
+            List<Func<Book, bool>> funcs = new List<Func<Book, bool>>();
             Func<Book, bool> func = null;
             if (!viewModel.keyword.IsEmpty())
             {
                 func = m => m.BookName.Contains(viewModel.keyword);
+                funcs.Add(func);
             }
-
             int total = 0;
             int totalPage = 0;
-            var t = LoadPagerEntities(viewModel.pageSize, viewModel.pageIndex, m => m.UpdateTime, out total, out totalPage, whereLambda: func, isAsc: false);
+            var t = LoadPagerEntities(viewModel.pageSize, viewModel.pageIndex, m => m.UpdateTime, out total, out totalPage,   isAsc: false,whereLambda: funcs.ToArray());
             return new PaginatedList<Book>(t.ToList(), total, viewModel.pageIndex, viewModel.pageSize);
+        }
+
+        public List<Book> GetBooksByBack(SearchViewModel viewModel)
+        {
+            if (viewModel == null)
+            {
+                viewModel = new SearchViewModel
+                {
+                    pageSize = 10,
+                    pageIndex = 1,
+                };
+            }
+            if (viewModel.pageIndex == 0)
+            {
+                viewModel.pageIndex = 1;
+            }
+            if (viewModel.pageSize == 0)
+            {
+                viewModel.pageSize = 10;
+            }
+            var q = Db.Book.AsQueryable();
+         
+            if (!viewModel.keyword.IsEmpty())
+            {
+                q = q.Where(m => m.BookName.Contains(viewModel.keyword));
+            }
+            if (viewModel.nocategory.HasValue)
+            {
+                var relations = Db.BookGroupCategroyRelation.AsQueryable();
+                if (viewModel.nocategory.Value)
+                {
+                    q = q.Where( m => !relations.Any(p => p.BookId == m.BookId));
+                }
+                else
+                {
+                    q = q.Where( m => relations.Any(p => p.BookId == m.BookId));
+                }
+            }
+            return q.Take(10).ToList();
         }
         public List<BookCategory> GetCategories()
         {
             return Db.BookCategory.ToList();
+        }
+       
+
+        public BookCategory GetBookCategory(int bookId)
+        {
+            var relation = Db.BookGroupCategroyRelation.FirstOrDefault(m => m.BookId == bookId);
+            if (relation == null)
+            {
+                return null;
+            }
+            return Db.BookCategory.FirstOrDefault(m => m.CategoryId == relation.CategoryId);
+        }
+
+        public bool SaveBook(Book book, int categoryId)
+        {
+            if (book == null)
+            {
+                return false;
+            }
+            var t = Db.Book.FirstOrDefault(m => m.BookId == book.BookId);
+            if (t == null)
+            {
+                return false;
+            }
+            t.BookName = book.BookName.AsTrim();
+            t.BookAuthor = book.BookAuthor.AsTrim();
+            t.BookSummary = book.BookSummary;
+            var relation = Db.BookGroupCategroyRelation.FirstOrDefault(m => m.BookId == book.BookId);
+            if (relation == null)
+            {
+                relation = new BookGroupCategroyRelation
+                {
+                    BookId = book.BookId,
+                    CategoryId = categoryId,
+                    CreateTime = DateTime.Now,
+                    UpdateTime = DateTime.Now
+                };
+                Db.BookGroupCategroyRelation.Add(relation);
+            }
+            else
+            {
+                if (relation.CategoryId != categoryId)
+                {
+                    relation.CategoryId = categoryId;
+                    relation.UpdateTime = DateTime.Now;
+                }
+            }
+            return Db.SaveChanges() > 0;
         }
         public BookThumbsup AddBookThumbsup(int bookid, string ip, DateTime date, int? userid = null)
         {
@@ -208,7 +295,7 @@ namespace Novel.Service
                 }
                 item = new BookReadViewModel
                 {
-                    id=h.Id,
+                    id = h.Id,
                     bookid = book.BookId,
                     bookauthor = book.BookAuthor,
                     bookname = book.BookName,
@@ -282,6 +369,6 @@ namespace Novel.Service
             return new PaginatedList<MyBookShelfViewModel>(result, total, pageIndex, pageSize);
         }
 
-        
+
     }
 }
