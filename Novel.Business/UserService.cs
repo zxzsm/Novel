@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using Novel.Entity;
+using Novel.Entity.ViewModels;
 
 namespace Novel.Service
 {
@@ -70,30 +72,5 @@ namespace Novel.Service
             return Db.SaveChanges() > 0 ? userInfo : null;
         }
 
-        public BookShelf GetBookShelf(int userId, int bookId)
-        {
-            return Db.BookShelf.FirstOrDefault(m => m.UserId == userId && m.BookId == bookId);
-        }
-
-        public BookShelf AddBookShelf(int userId, int bookId)
-        {
-            if (userId<=0)
-            {
-                return null;
-            }
-            var m = GetBookShelf(userId, bookId);
-            if (m == null)
-            {
-                m = new BookShelf
-                {
-                    BookId = bookId,
-                    UserId = userId,
-                    CreateTime = DateTime.Now,
-                    UpdateTime = DateTime.Now
-                };
-                Db.BookShelf.Add(m);
-            }
-            return Db.SaveChanges() > 0 ? m : null;
-        }
     }
 }

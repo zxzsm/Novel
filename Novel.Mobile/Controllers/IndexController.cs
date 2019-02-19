@@ -103,7 +103,7 @@ namespace Novel.Mobile.Controllers
             PaginatedList<MyBookShelfViewModel> shelfViewModels = null;
             using (BookService bookService = new BookService())
             {
-                bookService.GetReadBookHistory(t);
+                bookService.GetReadBookHistory(UserId);
                 shelfViewModels = bookService.GetBookShlef(shelves, 1, 20);
 
             }

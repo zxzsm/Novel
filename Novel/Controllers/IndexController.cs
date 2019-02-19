@@ -37,11 +37,6 @@ namespace Novel.Controllers
         public IActionResult Novel(int id)
         {
             ViewData["isshelf"] = false;
-            int userId = 0;
-            if (User.Identity.IsAuthenticated && HttpContext.User.Claims.Any(m => m.Type == ClaimTypes.PrimarySid))
-            {
-                userId = HttpContext.User.Claims.First(m => m.Type == ClaimTypes.PrimarySid).Value.AsInt();
-            }
             NovelViewModel bookViewModel = null;
             using (BookService service = new BookService())
             {
@@ -52,16 +47,14 @@ namespace Novel.Controllers
                 ViewData["keywords"] = bookViewModel.Book.BookName + "," + bookViewModel.Book.BookName + "最新章节," + bookViewModel.Book.BookAuthor;
                 ViewData["description"] = bookViewModel.Book.BookName + "最新章节由网友提供," + bookViewModel.Book.BookName + "情节跌宕起伏、扣人心弦,是一本情节与文笔俱佳的网络小说,书客来免费提供" + bookViewModel.Book.BookName + "凉爽干净的文字章节在线阅读。";
             }
-            if (userId > 0)
+            if (UserId > 0)
             {
-                using (UserService userService = new UserService())
+                using (BookShelfService shelfService = new BookShelfService())
                 {
-                    var t = userService.GetBookShelf(userId, bookViewModel.Book.BookId);
+                    var t = shelfService.GetBookShelf(UserId, bookViewModel.Book.BookId);
                     ViewData["isshelf"] = t != null;
                 }
             }
-
-
             return View(bookViewModel);
 
         }
@@ -70,12 +63,7 @@ namespace Novel.Controllers
             ContentViewModel contentViewModel = null;
             using (BookService service = new BookService())
             {
-                int userId = 0;
-                if (User.Identity.IsAuthenticated && HttpContext.User.Claims.Any(m => m.Type == ClaimTypes.PrimarySid))
-                {
-                    userId = HttpContext.User.Claims.First(m => m.Type == ClaimTypes.PrimarySid).Value.AsInt();
-                }
-                contentViewModel = service.GetContentViewModel(itemId, userId);
+                contentViewModel = service.GetContentViewModel(itemId, UserId);
                 ViewData["Title"] = contentViewModel.BookName + "-" + contentViewModel.ItemName;
                 ViewData["keywords"] = contentViewModel.BookName + "," + contentViewModel.ItemName;
                 ViewData["description"] = "书客来提供了小说" + contentViewModel.BookName + "凉爽干净的文字章节:" + contentViewModel.ItemName + "在线阅读。";
@@ -89,14 +77,19 @@ namespace Novel.Controllers
         [Authorize]
         public IActionResult BookShelf()
         {
-            var t = GetCookies("historyreadbooks", new List<BookReadViewModel>());
-            var shelves = GetCookies("bookshelves", new List<MyBookShelfViewModel>());
+            List<BookReadViewModel> t = null;
+            PaginatedList<MyBookShelfViewModel> shelves =null;
             using (BookService bookService = new BookService())
             {
-                bookService.GetReadBookHistory(t);
-                ViewData["BookShelves"] = bookService.GetBookShlef(shelves, 1, 10);
+                t = bookService.GetReadBookHistory(UserId);
+               
             }
-            if (t.Count > 0)
+            using (BookShelfService shelfService=new BookShelfService())
+            {
+                shelves = shelfService.GetBookShlef(UserId, 1, int.MaxValue);
+            }
+         
+            if (t != null && t.Count > 0)
             {
                 foreach (var item in t)
                 {
@@ -105,6 +98,16 @@ namespace Novel.Controllers
                     item.bookurl = Url.Action("Novel", new { id = item.bookid });
                 }
             }
+            if (shelves!=null&&shelves.Count>0)
+            {
+                foreach (var item in shelves)
+                {
+                    item.lasitemurl = Url.Action("Content", new { itemId = item.lastitemid });
+                    item.currentitemurl = Url.Action("Content", new { itemId = item.currentreaditemid });
+                    item.bookurl = Url.Action("Novel", new { id = item.bookid });
+                }
+            }
+            ViewData["BookShelves"] = shelves;
             ViewData["HistoryReadBooks"] = t;
             return View();
         }

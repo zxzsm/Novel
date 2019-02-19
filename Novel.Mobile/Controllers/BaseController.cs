@@ -4,6 +4,7 @@ using Novel.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Novel.Mobile.Controllers
@@ -12,6 +13,21 @@ namespace Novel.Mobile.Controllers
     {
 
         protected const int SAVECOOKIESTIME = 1051200;
+
+        public int UserId
+        {
+            get
+            {
+                int userId = 0;
+                if (User.Identity.IsAuthenticated && HttpContext.User.Claims.Any(m => m.Type == ClaimTypes.PrimarySid))
+                {
+                    userId = HttpContext.User.Claims.First(m => m.Type == ClaimTypes.PrimarySid).Value.AsInt();
+                }
+                return userId;
+            }
+        }
+
+
         /// <summary>
         /// 设置本地cookie
         /// </summary>
@@ -29,7 +45,7 @@ namespace Novel.Mobile.Controllers
         /// 删除指定的cookie
         /// </summary>
         /// <param name="key">键</param>
-        protected void DeleteCookies(string key)
+        protected virtual void DeleteCookies(string key)
         {
             HttpContext.Response.Cookies.Delete(key);
         }
@@ -39,7 +55,7 @@ namespace Novel.Mobile.Controllers
         /// </summary>
         /// <param name="key">键</param>
         /// <returns>返回对应的值</returns>
-        protected string GetCookies(string key)
+        protected virtual string GetCookies(string key)
         {
             HttpContext.Request.Cookies.TryGetValue(key, out string value);
             if (string.IsNullOrEmpty(value))
@@ -47,7 +63,7 @@ namespace Novel.Mobile.Controllers
             return value;
         }
 
-        protected T GetCookies<T>(string key, T t = default(T)) where T : class
+        protected virtual T GetCookies<T>(string key, T t = default(T)) where T : class
         {
             string v = GetCookies(key);
             if (string.IsNullOrWhiteSpace(v))

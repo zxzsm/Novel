@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Novel.Entity;
 using Novel.Entity.ViewModels;
@@ -33,7 +34,7 @@ namespace Novel.Controllers
             {
                 userId = HttpContext.User.Claims.First(m => m.Type == ClaimTypes.PrimarySid).Value.AsInt();
             }
-            using (UserService userService = new UserService())
+            using (BookShelfService userService = new BookShelfService())
             {
                 userService.AddBookShelf(userId, id);
             }
@@ -49,5 +50,34 @@ namespace Novel.Controllers
             }
             return Json(new ApiResult<string> { data = "", status = 0, msg = "请求成功" });
         }
+        public JsonResult RemoveBookRecord(int id, int type)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Json(ApiResult<string>.Fail("请先登陆"));
+            }
+            using (BookShelfService bookShelfService = new BookShelfService())
+            {
+                switch (type)
+                {
+                    case 1:
+                        if (!bookShelfService.DeleteBookShelf(id))
+                        {
+                            return Json(ApiResult<string>.Fail("删除失败"));
+                        }
+                        break;
+                    case 2:
+                        if (!bookShelfService.DeleteUserReadHistory(id))
+                        {
+                            return Json(ApiResult<string>.Fail("删除失败"));
+                        }
+                        break;
+                    default:
+                        return Json(ApiResult<string>.Fail("请求有误"));
+                }
+            }
+            return Json(ApiResult<string>.OK(""));
+        }
+
     }
 }

@@ -5,6 +5,7 @@ using Novel.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Novel.Controllers
@@ -13,6 +14,19 @@ namespace Novel.Controllers
     {
 
         protected const int SAVECOOKIESTIME = 1051200;
+
+        public int UserId
+        {
+            get
+            {
+                int userId = 0;
+                if (User.Identity.IsAuthenticated && HttpContext.User.Claims.Any(m => m.Type == ClaimTypes.PrimarySid))
+                {
+                    userId = HttpContext.User.Claims.First(m => m.Type == ClaimTypes.PrimarySid).Value.AsInt();
+                }
+                return userId;
+            }
+        }
 
 
         /// <summary>

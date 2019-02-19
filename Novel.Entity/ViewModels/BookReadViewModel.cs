@@ -6,6 +6,7 @@ namespace Novel.Entity.ViewModels
 {
     public class BookReadViewModel
     {
+        public int id { get; set; }
         public int bookid { get; set; }
         public string bookurl { get; set; }
         public string bookauthor { get; set; }

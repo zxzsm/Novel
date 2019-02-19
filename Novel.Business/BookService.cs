@@ -52,7 +52,7 @@ namespace Novel.Service
 
             if (userId > 0)
             {
-                var readBookHistories = Db.UserReadBookHistory.Where(m => m.UserId == userId).OrderBy(m=>m.UpdateTime);
+                var readBookHistories = Db.UserReadBookHistory.Where(m => m.UserId == userId).OrderBy(m => m.UpdateTime);
                 var h = readBookHistories.FirstOrDefault(m => m.BookId == book.BookId);
                 if (h == null)
                 {
@@ -60,7 +60,7 @@ namespace Novel.Service
                     {
                         Db.UserReadBookHistory.Remove(readBookHistories.First());
                     }
-                    h = new UserReadBookHistory { BookId=book.BookId,ReadItemId=itemId,CreateTime= now, UpdateTime= now, UserId=userId };
+                    h = new UserReadBookHistory { BookId = book.BookId, ReadItemId = itemId, CreateTime = now, UpdateTime = now, UserId = userId };
                     Db.UserReadBookHistory.Add(h);
                 }
                 else
@@ -70,7 +70,7 @@ namespace Novel.Service
                 }
 
                 var shelf = Db.BookShelf.FirstOrDefault(m => m.UserId == userId && m.BookId == book.BookId);
-                if (shelf!=null)
+                if (shelf != null)
                 {
                     shelf.ReadItemId = itemId;
                     shelf.UpdateTime = now;
@@ -193,33 +193,40 @@ namespace Novel.Service
             return bookThumbsup;
         }
 
-        public void GetReadBookHistory(List<BookReadViewModel> readViewModels)
+        public List<BookReadViewModel> GetReadBookHistory(int userId)
         {
-            if (readViewModels == null && readViewModels.Count == 0)
-            {
-                return;
-            }
+            var hs = Db.UserReadBookHistory.Where(m => m.UserId == userId).OrderByDescending(m => m.UpdateTime);
+            List<BookReadViewModel> readViewModels = new List<BookReadViewModel>();
             // var q = Db.BookItem.Where(m => readViewModels.Any(p => p.bookid == m.BookId));
-            foreach (var item in readViewModels)
+            foreach (var h in hs)
             {
-                var book = Db.Book.FirstOrDefault(m => m.BookId == item.bookid);
-                if (book != null)
+                BookReadViewModel item = null;
+                var book = Db.Book.FirstOrDefault(m => m.BookId == h.BookId);
+                if (book == null)
                 {
-                    item.bookauthor = book.BookAuthor;
-                    item.bookname = book.BookName;
-                    item.bookimage = book.BookImage;
+                    continue;
                 }
-                if (item.currentreaditemid > 0)
+                item = new BookReadViewModel
                 {
-                    var currentItem = Db.BookItem.FirstOrDefault(m => m.ItemId == item.currentreaditemid);
+                    id=h.Id,
+                    bookid = book.BookId,
+                    bookauthor = book.BookAuthor,
+                    bookname = book.BookName,
+                    bookimage = book.BookImage,
+                    currentreaditemid = h.ReadItemId,
+                    lastreadtime = h.UpdateTime.AsDateTime(),
+                };
+                readViewModels.Add(item);
+                if (h.ReadItemId > 0)
+                {
+                    var currentItem = Db.BookItem.FirstOrDefault(m => m.ItemId == h.ReadItemId && m.BookId == h.BookId);
                     if (currentItem != null)
                     {
                         item.currentitemname = currentItem.ItemName;
-                        item.currentreaditemid = currentItem.ItemId;
                     }
                 }
-                var maxPri = Db.BookItem.Where(m => m.BookId == item.bookid).Max(m => m.Pri);
-                var lastItem = Db.BookItem.FirstOrDefault(m => m.BookId == item.bookid && m.Pri == maxPri);
+                var maxPri = Db.BookItem.Where(m => m.BookId == h.BookId).Max(m => m.Pri);
+                var lastItem = Db.BookItem.FirstOrDefault(m => m.BookId == h.BookId && m.Pri == maxPri);
                 if (lastItem != null)
                 {
                     item.lastitemname = lastItem.ItemName;
@@ -227,6 +234,7 @@ namespace Novel.Service
                     item.update = lastItem.UpdateTime.AsDateTime();
                 }
             }
+            return readViewModels;
         }
 
         public PaginatedList<MyBookShelfViewModel> GetBookShlef(List<MyBookShelfViewModel> shelevs, int pageIndex, int pageSize)
@@ -273,5 +281,7 @@ namespace Novel.Service
             }
             return new PaginatedList<MyBookShelfViewModel>(result, total, pageIndex, pageSize);
         }
+
+        
     }
 }
