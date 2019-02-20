@@ -230,13 +230,27 @@ namespace Novel.Controllers
             await HttpContext.SignOutAsync();
             return RedirectToAction("Index");
         }
-        public IActionResult Category(string category, int pageSize, int pageIndex)
+        public IActionResult Category(string category, int p)
         {
             var c = BookStore.Categories.FirstOrDefault(m => BookStore.GetPinYin(m.CategoryName) == category);
             if (c == null)
             {
                 return RedirectToAction("Index");
             }
+            using (BookService bookService = new BookService())
+            {
+               var  r = bookService.GetBooksByCategory(c.CategoryId, p, 20);
+
+                var pageOption = new MoPagerOption {
+                    CurrentPage=p,
+                    PageSize=20,
+                    RouteUrl=Url.Action("Category","Index"),
+                    TotalPage=r.TotalPages
+                };
+                ViewBag.PagerOption = pageOption;
+                ViewData["books"] = r;
+            }
+ 
             return View();
         }
     }
