@@ -30,8 +30,13 @@ namespace Novel.Controllers
                 var t = bookContext.Book.ToList();
                 viewModel.Fantasy = t;
             }
-            ViewData["keywords"] = "小说,小说网,免费小说网,书客来,玄幻奇幻小说,武侠小说,都市言情小说,仙侠小说,历史军事小说,网游竞技小说";
-            ViewData["description"] = "小说阅读,精彩小说尽在书客来.书客来提供玄幻奇幻小说,武侠小说,都市言情小说,仙侠小说,历史军事小说,网游竞技小说,首发小说,最新章节免费";
+
+            using (BookService bookService = new BookService())
+            {
+                viewModel.BookCategories = bookService.GetCategories();
+            }
+            ViewData["keywords"] = "书客来,小说,小说网,免费小说网,玄幻奇幻小说,武侠小说,都市言情小说,仙侠小说,历史军事小说,网游竞技小说";
+            ViewData["description"] = "书客来,小说阅读,精彩小说尽在书客来.书客来提供玄幻奇幻小说,武侠小说,都市言情小说,仙侠小说,历史军事小说,网游竞技小说,首发小说,最新章节免费";
             return View(viewModel);
         }
         public IActionResult Novel(int id)
@@ -78,17 +83,17 @@ namespace Novel.Controllers
         public IActionResult BookShelf()
         {
             List<BookReadViewModel> t = null;
-            PaginatedList<MyBookShelfViewModel> shelves =null;
+            PaginatedList<MyBookShelfViewModel> shelves = null;
             using (BookService bookService = new BookService())
             {
                 t = bookService.GetReadBookHistory(UserId);
-               
+
             }
-            using (BookShelfService shelfService=new BookShelfService())
+            using (BookShelfService shelfService = new BookShelfService())
             {
                 shelves = shelfService.GetBookShlef(UserId, 1, int.MaxValue);
             }
-         
+
             if (t != null && t.Count > 0)
             {
                 foreach (var item in t)
@@ -98,7 +103,7 @@ namespace Novel.Controllers
                     item.bookurl = Url.Action("Novel", new { id = item.bookid });
                 }
             }
-            if (shelves!=null&&shelves.Count>0)
+            if (shelves != null && shelves.Count > 0)
             {
                 foreach (var item in shelves)
                 {
@@ -224,6 +229,15 @@ namespace Novel.Controllers
         {
             await HttpContext.SignOutAsync();
             return RedirectToAction("Index");
+        }
+        public IActionResult Category(string category, int pageSize, int pageIndex)
+        {
+            var c = BookStore.Categories.FirstOrDefault(m => BookStore.GetPinYin(m.CategoryName) == category);
+            if (c == null)
+            {
+                return RedirectToAction("Index");
+            }
+            return View();
         }
     }
 }

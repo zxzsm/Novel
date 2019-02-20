@@ -47,17 +47,20 @@
                     <th>书名</th>
                     <th>作者</th>
                     <th>图片</th>
+                    <th>状态</th>
                     <th>操作</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in ViewData["Fantasy"] as List<Book>)
                 {
+                    string state = item.BookState.HasValue && item.BookState.Value == 1 ? "完结" : "连载中";
                     <tr>
                         <td>@index</td>
                         <td>@item.BookName</td>
                         <td>@item.BookAuthor</td>
                         <td><img class="img" src="@item.BookImage" width="100"></td>
+                        <td>@state</td>
                         <td><a href="@Url.Action("EditBook","Book",new {bookId=item.BookId })" class="btn btn-default" target="_blank">修改</a></td>
                     </tr>
                     index++;

@@ -12,5 +12,7 @@ namespace Novel.Entity.Models
         /// 玄幻奇幻
         /// </summary>
         public List<Book> Fantasy { get; set; }
+
+        public List<BookCategory> BookCategories { get; set; }
     }
 }

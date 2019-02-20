@@ -102,6 +102,10 @@ namespace Novel
                             template: "content/{itemId}.html",
                             defaults: new { controller = "Index", action = "Content" });
                 routes.MapRoute(
+                        name: "category",
+                        template: "/{action}/{category}.html",
+                        defaults: new { controller = "Index", action = "Category" });
+                routes.MapRoute(
                             name: "default",
                             template: "/",
                             defaults: new { controller = "Index", action = "Index" });
@@ -110,10 +114,12 @@ namespace Novel
                             name: "default3",
                             template: "{action}.html/",
                             defaults: new { controller = "Index" });
+               
                 routes.MapRoute(
                            name: "default4",
                            template: "{controller}/{action}",
                            defaults: new { controller = "Index" });
+               
             });
         }
     }
