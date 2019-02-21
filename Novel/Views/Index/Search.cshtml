@@ -10,9 +10,39 @@
 <script src="~/js/paginate.js"></script>
 <link href="~/css/jquery.mloading.css" rel="stylesheet" />
 <script src="~/js/jquery.mloading.js"></script>
+<link href="~/css/item.css" rel="stylesheet" />
 <link href="~/css/search.css" rel="stylesheet" />
+<style>
 
-<form class="pure-form" >
+    ul.pagination {
+        display: inline-block;
+        padding: 0;
+        margin: 0;
+    }
+
+        ul.pagination li {
+            display: inline;
+        }
+
+            ul.pagination li a {
+                color: black;
+                float: left;
+                padding: 8px 16px;
+                text-decoration: none;
+                border-radius: 5px;
+            }
+
+                ul.pagination li.active a {
+                    background-color: #4CAF50;
+                    color: white;
+                    border-radius: 5px;
+                }
+
+                ul.pagination li a:hover:not(.active) {
+                    background-color: #ddd;
+                }
+</style>
+<form class="pure-form">
     <div id="serarch">
         <div class="pure-g">
             <div class="pure-u-1" style="margin:20px 0px;text-align:center;">
@@ -112,15 +142,15 @@
                         </tr>
                     </table>
                 </div>*@
-            <div style="width:100%;">
+            <div style="width:100%;text-align:right;" class="pure-u-1-1">
                 <paginate v-model="page"
                           :page-count="pageCount"
                           :click-handler="clickNum"
-                          :prev-text="'上一页'"
-                          :next-text="'下一页'"
-                          :active-class="'pselectd'"
+                          :prev-text="'&laquo;'"
+                          :next-text="'&raquo;'"
+                          :active-class="'active'"
                           :container-class="'pagination'"
-                          :page-class="'page-item'">
+                          :page-class="''">
                 </paginate>
             </div>
         </div>

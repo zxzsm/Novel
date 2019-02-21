@@ -18,5 +18,7 @@ namespace Novel.Entity.Models
         public int NextId { get; set; }
         public string NextName { get; set; }
 
+        public BookCategory Category { get; set; }
+
     }
 }

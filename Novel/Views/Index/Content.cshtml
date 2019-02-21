@@ -1,6 +1,7 @@
 ﻿@using System.Web
 @model Novel.Entity.Models.ContentViewModel
 @using Novel.Entity.ViewModels
+@using Novel.Utilities
 @{
     //颜色集合
     var bgColors = new List<BGReadColorViewModel> {
@@ -46,7 +47,13 @@ new BGReadColorViewModel{ color="#E6E6E4",colortitle="灰色" }
 <div class="pure-g">
     <div class="pure-u-1 fr" style="margin-top:10px;box-shadow: 0 5px 20px rgba(0,0,0,.2);background-color:@bgColor" id="icontent">
         <div class="pure-u-1" style="padding:10px;">
-            <a href="@Url.Action("Novel",new { id=Model.BookId })" class="f14"> @Model.BookName</a>&nbsp;/<a href="@Url.Action("Content",new { itemId=Model.ItemId })" class="f14"> @Model.ItemName</a>
+            <a href="@Url.Action("Novel",new { id=Model.BookId })" class="f14"> @Model.BookName</a>&nbsp;/
+            @if (Model.Category != null)
+            {
+                <text><a class="f14" href="@Url.Action("Category","Index",new { category=Pinyin.GetPinYin(Model.Category.CategoryName)})">@Model.Category.CategoryName</a>&nbsp;/</text>
+            }
+
+            <a href="@Url.Action("Content",new { itemId=Model.ItemId })" class="f14"> @Model.ItemName</a>
         </div>
         <div class="pure-u-1" style="text-align:center;"><h2 class="content-subhead">@Model.ItemName</h2></div>
 

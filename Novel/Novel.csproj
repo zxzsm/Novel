@@ -29,4 +29,9 @@
     <ProjectReference Include="..\Novel.Utilities\Novel.Utilities.csproj" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <Folder Include="wwwroot\files\" />
+  </ItemGroup>
+
 </Project>

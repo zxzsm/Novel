@@ -1,5 +1,6 @@
 ﻿@using Novel.Entity.Models
 @using Novel.Entity.ViewModels
+@using Novel.Utilities
 @model NovelViewModel
 @{
     Layout = "_Layout";
@@ -30,8 +31,24 @@
         background-color: #e6e6e6;
         color: black !important;
     }
+
+    .title {
+        font-size: 14px;
+        padding: 5px 15px;
+    }
 </style>
-<div class="pure-g btitle fr">
+
+<div class="pure-g  fr">
+    <div class="pure-u-1 title">
+        <a href="//www.shukelai.com">首页</a>&nbsp;/
+        @if (Model.BookCategory != null)
+        {
+            <text>  <a href="@Url.Action("Category","Index",new { category=Pinyin.GetPinYin(Model.BookCategory.CategoryName)})">@Model.BookCategory.CategoryName</a>&nbsp;/</text>
+        }
+        @{string title = Model.Book.BookName + "最新章节";}
+        <span> @title</span>
+    </div>
+
     <div class="pure-u-1-4">
         <div class="novel">
             <img class="img" src="@Model.Book.BookImage">

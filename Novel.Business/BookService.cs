@@ -50,6 +50,12 @@ namespace Novel.Service
                 contentViewModel.NextName = nextItem.ItemName;
             }
 
+            var relation = Db.BookGroupCategroyRelation.FirstOrDefault(m => m.BookId == book.BookId);
+            if (relation != null)
+            {
+                contentViewModel.Category = GetCategories().FirstOrDefault(m => m.CategoryId == relation.CategoryId);
+            }
+
             if (userId > 0)
             {
                 var readBookHistories = Db.UserReadBookHistory.Where(m => m.UserId == userId).OrderBy(m => m.UpdateTime);
@@ -111,12 +117,17 @@ namespace Novel.Service
             }
             return bookIndex;
         }
-        public NovelViewModel GetBook(int id)
+        public NovelViewModel GetBookDetail(int id)
         {
             NovelViewModel bookViewModel = new NovelViewModel();
-
             var book = Db.Book.FirstOrDefault(m => m.BookId == id);
             var bookItems = Db.BookItem.Where(m => m.BookId == id).Select(m => new BookItemViewModel { ItemName = m.ItemName, ItemId = m.ItemId }).ToList();
+
+            var relation = Db.BookGroupCategroyRelation.FirstOrDefault(m => m.BookId == id);
+            if (relation != null)
+            {
+                bookViewModel.BookCategory = GetCategories().FirstOrDefault(m => m.CategoryId == relation.CategoryId);
+            }
             bookViewModel.Book = book;
             bookViewModel.Items = bookItems;
             return bookViewModel;
@@ -152,7 +163,6 @@ namespace Novel.Service
             var t = LoadPagerEntities(viewModel.pageSize, viewModel.pageIndex, m => m.UpdateTime, out total, out totalPage, isAsc: false, whereLambda: funcs.ToArray());
             return new PaginatedList<Book>(t.ToList(), total, viewModel.pageIndex, viewModel.pageSize);
         }
-
         public List<Book> GetBooksByBack(SearchViewModel viewModel)
         {
             if (viewModel == null)
@@ -193,10 +203,14 @@ namespace Novel.Service
         }
         public List<BookCategory> GetCategories()
         {
-            return Db.BookCategory.ToList();
+            var c = CacheHelper.CacheValue("Categories") as List<BookCategory>;
+            if (c == null)
+            {
+                c = Db.BookCategory.ToList();
+                CacheHelper.CacheInsertAddMinutes("Categories", c, 12 * 60);
+            }
+            return c;
         }
-
-
         public BookCategory GetBookCategory(int bookId)
         {
             var relation = Db.BookGroupCategroyRelation.FirstOrDefault(m => m.BookId == bookId);
@@ -206,7 +220,6 @@ namespace Novel.Service
             }
             return Db.BookCategory.FirstOrDefault(m => m.CategoryId == relation.CategoryId);
         }
-
         public bool SaveBook(Book book, int categoryId)
         {
             if (book == null)
@@ -264,7 +277,6 @@ namespace Novel.Service
             Db.SaveChanges();
             return bookThumbsup;
         }
-
         public BookThumbsup GetBookThumbsup(int bookid, string ip, DateTime date, int? userid = null)
         {
             var q = Db.BookThumbsup.Where(m => m.Date == date && m.BookId == bookid);
@@ -279,7 +291,6 @@ namespace Novel.Service
             }
             return bookThumbsup;
         }
-
         public List<BookReadViewModel> GetReadBookHistory(int userId)
         {
             var hs = Db.UserReadBookHistory.Where(m => m.UserId == userId).OrderByDescending(m => m.UpdateTime);
@@ -372,19 +383,26 @@ namespace Novel.Service
 
         public PaginatedList<Book> GetBooksByCategory(int categoryId, int pageIndex, int pageSize)
         {
-            if (pageIndex<=0)
+            if (pageIndex <= 0)
             {
                 pageIndex = 1;
             }
-            if (pageSize<=0)
+            if (pageSize <= 0)
             {
                 pageSize = 20;
             }
             var q = Db.Book.Join(Db.BookGroupCategroyRelation.Where(m => m.CategoryId == categoryId), m => m.BookId, m => m.BookId, (b, r) => b);
             int total = 0;
             int totalPage = 0;
-            var t = LoadPagerEntities(q,pageSize, pageIndex, m => m.ReadVolume, out total, out totalPage, false);
+            var t = LoadPagerEntities(q, pageSize, pageIndex, m => m.ReadVolume, out total, out totalPage, false);
             return new PaginatedList<Book>(t.ToList(), total, pageIndex, pageSize);
+        }
+
+
+        public List<Book> GetHotBooksByCategory(int categoryId, int pageSize)
+        {
+            var q = Db.Book.Join(Db.BookGroupCategroyRelation.Where(m => m.CategoryId == categoryId), m => m.BookId, m => m.BookId, (b, r) => b);
+            return q.OrderByDescending(m => m.ReadVolume).ThenByDescending(m => m.UpdateTime).Take(pageSize).ToList();
         }
 
     }

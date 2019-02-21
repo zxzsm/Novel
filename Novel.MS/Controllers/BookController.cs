@@ -16,7 +16,7 @@ namespace Novel.MS.Controllers
             NovelViewModel book = null;
             using (BookService bookService = new BookService())
             {
-                book = bookService.GetBook(bookId);
+                book = bookService.GetBookDetail(bookId);
                 if (book == null)
                 {
                     return RedirectToAction("Book", "Index");

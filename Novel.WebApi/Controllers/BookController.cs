@@ -53,7 +53,7 @@ namespace Novel.WebApi.Controllers
         {
             using (BookService service = new BookService())
             {
-                NovelViewModel bookViewModel = service.GetBook(id);
+                NovelViewModel bookViewModel = service.GetBookDetail(id);
                 bookViewModel.Book.BookImage = bookViewModel.Book.BookImage = IMAGEDOMAIN + bookViewModel.Book.BookImage;
                 return bookViewModel;
             }

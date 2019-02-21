@@ -64,6 +64,13 @@
             margin-top: 5px;
             font-size: 15px;
         }
+
+        .footer {
+            text-align: center;
+            color: #B2B2B2;
+            font-size: 13px;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -98,8 +105,8 @@
                 </a>
             </div>
             @*<div class="pure-u-3-8" style="padding-top:20px;color:#FD8000;">
-                    书当快意读易尽,客有可人期不来
-                </div>*@
+                书当快意读易尽,客有可人期不来
+            </div>*@
 
             <div class="pure-u-4-5">
                 @using (Html.BeginForm("Search", "Index", FormMethod.Get, new { style = "margin:25px 0px 0px 10%;", @class = "pure-form", id = "headsearch" }))
@@ -115,9 +122,9 @@
                 <div class="pure-menu pure-menu-horizontal">
                     <a href="/" class="pure-menu-heading pure-menu-link">首页</a>
                     <ul class="pure-menu-list">
-                        @foreach (var item in BookStore.Categories)
+                        @foreach (var item in BookCommon.Categories)
                         {
-                            <li class="pure-menu-item"><a href="@Url.Action("Category","Index",new { category=BookStore.GetPinYin(item.CategoryName)})" class="pure-menu-link">@item.CategoryName</a></li>
+                            <li class="pure-menu-item"><a href="@Url.Action("Category","Index",new { category=Pinyin.GetPinYin(item.CategoryName)})" class="pure-menu-link">@item.CategoryName</a></li>
                         }
                         <li class="pure-menu-item"><a href="#" class="pure-menu-link">连载中</a></li>
                         <li class="pure-menu-item"><a href="#" class="pure-menu-link">完结</a></li>
@@ -129,11 +136,17 @@
         <div class="body">
             @RenderBody()
         </div>
+        <footer class="border-top footer text-muted" id="footer">
+            <div class="footer fr" style="">
+                <p>
+                    本站所有小说为转载作品，转载至本站只是为了宣传本书让更多读者欣赏。
+                </p>
+                <p>Copyright © 2019 书客来 苏ICP备19006865号</p>
+                <p>如有需要请联系:zxzsm@163.com</p>
+            </div>
+        </footer>
     </div>
-    <footer class="border-top footer text-muted" id="footer">
-        <div class="container">
-        </div>
-    </footer>
+    
     @RenderSection("Scripts", required: false)
 
 </body>

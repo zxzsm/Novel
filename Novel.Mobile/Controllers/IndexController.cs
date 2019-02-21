@@ -36,7 +36,7 @@ namespace Novel.Mobile.Controllers
             ViewData["bookshelves"] = GetCookies("bookshelves", new List<MyBookShelfViewModel>());
             using (BookService service = new BookService())
             {
-                NovelViewModel bookViewModel = service.GetBook(id);
+                NovelViewModel bookViewModel = service.GetBookDetail(id);
                 bookViewModel.IsThumbsup = service.GetBookThumbsup(id, GetClientIp(), DateTime.Today) != null;
                 ViewData["Title"] = bookViewModel.Book.BookName;
                 ViewData["keywords"] = bookViewModel.Book.BookName + "," + bookViewModel.Book.BookName + "最新章节," + bookViewModel.Book.BookAuthor;

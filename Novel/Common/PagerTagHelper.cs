@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Novel
 {
     [HtmlTargetElement("categorypager")]
-    public class CategoryPagerTagHelper:TagHelper
+    public class CategoryPagerTagHelper : TagHelper
     {
         public MoPagerOption PagerOption { get; set; }
 
@@ -16,6 +16,7 @@ namespace Novel
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "div";
+            output.Attributes.Add("class", "pure-u-1-1 pdirection");
             if (PagerOption.PageSize <= 0) { PagerOption.PageSize = 15; }
             if (PagerOption.CurrentPage <= 0) { PagerOption.CurrentPage = 1; }
             if (PagerOption.TotalPage <= 0) { return; }
@@ -51,16 +52,33 @@ namespace Novel
                                                 PagerOption.RouteUrl,
                                                 PagerOption.CurrentPage - 1 <= 0 ? 1 : PagerOption.CurrentPage - 1);
 
-                        for (int i = 1; i <= PagerOption.TotalPage; i++)
+                        var start = PagerOption.CurrentPage - 2 <= 0 ? 1 : PagerOption.CurrentPage - 2;
+                        var end = PagerOption.CurrentPage + 2 > PagerOption.TotalPage ? PagerOption.TotalPage : PagerOption.CurrentPage + 2;
+
+                        if (start==1)
+                        {
+                            end = PagerOption.TotalPage > 5 ? 5 : PagerOption.TotalPage;
+                        }
+
+                        if (start != 1)
+                        {
+                            sbPage.AppendFormat("<li><a href='{0}'>1</a></li>", PagerOption.RouteUrl);
+                            sbPage.Append("<li><span>...</span></li>");
+                        }
+                        for (int i = start; i <= end; i++)
                         {
 
-                            sbPage.AppendFormat("       <li {1}><a href=\"{2}/?p={0}\">{0}</a></li>",
+                            sbPage.AppendFormat("       <li ><a {1} href=\"{2}/?p={0}\">{0}</a></li>",
                                 i,
                                 i == PagerOption.CurrentPage ? "class=\"active\"" : "",
                                 PagerOption.RouteUrl);
 
                         }
-
+                        if (end != PagerOption.TotalPage)
+                        {
+                            sbPage.Append("<li><span>...</span></li>");
+                            sbPage.AppendFormat("<li><a href='{0}?p={1}'>{1}</a></li>", PagerOption.RouteUrl, PagerOption.TotalPage);
+                        }
                         sbPage.Append("       <li>");
                         sbPage.AppendFormat("         <a href=\"{0}?p={1}\" aria-label=\"Next\">",
                                             PagerOption.RouteUrl,
@@ -113,5 +131,5 @@ namespace Novel
     }
 }
 
-   
+
 
