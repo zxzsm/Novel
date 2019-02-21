@@ -24,7 +24,7 @@ namespace Novel.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
-            IndexViewModel viewModel = new IndexViewModel();
+            
 
             ViewData["cdatas"] = BookCommon.IndexCategoryBooks;
 

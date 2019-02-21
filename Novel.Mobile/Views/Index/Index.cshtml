@@ -1,6 +1,8 @@
-﻿@model Novel.Entity.Models.IndexViewModel
+﻿@using Novel.Entity.Models
+
 @{
     ViewData["Title"] = "书客来-手机版-免费小说网站";
+    var c = ViewData["cdatas"] as Dictionary<BookCategory, List<Book>>;
 }
 
 <style>
@@ -11,33 +13,37 @@
     }
 </style>
 <div style="margin:1%;">
-    <div class="pure-g">
-        <div class="pure-u-1">
-            <h3 class="content-subhead">玄幻奇幻</h3>
+    @foreach (var categroy in c)
+    {
+        <div class="pure-g">
+            <div class="pure-u-1">
+                <h3 class="content-subhead">@categroy.Key.CategoryName</h3>
+            </div>
         </div>
-    </div>
-    <div class="pure-g">
-        @foreach (var item in Model.Fantasy)
-        {
-            <div class="pure-u-1-1 mtop">
-                <a class="book-layout" href="@Url.Action("Novel",new { id=item.BookId })">
-                    <img class="pure-img book-cover" src="@item.BookImage" alt="@item.BookName">
-                    <div class="book-cell">
-                        <h4 class="book-title">@item.BookName</h4>
-                        <p class="book-desc">@Html.Raw(item.BookSummary)</p>
-                        <div class="book-meta">
-                            <div class="book-meta1">
-                                <span class="book-author">
-                                    @item.BookAuthor
-                                </span>
+        <div class="pure-g">
+            @foreach (var item in categroy.Value)
+            {
+                <div class="pure-u-1-1 mtop">
+                    <a class="book-layout" href="@Url.Action("Novel",new { id=item.BookId })">
+                        <img class="pure-img book-cover" src="@item.BookImage" alt="@item.BookName">
+                        <div class="book-cell">
+                            <h4 class="book-title">@item.BookName</h4>
+                            <p class="book-desc">@Html.Raw(item.BookSummary)</p>
+                            <div class="book-meta">
+                                <div class="book-meta1">
+                                    <span class="book-author">
+                                        @item.BookAuthor
+                                    </span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </a>
-            </div>
+                    </a>
+                </div>
 
-        }
+            }
         </div>
-    </div>
+    }
+
+</div>
 
 

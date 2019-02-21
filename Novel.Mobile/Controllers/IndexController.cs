@@ -11,6 +11,11 @@ using Novel.Entity.ViewModels;
 using Novel.Service;
 using Novel.Utilities;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Novel.Mobile.Controllers
@@ -20,15 +25,10 @@ namespace Novel.Mobile.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
-            IndexViewModel viewModel = new IndexViewModel();
-            using (BookContext bookContext = new BookContext())
-            {
-                var t = bookContext.Book.ToList();
-                viewModel.Fantasy = t;
-                ViewData["keywords"] = "小说,小说网,免费小说网,书客来手机版,玄幻奇幻小说,武侠小说,都市言情小说,仙侠小说,历史军事小说,网游竞技小说";
-                ViewData["description"] = "小说阅读,精彩小说尽在书客来手机版.书客来提供玄幻奇幻小说,武侠小说,都市言情小说,仙侠小说,历史军事小说,网游竞技小说,首发小说,最新章节免费";
-            }
-            return View(viewModel);
+            ViewData["cdatas"] = BookCommon.IndexCategoryBooks;
+            ViewData["keywords"] = "小说,小说网,免费小说网,书客来手机版,玄幻奇幻小说,武侠小说,都市言情小说,仙侠小说,历史军事小说,网游竞技小说";
+            ViewData["description"] = "小说阅读,精彩小说尽在书客来手机版.书客来提供玄幻奇幻小说,武侠小说,都市言情小说,仙侠小说,历史军事小说,网游竞技小说,首发小说,最新章节免费";
+            return View();
         }
 
         public IActionResult Novel(int id)
@@ -95,7 +95,7 @@ namespace Novel.Mobile.Controllers
             }
             SetCookies("historyreadbooks", JsonUtil.SerializeObject(historyBooks), SAVECOOKIESTIME);
         }
-
+        [Authorize]
         public IActionResult BookShelf()
         {
             var t = GetCookies("historyreadbooks", new List<BookReadViewModel>());
@@ -175,6 +175,46 @@ namespace Novel.Mobile.Controllers
             }
         }
 
+        public IActionResult Login(string ReturnUrl = "")
+        {
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index");
+            }
+            ViewData["returnurl"] = ReturnUrl;
+            return View();
+        }
 
+        [HttpPost]
+        public async Task<JsonResult> Sign(UserInfo user, string returnurl = "")
+        {
+            user.UserName = user.UserName.AsTrim();
+            user.Uesrpwd = user.Uesrpwd.AsTrim();
+            using (UserService userService = new UserService())
+            {
+                var t = userService.GetUserInfo(user.UserName);
+                if (t == null)
+                {
+                    return Json(ApiResult<object>.Fail("用户未找到"));
+                }
+                if (t != null && t.Uesrpwd != user.Uesrpwd)
+                {
+                    return Json(ApiResult<object>.Fail("密码错误"));
+                }
+                var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+                //可以放用户唯一标识。 然后再BaseController中使用User.Identity.Name获取， 再查询数据库/缓存获取用户信息
+                identity.AddClaim(new Claim(ClaimTypes.Name, t.UserName)); //取值 User.Identity.Name
+                identity.AddClaim(new Claim(ClaimTypes.PrimarySid, t.UserId.ToString()));
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(identity), new AuthenticationProperties
+                    {
+                        IsPersistent = true,
+                        ExpiresUtc = DateTime.UtcNow.AddMonths(1),
+                        AllowRefresh = true
+                    });
+                return Json(ApiResult<UserInfo>.OK(user));
+            }
+        }
     }
 }

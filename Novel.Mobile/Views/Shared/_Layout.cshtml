@@ -26,6 +26,22 @@
             s.parentNode.insertBefore(hm, s);
         })();
     </script>
+    <style>
+        .nav-a{
+            display:inline-block;
+            width:30%;
+            margin-top:10px;
+        }
+            .nav-a img {
+                width: 50px;
+                margin: 0 auto;
+                display: list-item;
+            }
+        .nav-h {
+            margin: 0px;
+            text-align: center;
+        }
+    </style>
 
 </head>
 <body>
@@ -38,11 +54,15 @@
                 </a>
             </div>
             <div class="pure-u-1-3">
+
                 <a class="rt" style="float:right;" href="@Url.Action("BookShelf")">
                     <img src="~/files/shujia.png" style="width:100%" />
                 </a>
                 <a class="rt" style="float:right;" href="/">
                     <img src="~/files/home.png" style="width:100%" />
+                </a>
+                <a class="rt" style="float:right;" href="@Url.Action("BookShelf")">
+                    <img src="~/files/login.png" style="width:100%" />
                 </a>
             </div>
         </div>
@@ -54,9 +74,31 @@
                 }
             </div>
         </div>
+        <div class="pure-g">
+            <div class="pure-u-1">
+                <a href="/" class="nav-a">
+                    <img src="~/files/fenlei.png" />
+                    <h4 class="nav-h">分类</h4>
+                </a>
+                <a href="/" class="nav-a">
+                    <img src="~/files/phb.png" />
+                    <h4 class="nav-h">排行榜</h4>
+                </a>
+                <a href="/" class="nav-a">
+                    <img src="~/files/sc.png" />
+                    <h4 class="nav-h">收藏榜</h4>
+                </a>
+            </div>
+        </div>
         <div class="body">
             @RenderBody()
         </div>
+        <footer class="border-top footer text-muted" id="footer">
+            <div class="footer" style="">
+                <p>Copyright © 2019 书客来 m.shukelai.com</p>
+                <p>如有需要请联系:zxzsm@163.com</p>
+            </div>
+        </footer>
     </div>
     @RenderSection("Scripts", required: false)
 </body>

@@ -51,3 +51,9 @@ a:hover {
 .mtop:first-child{
     margin-top:1%;
 }
+.footer {
+    text-align: center;
+    color: #B2B2B2;
+    font-size: 13px;
+    margin-top: 10px;
+}
