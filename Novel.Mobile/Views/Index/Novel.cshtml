@@ -5,9 +5,14 @@
 @model NovelViewModel
 
 @{
-    Layout = "_LayoutBook";
+    Layout = "_Layout";
 }
-<link href="~/css/book.css?v=@CssVersion.M_Book_Ver" rel="stylesheet" />
+<style>
+    .book-layout{
+        margin:0 !important;
+    }
+</style>
+<link href="~/css/book.css?v=@CssVersion.Ver" rel="stylesheet" />
 <div class="book-detail-info">
     <div class="book-layout">
         <img src="@Model.Book.BookImage" class="book-cover">

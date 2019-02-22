@@ -2,7 +2,7 @@
 @using Novel.Entity.ViewModels
 @{
     ViewData["Title"] = "我的书架";
-    Layout = "_LayoutBook";
+    Layout = "_Layout";
 }
 <link href="~/css/common-item.css" rel="stylesheet" />
 <link href="~/css/mybook.css" rel="stylesheet" />
@@ -13,6 +13,7 @@
         width: 85%;
         display: inline-block;
     }
+
     .aside {
         position: fixed;
         z-index: 3;
@@ -30,15 +31,17 @@
         width: 100%;
         text-align: center;
     }
+
     .ch {
         display: inline-block;
         position: relative;
         margin: 0 .5rem 0 1rem;
         zoom: 150%
     }
-    .fl{
-        display:flex;
-        align-items:center;
+
+    .fl {
+        display: flex;
+        align-items: center;
     }
 </style>
 <div class="pure-g">
@@ -61,7 +64,7 @@
         {
             string url = item.currentreaditemid == 0 ? item.bookurl : item.currentitemurl;
             <div class="pure-u-1 fl">
-                <input type="checkbox" class="ch" id="item_@item.bookid" value="@item.bookid">
+                <input type="checkbox" class="ch" value="@item.id">
                 <a class="book-layout" href="@url">
 
                     <img class="pure-img book-cover" src="@item.bookimage" alt="@item.bookname">
@@ -105,7 +108,7 @@
         {
             string url = item.currentreaditemid == 0 ? item.bookurl : item.currentitemurl;
             <div class="pure-u-1 fl">
-                <input type="checkbox" class="ch" id="item_@item.bookid" value="@item.bookid">
+                <input type="checkbox" class="ch" value="@item.id">
                 <a class="book-layout" href="@url">
                     <img class="pure-img book-cover" src="@item.bookimage" alt="@item.bookname">
                     <div class="book-cell">
@@ -157,30 +160,34 @@
     }
     function deleted() {
         var display = $("#mybook").css('display');
-        var cookiename = "";
+        var type = 0;
         var checkedList = $("#mybook input[type='checkbox']:checked");
         if (display != "none") {
             checkedList = $("#mybook input[type='checkbox']:checked");
-            cookiename = "bookshelves";
+            type = 1;
         }
         else {
             checkedList = $("#myhistory input[type='checkbox']:checked");
-            cookiename = "historyreadbooks";
+            type = 2;
         }
         if (checkedList.length > 0 && confirm('确实要删除吗?')) {
-            var data = JSON.parse($.fn.cookie(cookiename));
-            checkedList.each(function () {
-                debugger;
-                for (var i = 0; i < data.length; i++) {
-                    if ($(this).val() == data[i].bookid) {
-                        data.splice(i, 1);
-                        $($(this).parent()).remove();
-                        break;
+            var selectBoxs = [];
+            for (var i = 0; i < checkedList.length; i++) {
+                var bookid = parseInt($(checkedList[i]).val());
+                selectBoxs.push(bookid);
+                $(checkedList[i]).parent().remove();
+            }
+            var url = "@Url.Action("RemoveBookRecord", "Book")";
+            $.post(url, { id: selectBoxs, type: type }, function (rs) {
+                if (rs && rs.status == 0) {
+                    for (var i = 0; i < checkedList.length; i++) {
+                        $(checkedList[i]).parent().remove();
                     }
                 }
+                else {
+                    alert(rs.msg);
+                }
             });
-            var s = JSON.stringify(data);
-            $.fn.cookie(cookiename, s, { expires: 365 * 2 });
             //location.reload()
         }
     }

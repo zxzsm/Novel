@@ -1,13 +1,19 @@
 ﻿@using System.Web
 @model Novel.Entity.Models.ContentViewModel
 @using Novel.Entity.ViewModels
+@using Novel.Utilities
 @{
     Layout = "_LayoutContent";
 }
 <script src="~/js/content.js"></script>
 <div class="pure-g">
     <div class="pure-u-1" style="padding:10px;">
-       <a href="/">首页</a>/ <a href="@Url.Action("Novel",new { id=Model.BookId })"> @Model.BookName</a>&nbsp;/<a href="@Url.Action("Content",new { itemId=Model.ItemId })"> @Model.ItemName</a>
+        <a href="/">首页</a>/
+        @if (Model.Category != null)
+        {
+          <text>  <a href="@Url.Action("Category","Index",new { category=Pinyin.GetPinYin(Model.Category.CategoryName)})"> @Model.Category.CategoryName</a>/</text>
+        }
+        <a href="@Url.Action("Novel",new { id=Model.BookId })"> @Model.BookName</a>&nbsp;/<a href="@Url.Action("Content",new { itemId=Model.ItemId })"> @Model.ItemName</a>
     </div>
     <div class="pure-u-1" style="text-align:center;"><h2 class="content-subhead">@Model.ItemName</h2></div>
     <div class="pure-u-1">

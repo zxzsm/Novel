@@ -24,10 +24,7 @@ namespace Novel.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
-            
-
             ViewData["cdatas"] = BookCommon.IndexCategoryBooks;
-
             ViewData["keywords"] = "书客来,小说,小说网,免费小说网,玄幻奇幻小说,武侠小说,都市言情小说,仙侠小说,历史军事小说,网游竞技小说";
             ViewData["description"] = "书客来,小说阅读,精彩小说尽在书客来.书客来提供玄幻奇幻小说,武侠小说,都市言情小说,仙侠小说,历史军事小说,网游竞技小说,首发小说,最新章节免费";
             return View();

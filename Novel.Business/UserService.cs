@@ -22,7 +22,10 @@ namespace Novel.Service
             userName = userName.AsTrim();
             return Db.UserInfo.FirstOrDefault(m => m.UserName == userName);
         }
-
+        public UserInfo GetUserInfoById(int userId)
+        {
+            return Db.UserInfo.FirstOrDefault(m => m.UserId == userId);
+        }
         public bool CheckUserInfo(UserInfo userInfo, bool needCheckEmail = false, bool needCheckMobile = false)
         {
             if (userInfo.UserName.IsEmpty())

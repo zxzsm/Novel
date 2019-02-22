@@ -51,70 +51,32 @@ namespace Novel.Mobile.Controllers
             ContentViewModel contentViewModel = null;
             using (BookService service = new BookService())
             {
-                contentViewModel = service.GetContentViewModel(itemId);
+                contentViewModel = service.GetContentViewModel(itemId, UserId);
                 ViewData["Title"] = contentViewModel.ItemName + "_" + contentViewModel.BookName;
                 ViewData["keywords"] = contentViewModel.BookName + "," + contentViewModel.ItemName;
                 ViewData["description"] = "书客来手机版提供了小说" + contentViewModel.BookName + "凉爽干净的文字章节:" + contentViewModel.ItemName + "在线阅读。";
                 ViewData["ReadSetting"] = GetCookies("rsetting", new BookReadSettingViewModel());
             }
-
-            SetReadBookCookies(contentViewModel);
             return View(contentViewModel);
         }
 
-        private void SetReadBookCookies(ContentViewModel contentViewModel)
-        {
-            var historyBooks = GetCookies("historyreadbooks", new List<BookReadViewModel>());
-            var myShelves = GetCookies("bookshelves", new List<MyBookShelfViewModel>());
-            var r = historyBooks.FirstOrDefault(m => m.bookid == contentViewModel.BookId);
-            if (r == null)
-            {
-                if (historyBooks.Count > 20)
-                {
-                    historyBooks.Remove(historyBooks.Last());
-                }
-                r = new BookReadViewModel
-                {
-                    bookid = contentViewModel.BookId,
-                };
-            }
-            else
-            {
-                historyBooks.Remove(r);
-            }
-            r.currentreaditemid = contentViewModel.ItemId;
-            r.lastreadtime = DateTime.Now;
-            historyBooks.Insert(0, r);
 
-            var mybook = myShelves.FirstOrDefault(p => p.bookid == contentViewModel.BookId);
-            if (mybook != null)
-            {
-                mybook.currentreaditemid = contentViewModel.ItemId;
-                mybook.lastreadtime = DateTime.Now;
-                SetCookies("bookshelves", JsonUtil.SerializeObject(myShelves), SAVECOOKIESTIME);
-            }
-            SetCookies("historyreadbooks", JsonUtil.SerializeObject(historyBooks), SAVECOOKIESTIME);
-        }
         [Authorize]
         public IActionResult BookShelf()
         {
-            var t = GetCookies("historyreadbooks", new List<BookReadViewModel>());
-            var shelves = GetCookies("bookshelves", new List<MyBookShelfViewModel>());
-            PaginatedList<MyBookShelfViewModel> shelfViewModels = null;
+            List<BookReadViewModel> t = null;
+            PaginatedList<MyBookShelfViewModel> shelves = null;
             using (BookService bookService = new BookService())
             {
-                bookService.GetReadBookHistory(UserId);
-                shelfViewModels = bookService.GetBookShlef(shelves, 1, 20);
+                t = bookService.GetReadBookHistory(UserId);
 
             }
-            foreach (var item in shelfViewModels)
+            using (BookShelfService shelfService = new BookShelfService())
             {
-                item.lasitemurl = Url.Action("Content", new { itemId = item.lastitemid });
-                item.currentitemurl = Url.Action("Content", new { itemId = item.currentreaditemid });
-                item.bookurl = Url.Action("Novel", new { id = item.bookid });
+                shelves = shelfService.GetBookShlef(UserId, 1, int.MaxValue);
             }
-            ViewData["BookShelves"] = shelfViewModels;
-            if (t.Count > 0)
+
+            if (t != null && t.Count > 0)
             {
                 foreach (var item in t)
                 {
@@ -123,6 +85,16 @@ namespace Novel.Mobile.Controllers
                     item.bookurl = Url.Action("Novel", new { id = item.bookid });
                 }
             }
+            if (shelves != null && shelves.Count > 0)
+            {
+                foreach (var item in shelves)
+                {
+                    item.lasitemurl = Url.Action("Content", new { itemId = item.lastitemid });
+                    item.currentitemurl = Url.Action("Content", new { itemId = item.currentreaditemid });
+                    item.bookurl = Url.Action("Novel", new { id = item.bookid });
+                }
+            }
+            ViewData["BookShelves"] = shelves;
             ViewData["HistoryReadBooks"] = t;
             return View();
         }
@@ -215,6 +187,101 @@ namespace Novel.Mobile.Controllers
                     });
                 return Json(ApiResult<UserInfo>.OK(user));
             }
+        }
+        public IActionResult Register()
+        {
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index");
+            }
+            return View();
+        }
+        [HttpPost]
+        public JsonResult RegisterUser(UserInfo info)
+        {
+            UserInfo t = null;
+            using (UserService userService = new UserService())
+            {
+                if (!userService.CheckUserInfo(info, true, true))
+                {
+                    return Json(ApiResult<object>.Fail("请检查信息是否填写完整"));
+                }
+                t = userService.GetUserInfo(info);
+                if (t != null)
+                {
+                    return Json(ApiResult<object>.Fail("该用户名已注册"));
+                }
+                t = userService.GetUserInfo(info.UserMoblie.AsTrim(), info.UserEmail.AsTrim());
+                if (t != null)
+                {
+                    return Json(ApiResult<object>.Fail("该手机号码和邮箱已注册"));
+                }
+                t = userService.AddUserInfo(info);
+            }
+            if (t == null)
+            {
+                return Json(ApiResult<object>.Fail("注册失败"));
+            }
+            return Json(ApiResult<object>.OK(null));
+        }
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("Index");
+        }
+        /// <summary>
+        /// 分类页面
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult CategoryList()
+        {
+            return View();
+        }
+
+        public IActionResult Rank()
+        {
+            return View();
+        }
+        [Authorize]
+        public IActionResult UserInfo()
+        {
+            UserInfo userInfo = null;
+            using (UserService userService = new UserService())
+            {
+                userInfo = userService.GetUserInfoById(UserId);
+                if (userInfo == null)
+                {
+                    return RedirectToAction("Login");
+                }
+            }
+            return View(userInfo);
+        }
+
+        public IActionResult Category(string category, int p)
+        {
+            var c = BookCommon.Categories.FirstOrDefault(m => Pinyin.GetPinYin(m.CategoryName) == category);
+            if (c == null)
+            {
+                return RedirectToAction("Index");
+            }
+            ViewData["Title"] = string.Format("{0}_书客来_免费小说网站", c.CategoryName);
+            ViewData["category"] = c;
+            using (BookService bookService = new BookService())
+            {
+                var r = bookService.GetBooksByCategory(c.CategoryId, p, BookCommon.PAGESIZE);
+
+                var pageOption = new MoPagerOption
+                {
+                    CurrentPage = p,
+                    PageSize = BookCommon.PAGESIZE,
+                    RouteUrl = Url.Action("Category", "Index"),
+                    TotalPage = r.TotalPages
+                };
+                ViewBag.PagerOption = pageOption;
+                ViewData["books"] = r;
+            }
+
+            return View();
         }
     }
 }

@@ -12,6 +12,31 @@
         outline: 0;
     }
 </style>
+<div class="pure-g">
+    <div class="pure-u-1 pure-u-md-1">
+        @using (Html.BeginForm("Search", "Index", FormMethod.Get, new { style = "margin:1%;", @class = "pure-form", id = "headsearch" }))
+        {
+            @Html.TextBox("keyword", null, new { @class = "pure-u-1" });
+        }
+    </div>
+</div>
+<div class="pure-g">
+    <div class="pure-u-1">
+        <a href="@Url.Action("CategoryList","Index")" class="nav-a">
+            <img src="~/files/fenlei.png" />
+            <h4 class="nav-h">分类</h4>
+        </a>
+        <a href="@Url.Action("Rank","Index")" class="nav-a">
+            <img src="~/files/phb.png" />
+            <h4 class="nav-h">排行榜</h4>
+        </a>
+        <a href="/" class="nav-a">
+            <img src="~/files/sc.png" />
+            <h4 class="nav-h">收藏榜</h4>
+        </a>
+    </div>
+</div>
+
 <div style="margin:1%;">
     @foreach (var categroy in c)
     {

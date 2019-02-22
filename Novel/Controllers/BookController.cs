@@ -61,13 +61,13 @@ namespace Novel.Controllers
                 switch (type)
                 {
                     case 1:
-                        if (!bookShelfService.DeleteBookShelf(id))
+                        if (!bookShelfService.DeleteBookShelf(new List<int> { id }))
                         {
                             return Json(ApiResult<string>.Fail("删除失败"));
                         }
                         break;
                     case 2:
-                        if (!bookShelfService.DeleteUserReadHistory(id))
+                        if (!bookShelfService.DeleteUserReadHistory(new List<int> { id }))
                         {
                             return Json(ApiResult<string>.Fail("删除失败"));
                         }

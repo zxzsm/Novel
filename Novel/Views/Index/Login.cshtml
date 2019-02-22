@@ -31,7 +31,14 @@
 </div>
 <script>
         function login() {
-
+            if (!$("#username").val().trim()) {
+                alert("请输入用户名");
+                return;
+            }
+            if (!$("#pwd").val().trim()) {
+                alert("请输入密码");
+                return;
+            }
         url = "@Url.Action("Sign", "Index")";
         $.post(url, {
             UserName: $("#username").val().trim(),
@@ -51,4 +58,3 @@
         });
         }
 </script>
-    </div>

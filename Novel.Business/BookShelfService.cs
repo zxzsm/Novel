@@ -19,7 +19,7 @@ namespace Novel.Service
             var t = LoadPagerEntities(pageSize, pageIndex, m => m.UpdateTime, out total, out totalPage, whereLambda: whereLambda);
             var result = t.Select(m => new MyBookShelfViewModel
             {
-                id=m.Id,
+                id = m.Id,
                 bookid = m.BookId,
                 currentreaditemid = m.ReadItemId.HasValue ? m.ReadItemId.Value : 0
             }).ToList();
@@ -79,24 +79,24 @@ namespace Novel.Service
             return Db.SaveChanges() > 0 ? m : null;
         }
 
-        public bool DeleteUserReadHistory(int id)
+        public bool DeleteUserReadHistory(List<int> ids)
         {
-            var t = Db.UserReadBookHistory.FirstOrDefault(m => m.Id == id);
-            if (t==null)
-            {
-                return false;
-            }
-            Db.UserReadBookHistory.Remove(t);
-            return Db.SaveChanges() > 0;
-        }
-        public bool DeleteBookShelf(int id)
-        {
-            var t = Db.BookShelf.FirstOrDefault(m => m.Id == id);
+            var t = Db.UserReadBookHistory.Where(m => ids.Any(id => m.Id == id));
             if (t == null)
             {
                 return false;
             }
-            Db.BookShelf.Remove(t);
+            Db.UserReadBookHistory.RemoveRange(t);
+            return Db.SaveChanges() > 0;
+        }
+        public bool DeleteBookShelf(List<int> ids)
+        {
+            var t = Db.BookShelf.Where(m => ids.Any(id => m.Id == id));
+            if (t == null)
+            {
+                return false;
+            }
+            Db.BookShelf.RemoveRange(t);
             return Db.SaveChanges() > 0;
         }
     }

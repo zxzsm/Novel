@@ -1,0 +1,43 @@
+﻿@model Novel.Entity.Models.UserInfo
+@{
+    ViewData["Title"] = "个人信息";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .btnorange {
+        background-color: #FD8000;
+        color: #fff;
+    }
+</style>
+<div class="pure-form pure-form-stacked" style="margin:0 1%;">
+    <fieldset>
+        <div class="pure-g">
+            @*<div class="pure-u-1 pure-u-md-1-3">
+                <label for="first-name">用户名</label>
+                <input id="first-name" class="pure-u-23-24" type="text" value="@Model.UserName" readonly>
+            </div>
+
+            <div class="pure-u-1 pure-u-md-1-3">
+                <label for="last-name">手机</label>
+                <input id="last-name" class="pure-u-23-24" type="text" value="@Model.UserMoblie" readonly>
+            </div>
+
+            <div class="pure-u-1 pure-u-md-1-3">
+                <label for="email">E-Mail</label>
+                <input id="email" class="pure-u-23-24" type="email" value="@Model.UserEmail" readonly>
+            </div>*@
+            <div class="pure-u-1" style="text-align: center;">
+                <a class="rt" href="@Url.Action("UserInfo","Index")" style="width:4rem;">
+                    <img src="~/files/ydl.png" style="width:100%" />
+                    <label>
+                     @Model.UserName
+                    </label>
+                  
+                </a>
+            </div>
+        </div>
+        @*@Url.Action("Logout", "Index")*@
+
+        <input type="button" style="width:100%;" class="pure-button btnorange" value="退出登陆" onclick="window.location.href='@Url.Action("Logout", "Index")'" />
+    </fieldset>
+</div>
