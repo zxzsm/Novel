@@ -39,7 +39,7 @@ namespace Novel.Controllers
                 bookViewModel = service.GetBookDetail(id);
                 bookViewModel.IsThumbsup = service.GetBookThumbsup(id, GetClientIp(), DateTime.Today) != null;
 
-                ViewData["Title"] = bookViewModel.Book.BookName;
+                ViewData["Title"] = bookViewModel.Book.BookName+"-"+bookViewModel.Book.BookAuthor+"著-书客来-免费小说网";
                 ViewData["keywords"] = bookViewModel.Book.BookName + "," + bookViewModel.Book.BookName + "最新章节," + bookViewModel.Book.BookAuthor;
                 ViewData["description"] = bookViewModel.Book.BookName + "最新章节由网友提供," + bookViewModel.Book.BookName + "情节跌宕起伏、扣人心弦,是一本情节与文笔俱佳的网络小说,书客来免费提供" + bookViewModel.Book.BookName + "凉爽干净的文字章节在线阅读。";
                 ViewData["mobileurl"] = BookCommon.MOBILEURL.TrimEnd('/')  + Url.Action("Novel", "Index", new { id });
@@ -61,7 +61,7 @@ namespace Novel.Controllers
             using (BookService service = new BookService())
             {
                 contentViewModel = service.GetContentViewModel(itemId, UserId);
-                ViewData["Title"] = contentViewModel.BookName + "-" + contentViewModel.ItemName;
+                ViewData["Title"] =  contentViewModel.ItemName+"-"+ contentViewModel.BookName+ "-书客来";
                 ViewData["keywords"] = contentViewModel.BookName + "," + contentViewModel.ItemName;
                 ViewData["description"] = "书客来提供了小说" + contentViewModel.BookName + "最新的文字章节:" + contentViewModel.ItemName + "在线阅读。";
                 ViewData["ReadSetting"] = GetCookies("rsetting", new BookReadSettingViewModel());
