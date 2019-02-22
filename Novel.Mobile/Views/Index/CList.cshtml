@@ -1,0 +1,30 @@
+﻿@using Novel.Entity.Models
+@using Novel.Utilities
+@{
+    ViewData["Title"] = "分类";
+    var cdata = ViewData["cdatas"] as List<BookCategory>;
+}
+
+@if (cdata==null||cdata.Count==0)
+{
+    return;
+}
+ <style>
+     .cl {
+         display: block;
+         padding: 2rem;
+         font-size: 1.2rem;
+         margin: 0.5rem;
+         box-shadow: 0 5px 20px rgba(0,0,0,.2);
+         border-radius: 7px;
+     }
+ </style>
+ <div class="pure-g" style="margin-top:1rem">
+     <div class="pure-u-1">
+         @foreach (var item in cdata)
+         {
+             <a class="cl" href="@Url.Action("Category","Index",new { category=Pinyin.GetPinYin(item.CategoryName)})">@item.CategoryName</a>
+         }
+     </div>
+ </div>
+

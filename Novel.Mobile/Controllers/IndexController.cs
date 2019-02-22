@@ -26,8 +26,8 @@ namespace Novel.Mobile.Controllers
         public IActionResult Index()
         {
             ViewData["cdatas"] = BookCommon.IndexCategoryBooks;
-            ViewData["keywords"] = "小说,小说网,免费小说网,书客来手机版,玄幻奇幻小说,武侠小说,都市言情小说,仙侠小说,历史军事小说,网游竞技小说";
-            ViewData["description"] = "小说阅读,精彩小说尽在书客来手机版.书客来提供玄幻奇幻小说,武侠小说,都市言情小说,仙侠小说,历史军事小说,网游竞技小说,首发小说,最新章节免费";
+            ViewData["keywords"] = "小说,小说网,免费小说网,书客来,玄幻奇幻小说,武侠小说,都市言情小说,仙侠小说,历史军事小说,网游竞技小说";
+            ViewData["description"] = "小说阅读,精彩小说尽在书客来.书客来提供玄幻奇幻小说,武侠小说,都市言情小说,仙侠小说,历史军事小说,网游竞技小说,首发小说,最新章节免费";
             return View();
         }
 
@@ -54,7 +54,7 @@ namespace Novel.Mobile.Controllers
                 contentViewModel = service.GetContentViewModel(itemId, UserId);
                 ViewData["Title"] = contentViewModel.ItemName + "_" + contentViewModel.BookName;
                 ViewData["keywords"] = contentViewModel.BookName + "," + contentViewModel.ItemName;
-                ViewData["description"] = "书客来手机版提供了小说" + contentViewModel.BookName + "凉爽干净的文字章节:" + contentViewModel.ItemName + "在线阅读。";
+                ViewData["description"] = "书客来提供了小说" + contentViewModel.BookName + "凉爽干净的文字章节:" + contentViewModel.ItemName + "在线阅读。";
                 ViewData["ReadSetting"] = GetCookies("rsetting", new BookReadSettingViewModel());
             }
             return View(contentViewModel);
@@ -206,7 +206,7 @@ namespace Novel.Mobile.Controllers
                 {
                     return Json(ApiResult<object>.Fail("请检查信息是否填写完整"));
                 }
-                t = userService.GetUserInfo(info);
+                t = userService.GetUserInfo(info.UserName);
                 if (t != null)
                 {
                     return Json(ApiResult<object>.Fail("该用户名已注册"));
@@ -227,14 +227,15 @@ namespace Novel.Mobile.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction("Login");
         }
         /// <summary>
         /// 分类页面
         /// </summary>
         /// <returns></returns>
-        public IActionResult CategoryList()
+        public IActionResult CList()
         {
+            ViewData["cdatas"] = BookCommon.Categories;
             return View();
         }
 
@@ -264,7 +265,7 @@ namespace Novel.Mobile.Controllers
             {
                 return RedirectToAction("Index");
             }
-            ViewData["Title"] = string.Format("{0}_书客来_免费小说网站", c.CategoryName);
+            ViewData["Title"] = string.Format("{0}-书客来-免费小说网站", c.CategoryName);
             ViewData["category"] = c;
             using (BookService bookService = new BookService())
             {

@@ -11,6 +11,23 @@
         color: inherit;
         outline: 0;
     }
+
+    .nav-a {
+        display: inline-block;
+        width: 20%;
+        margin: 1rem 1rem 0 1rem;
+    }
+
+        .nav-a img {
+            width: 40px;
+            margin: 0 auto;
+            display: list-item;
+        }
+
+    .nav-h {
+        margin: 0px;
+        text-align: center;
+    }
 </style>
 <div class="pure-g">
     <div class="pure-u-1 pure-u-md-1">
@@ -21,8 +38,8 @@
     </div>
 </div>
 <div class="pure-g">
-    <div class="pure-u-1">
-        <a href="@Url.Action("CategoryList","Index")" class="nav-a">
+    <div class="pure-u-1" style="text-align:center">
+        <a href="@Url.Action("CList","Index")" class="nav-a">
             <img src="~/files/fenlei.png" />
             <h4 class="nav-h">分类</h4>
         </a>

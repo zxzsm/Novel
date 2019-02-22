@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Novel
+namespace Novel.Mobile
 {
     [HtmlTargetElement("categorypager")]
     public class CategoryPagerTagHelper : TagHelper

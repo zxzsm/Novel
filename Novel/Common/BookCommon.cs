@@ -49,9 +49,8 @@ namespace Novel
                 return c;
             }
         }
-
-        
-
         public const int PAGESIZE = 20;
+
+        public const string MOBILEURL = "http://m.shukelai.com";
     }
 }

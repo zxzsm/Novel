@@ -4,12 +4,6 @@
     Layout = "_Layout";
 }
 
-<style>
-    .btnorange {
-        background-color: #FD8000;
-        color: #fff;
-    }
-</style>
 <div style="margin:5%">
     <div class="pure-form pure-form-stacked">
         <fieldset>
@@ -25,7 +19,7 @@
                 </div>
                 <div class="pure-u-1 " style="text-align:center;margin-top:20px">
                     <input type="button" style="width:100%;" class="pure-button btnorange" value="提交" onclick="login()" />
-                    <a href="/" style="margin:1rem auto;display:block;width:4rem;">免费注册</a>
+                    <a href="@Url.Action("Register","Index")" style="margin:1rem auto;display:block;width:4rem;">免费注册</a>
                 </div>
             </div>
         </fieldset>

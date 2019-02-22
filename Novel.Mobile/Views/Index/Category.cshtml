@@ -1,0 +1,37 @@
+﻿@using Novel.Entity.Models
+@using Novel.Entity
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var books = ViewData["books"] as PaginatedList<Book>;
+    var c = ViewData["category"] as BookCategory;
+}
+<link href="~/css/category.css" rel="stylesheet" />
+<div class="pure-g">
+    <div class="pure-u-1">
+        <h2 class="content-subhead">@c.CategoryName</h2>
+    </div>
+</div>
+<div class="pure-g">
+    @foreach (var item in books)
+    {
+        <div class="pure-u-1-1 mtop" v-for="item in bookitems">
+            <a class="book-layout" href="@Url.Action("Novel","Index",new {id=item.BookId })">
+                <img class="pure-img book-cover" src="@item.BookImage" alt="@item.BookName">
+                <div class="book-cell">
+                    <h4 class="book-title">@item.BookName</h4>
+                    <p class="book-desc">
+                        @Html.Raw(item.BookSummary)
+                    </p>
+                    <div class="book-meta">
+                        <div class="book-meta1">
+                            <span class="book-author">
+                                @item.BookAuthor
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    }
+    <categorypager pager-option="ViewBag.PagerOption as MoPagerOption"></categorypager>
+</div>
