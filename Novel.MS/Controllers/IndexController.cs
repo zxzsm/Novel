@@ -8,6 +8,7 @@ using Novel.Entity.Models;
 using Novel.Entity.ViewModels;
 using Novel.MS.Models;
 using Novel.Service;
+using Novel.Utilities;
 
 namespace Novel.MS.Controllers
 {
@@ -20,6 +21,20 @@ namespace Novel.MS.Controllers
             using (BookService  bookService = new BookService())
             {
                 var t = bookService.GetBooksByBack(searchViewModel);
+                var url = Url.Action("Book", "Index");
+                if (!searchViewModel.keyword.IsEmpty())
+                {
+                    url += "?keyword=" + searchViewModel.keyword;
+                }
+                var pageOption = new MoPagerOption
+                {
+                    CurrentPage = t.PageIndex,
+                    PageSize = searchViewModel.pageSize,
+                    RouteUrl = url,
+                    TotalPage = t.TotalPages,
+                    PageIndexName= "pageIndex"
+                };
+                ViewBag.PagerOption = pageOption;
                 ViewData["Fantasy"] = t;
             }
             return View(searchViewModel);
