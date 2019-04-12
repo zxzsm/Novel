@@ -16,4 +16,16 @@ namespace Novel.Entity.ViewModels
         public List<int> states { get; set; }
         public bool? nocategory { get; set; }
     }
+
+    public class BaseSimpleViewModel
+    {
+        public string k { get; set; }
+        public int ps { get; set; }
+        public int pi { get; set; }
+    }
+
+    public class TaskSearchViewModel: BaseSimpleViewModel
+    {
+        public int synctype { get; set; }
+    }
 }

@@ -41,5 +41,35 @@ namespace Novel.MS.Controllers
         }
 
 
+        public IActionResult Task(TaskSearchViewModel simpleViewModel)
+        {
+            using (BookTaskService  taskService = new BookTaskService())
+            {
+                var t = taskService.GetTasks(simpleViewModel);
+                ViewData["Data"] = t;
+                var url = Url.Action("Task", "Index");
+                url += "?1=1";
+                if (!simpleViewModel.k.IsEmpty())
+                {
+                    url += "&k=" + simpleViewModel.k;
+                }
+                if (simpleViewModel.synctype>0)
+                {
+                    url += "&synctype=" + simpleViewModel.synctype;
+                }
+                var pageOption = new MoPagerOption
+                {
+                    CurrentPage = t.PageIndex,
+                    PageSize = simpleViewModel.ps,
+                    RouteUrl = url,
+                    TotalPage = t.TotalPages,
+                    PageIndexName = "pi"
+                };
+                ViewBag.PagerOption = pageOption;
+            }
+                
+            return View();
+        }
+
     }
 }
