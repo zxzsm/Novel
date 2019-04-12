@@ -33,12 +33,37 @@ namespace Novel.Service
             {
                 d = d.Where(m => m.BookName.Contains(viewModel.k));
             }
-            if (viewModel.synctype>0)
+            if (viewModel.synctype > 0)
             {
-                d = d.Where(m => m.SyncType==viewModel.synctype);
+                d = d.Where(m => m.SyncType == viewModel.synctype);
             }
             var result = d.Query(viewModel.pi, viewModel.ps, m => m.Updated, m => m.ToList(), false);
             return result;
+        }
+
+        public BookReptileTask GetTask(int id)
+        {
+            return Db.BookReptileTask.FirstOrDefault(m => m.Id == id);
+        }
+        public BookReptileTask AddBookReptileTask(BookReptileTask bookReptileTask)
+        {
+            if (bookReptileTask == null)
+            {
+                return null;
+            }
+            bookReptileTask.Created = DateTime.Now;
+            bookReptileTask.Updated = DateTime.Now;
+            Db.BookReptileTask.Add(bookReptileTask);
+            return Db.SaveChanges() > 0 ? bookReptileTask : null;
+        }
+
+        public bool CheckTaskUrl(int id, string url)
+        {
+            if (id > 0)
+            {
+                return Db.BookReptileTask.Any(m => m.Url == url && m.Id != id);
+            }
+            return Db.BookReptileTask.Any(m => m.Url == url);
         }
     }
 }

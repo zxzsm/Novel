@@ -16,9 +16,9 @@ namespace Novel.MS.Controllers
     {
         public IActionResult Book(SearchViewModel searchViewModel)
         {
-            
+
             IndexViewModel viewModel = new IndexViewModel();
-            using (BookService  bookService = new BookService())
+            using (BookService bookService = new BookService())
             {
                 var t = bookService.GetBooksByBack(searchViewModel);
                 var url = Url.Action("Book", "Index");
@@ -32,7 +32,7 @@ namespace Novel.MS.Controllers
                     PageSize = searchViewModel.pageSize,
                     RouteUrl = url,
                     TotalPage = t.TotalPages,
-                    PageIndexName= "pageIndex"
+                    PageIndexName = "pageIndex"
                 };
                 ViewBag.PagerOption = pageOption;
                 ViewData["Fantasy"] = t;
@@ -43,7 +43,7 @@ namespace Novel.MS.Controllers
 
         public IActionResult Task(TaskSearchViewModel simpleViewModel)
         {
-            using (BookTaskService  taskService = new BookTaskService())
+            using (BookTaskService taskService = new BookTaskService())
             {
                 var t = taskService.GetTasks(simpleViewModel);
                 ViewData["Data"] = t;
@@ -53,10 +53,11 @@ namespace Novel.MS.Controllers
                 {
                     url += "&k=" + simpleViewModel.k;
                 }
-                if (simpleViewModel.synctype>0)
+                if (simpleViewModel.synctype > 0)
                 {
                     url += "&synctype=" + simpleViewModel.synctype;
                 }
+
                 var pageOption = new MoPagerOption
                 {
                     CurrentPage = t.PageIndex,
@@ -67,8 +68,26 @@ namespace Novel.MS.Controllers
                 };
                 ViewBag.PagerOption = pageOption;
             }
-                
+
             return View();
+        }
+
+        public IActionResult EditTask(BookReptileTask task)
+        {
+            using (BookTaskService bookTaskService = new BookTaskService())
+            {
+                task = bookTaskService.GetTask(task.Id);
+            }
+            return View(task);
+        }
+
+        public IActionResult SaveTask(BookReptileTask task)
+        {
+            using (BookTaskService bookTaskService = new BookTaskService())
+            {
+                bookTaskService.AddBookReptileTask(task);
+            }
+            return Content("<script> window.close();</script>", "text/html");
         }
 
     }
