@@ -5,13 +5,15 @@
     ViewData["Title"] = "EditTask";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@if (Model != null && Model.Id > 0)
+@if (Model != null && Model.BookId.HasValue)
 {
-    <h1>修改任务</h1>
+    <h1>@Model.BookName</h1>
+    ViewData["Title"] = Model.BookName + "修改";
 }
 else
 {
     <h1>添加任务</h1>
+    ViewData["Title"] = "添加任务";
 }
 
 @{
@@ -38,12 +40,7 @@ Value=""
 <div class="row">
     <div class="col-md-12">
         <form method="post" action="@Url.Action("SaveTask","Index")" onsubmit="return save()">
-            @if (Model != null && Model.BookId.HasValue)
-            {
-            <div class="form-group">
-                <label for="BookName" class="control-label">@Model.BookName</label>
-            </div>
-            }
+
             <div class="form-group">
                 <label for="SyncType" class="control-label">类型</label>
                 @Html.DropDownListFor(m => m.SyncType, selectListItems, new { @class = "form-control" })

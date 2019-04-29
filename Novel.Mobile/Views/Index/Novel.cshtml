@@ -8,8 +8,8 @@
     Layout = "_Layout";
 }
 <style>
-    .book-layout{
-        margin:0 !important;
+    .book-layout {
+        margin: 0 !important;
     }
 </style>
 <link href="~/css/book.css?v=@CssVersion.Ver" rel="stylesheet" />
@@ -35,7 +35,11 @@
                 @{
                     BookItemViewModel lastItem = Model.Items.OrderByDescending(m => m.ItemId).FirstOrDefault();
                 }
-                <a href="@Url.Action("Content", new { itemId = lastItem.ItemId })" class="book-last-item">@lastItem.ItemName</a>
+                @if (lastItem != null)
+                {
+                    <a href="@Url.Action("Content", new { itemId = lastItem.ItemId })" class="book-last-item">@lastItem.ItemName</a>
+                }
+
             </div>
 
         </div>
