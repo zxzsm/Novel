@@ -24,7 +24,10 @@ namespace Novel.MS.Controllers
             }
             return View(searchViewModel);
         }
-
+        public IActionResult Task()
+        {
+            return View();
+        }
 
     }
 }

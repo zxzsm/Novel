@@ -39,10 +39,10 @@ namespace Novel.Controllers
                 bookViewModel = service.GetBookDetail(id);
                 bookViewModel.IsThumbsup = service.GetBookThumbsup(id, GetClientIp(), DateTime.Today) != null;
 
-                ViewData["Title"] = bookViewModel.Book.BookName+"-"+bookViewModel.Book.BookAuthor+"著-书客来-免费小说网";
+                ViewData["Title"] = bookViewModel.Book.BookName + "-" + bookViewModel.Book.BookAuthor + "著-书客来-免费小说网";
                 ViewData["keywords"] = bookViewModel.Book.BookName + "," + bookViewModel.Book.BookName + "最新章节," + bookViewModel.Book.BookAuthor;
                 ViewData["description"] = bookViewModel.Book.BookName + "最新章节由网友提供," + bookViewModel.Book.BookName + "情节跌宕起伏、扣人心弦,是一本情节与文笔俱佳的网络小说,书客来免费提供" + bookViewModel.Book.BookName + "凉爽干净的文字章节在线阅读。";
-                ViewData["mobileurl"] = BookCommon.MOBILEURL.TrimEnd('/')  + Url.Action("Novel", "Index", new { id });
+                ViewData["mobileurl"] = BookCommon.MOBILEURL.TrimEnd('/') + Url.Action("Novel", "Index", new { id });
             }
             if (UserId > 0)
             {
@@ -61,11 +61,11 @@ namespace Novel.Controllers
             using (BookService service = new BookService())
             {
                 contentViewModel = service.GetContentViewModel(itemId, UserId);
-                ViewData["Title"] =  contentViewModel.ItemName+"-"+ contentViewModel.BookName+ "-书客来";
+                ViewData["Title"] = contentViewModel.ItemName + "-" + contentViewModel.BookName + "-书客来";
                 ViewData["keywords"] = contentViewModel.BookName + "," + contentViewModel.ItemName;
                 ViewData["description"] = "书客来提供了小说" + contentViewModel.BookName + "最新的文字章节:" + contentViewModel.ItemName + "在线阅读。";
                 ViewData["ReadSetting"] = GetCookies("rsetting", new BookReadSettingViewModel());
-                ViewData["mobileurl"] = BookCommon.MOBILEURL.TrimEnd('/')+ Url.Action("Content", "Index", new { itemId });
+                ViewData["mobileurl"] = BookCommon.MOBILEURL.TrimEnd('/') + Url.Action("Content", "Index", new { itemId });
             }
             return View(contentViewModel);
         }
@@ -148,7 +148,7 @@ namespace Novel.Controllers
             {
                 return RedirectToAction("Index");
             }
-            ViewData["mobileurl"] = BookCommon.MOBILEURL.TrimEnd('/')  + Url.Action("Login", "Index");
+            ViewData["mobileurl"] = BookCommon.MOBILEURL.TrimEnd('/') + Url.Action("Login", "Index");
             ViewData["returnurl"] = ReturnUrl;
             return View();
         }
@@ -234,7 +234,7 @@ namespace Novel.Controllers
             ViewData["Title"] = string.Format("{0}_书客来_免费小说网站", c.CategoryName);
             ViewData["keywords"] = string.Format("{0},{0}阅读,{0}下载,{1}", c.CategoryName, "书客来");
             ViewData["description"] = string.Format("读{0}小说尽在小说网:{1}免费小说网。本站提供{0}小说阅读。以及{0}小说最新更新章节和{0}小说章节列表尽在小说网站-{1}小说网,www.shukelai.com", c.CategoryName, "书客来");
-            if (p<=1)
+            if (p <= 1)
             {
                 ViewData["mobileurl"] = BookCommon.MOBILEURL.TrimEnd('/') + Url.Action("Category", "Index", new { category });
             }

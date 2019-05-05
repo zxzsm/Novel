@@ -4,8 +4,10 @@ using Microsoft.Extensions.Configuration;
 using Novel.Utilities;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Novel.Controllers
@@ -83,6 +85,42 @@ namespace Novel.Controllers
                 ip = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             }
             return ip;
+        }
+
+        /// <summary>
+        /// 字符串字符处理
+        /// </summary>
+        /// <param name="chr">等待处理的字符串</param>
+        /// <returns>处理后的字符串</returns>
+        /// //把TXT代码转换成HTML格式
+        protected virtual string TxtToHtml(string Input)
+        {
+            StringBuilder sb = new StringBuilder(Input);
+            sb.Replace("&", "&amp;");
+            sb.Replace("<", "&lt;");
+            sb.Replace(">", "&gt;");
+            sb.Replace("\r\n", "<br />");
+            sb.Replace("\n", "<br />");
+            sb.Replace("\t", " ");
+            //sb.Replace(" ", "&nbsp;");
+            return sb.ToString();
+        }
+
+
+        /// <summary>
+        /// 读取txt文件内容
+        /// </summary>
+        /// <param name="Path">文件地址</param>
+        protected string ReadTxtContent(string Path)
+        {
+            using (FileStream fs = new FileStream(Path, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite))
+            {
+                using (StreamReader sw = new StreamReader(fs, Encoding.UTF8))
+                {
+                    return sw.ReadToEnd();
+                }
+
+            }
         }
     }
 }
