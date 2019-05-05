@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Novel
+namespace Novel.MS
 {
-    [HtmlTargetElement("categorypager")]
-    public class CategoryPagerTagHelper : TagHelper
+    [HtmlTargetElement("pager")]
+    public class PagerTagHelper : TagHelper
     {
         public MoPagerOption PagerOption { get; set; }
 
@@ -47,14 +47,14 @@ namespace Novel
 
                         sbPage.Append("<nav>");
                         sbPage.Append("  <ul class=\"pagination\">");
-                        sbPage.AppendFormat("       <li><a href=\"{0}?p={1}\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span></a></li>",
+                        sbPage.AppendFormat("       <li><a href=\"{0}{2}={1}\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span></a></li>",
                                                 PagerOption.RouteUrl,
-                                                PagerOption.CurrentPage - 1 <= 0 ? 1 : PagerOption.CurrentPage - 1);
+                                                PagerOption.CurrentPage - 1 <= 0 ? 1 : PagerOption.CurrentPage - 1, UrlOverride(PagerOption.RouteUrl,PagerOption.PageIndexName));
 
                         var start = PagerOption.CurrentPage - 2 <= 0 ? 1 : PagerOption.CurrentPage - 2;
                         var end = PagerOption.CurrentPage + 2 > PagerOption.TotalPage ? PagerOption.TotalPage : PagerOption.CurrentPage + 2;
 
-                        if (start==1)
+                        if (start == 1)
                         {
                             end = PagerOption.TotalPage > 5 ? 5 : PagerOption.TotalPage;
                         }
@@ -67,21 +67,21 @@ namespace Novel
                         for (int i = start; i <= end; i++)
                         {
 
-                            sbPage.AppendFormat("       <li ><a {1} href=\"{2}/?p={0}\">{0}</a></li>",
+                            sbPage.AppendFormat("       <li {1}><a  href=\"{2}{3}={0}\">{0}</a></li>",
                                 i,
                                 i == PagerOption.CurrentPage ? "class=\"active\"" : "",
-                                PagerOption.RouteUrl);
+                                PagerOption.RouteUrl, UrlOverride(PagerOption.RouteUrl, PagerOption.PageIndexName));
 
                         }
                         if (end != PagerOption.TotalPage)
                         {
                             sbPage.Append("<li><span>...</span></li>");
-                            sbPage.AppendFormat("<li><a href='{0}?p={1}'>{1}</a></li>", PagerOption.RouteUrl, PagerOption.TotalPage);
+                            sbPage.AppendFormat("<li><a href='{0}{2}={1}'>{1}</a></li>", PagerOption.RouteUrl, PagerOption.TotalPage, UrlOverride(PagerOption.RouteUrl, PagerOption.PageIndexName));
                         }
                         sbPage.Append("       <li>");
-                        sbPage.AppendFormat("         <a href=\"{0}?p={1}\" aria-label=\"Next\">",
+                        sbPage.AppendFormat("         <a href=\"{0}{2}={1}\" aria-label=\"Next\">",
                                             PagerOption.RouteUrl,
-                                            PagerOption.CurrentPage + 1 > PagerOption.TotalPage ? PagerOption.CurrentPage : PagerOption.CurrentPage + 1);
+                                            PagerOption.CurrentPage + 1 > PagerOption.TotalPage ? PagerOption.CurrentPage : PagerOption.CurrentPage + 1, UrlOverride(PagerOption.RouteUrl, PagerOption.PageIndexName));
                         sbPage.Append("               <span aria-hidden=\"true\">&raquo;</span>");
                         sbPage.Append("         </a>");
                         sbPage.Append("       </li>");
@@ -95,6 +95,11 @@ namespace Novel
             output.Content.SetHtmlContent(sbPage.ToString());
             //output.TagMode = TagMode.SelfClosing;
             //return base.ProcessAsync(context, output);
+        }
+
+        private string UrlOverride(string url, string pageIndexName)
+        {
+            return url.Contains("?") ? "&" + pageIndexName : "/?" + pageIndexName;
         }
 
     }
@@ -127,6 +132,10 @@ namespace Novel
         /// 样式 默认 bootstrap样式 1
         /// </summary>
         public int StyleNum { get; set; }
+
+        public string PageIndexName { get; set; }
+        public string PageSizeName { get; set; }
+
     }
 }
 

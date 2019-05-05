@@ -55,7 +55,7 @@ namespace Novel.Entity.Models
 
                 entity.Property(e => e.BookReleaseTime).HasColumnType("datetime");
 
-                entity.Property(e => e.BookSummary).HasMaxLength(800);
+                entity.Property(e => e.BookSummary).HasMaxLength(2000);
 
                 entity.Property(e => e.CreateTime)
                     .HasColumnType("datetime")

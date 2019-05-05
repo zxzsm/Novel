@@ -1,11 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Novel.Entity.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-
 namespace Novel.Service
 {
     public class BaseRepository<T> : IDisposable where T : class
@@ -52,7 +49,7 @@ namespace Novel.Service
             {
                 pageIndex = 1;
             }
-            var tempData = Db.Set<T>().AsQueryable();
+            var tempData = Db.Set<T>().Where(m => true);
             if (whereLambda != null && whereLambda.Length > 0)
             {
                 foreach (var item in whereLambda)
@@ -61,7 +58,9 @@ namespace Novel.Service
                     tempData = tempData.Where(expression);
                 }
             }
+            
             total = tempData.Count();
+
             totalPage = (int)Math.Ceiling(total / (double)pageSize);
             if (pageIndex > totalPage)
             {
@@ -80,9 +79,9 @@ namespace Novel.Service
                      Skip<T>(pageSize * (pageIndex - 1)).
                      Take<T>(pageSize).AsQueryable();
             }
-            return tempData.AsQueryable();
+            return tempData;
         }
-        public IQueryable<T> LoadPagerEntities<S>(IQueryable<T> source,int pageSize, int pageIndex, Func<T, S> orderByLambda, out int total, out int totalPage,
+        public IQueryable<T> LoadPagerEntities<S>(IQueryable<T> source, int pageSize, int pageIndex, Func<T, S> orderByLambda, out int total, out int totalPage,
         bool isAsc = true, params Func<T, bool>[] whereLambda)
         {
             if (pageIndex <= 0)
@@ -117,7 +116,7 @@ namespace Novel.Service
                      Skip<T>(pageSize * (pageIndex - 1)).
                      Take<T>(pageSize).AsQueryable();
             }
-            return tempData.AsQueryable();
+            return tempData;
         }
 
         public void Dispose()

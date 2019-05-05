@@ -83,7 +83,11 @@
                         BookItemViewModel lastItem = Model.Items.OrderByDescending(m => m.ItemId).FirstOrDefault();
                     }
                     <td>
-                        <a href="@Url.Action("Content", new { itemId = lastItem.ItemId })">@lastItem.ItemName</a>
+                        @if (lastItem != null)
+                        {
+                            <a href="@Url.Action("Content", new { itemId = lastItem.ItemId })">@lastItem.ItemName</a>
+                        }
+
                     </td>
                 </tr>
                 <tr>

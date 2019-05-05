@@ -1,0 +1,75 @@
+﻿@model Novel.Entity.Models.BookReptileTask
+@using Novel.Common
+@using Novel.Utilities
+@{
+    ViewData["Title"] = "EditTask";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@if (Model != null && Model.BookId.HasValue)
+{
+    <h1>@Model.BookName</h1>
+    ViewData["Title"] = Model.BookName + "修改";
+}
+else
+{
+    <h1>添加任务</h1>
+    ViewData["Title"] = "添加任务";
+}
+
+@{
+    List<SelectListItem> selectListItems = new List<SelectListItem>
+{
+new SelectListItem
+{
+Text="全部",
+Value=""
+}
+};
+    var types = Enum.GetValues(typeof(SyncType));
+    foreach (SyncType item in types)
+    {
+        selectListItems.Add(new SelectListItem
+        {
+            Text = item.ToDescription(),
+            Value = ((int)item).ToString()
+        });
+    }
+
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <form method="post" action="@Url.Action("SaveTask","Index")" onsubmit="return save()">
+
+            <div class="form-group">
+                <label for="SyncType" class="control-label">类型</label>
+                @Html.DropDownListFor(m => m.SyncType, selectListItems, new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                <label for="Url" class="control-label">抓取链接</label>
+                @Html.TextBoxFor(m => m.Url, new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                <label for="CurrentRecod" class="control-label">抓取章节</label>
+                @Html.TextBoxFor(m => m.CurrentRecod, new { @class = "form-control" })
+            </div>
+            <button type="submit" class="btn btn-default">提交</button>
+            @Html.HiddenFor(m => m.Id)
+        </form>
+    </div>
+</div>
+
+<script>
+    function save() {
+        if ($.trim($("#SyncType").val()) == "") {
+            alert("类型未选择")
+            return false;
+        }
+        if ($.trim($("#Url").val()) == "") {
+            alert("抓取链接未填写")
+            return false;
+        }
+        return true;
+    }
+</script>
+

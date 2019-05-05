@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace Novel.Common
 {
@@ -12,5 +13,19 @@ namespace Novel.Common
         /// 完结
         /// </summary>
         End = 1
+    }
+
+    public enum SyncType
+    {
+        /// <summary>
+        /// 笔趣云
+        /// </summary>
+        [Description("笔趣云")]
+        BQY =2,
+        /// <summary>
+        /// 梦想中文
+        /// </summary>
+        [Description("梦想中文")]
+        MXZW =3,
     }
 }

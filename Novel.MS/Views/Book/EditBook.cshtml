@@ -10,7 +10,7 @@
     <div class="col-md-12">
         <form method="post" action="@Url.Action("SaveBook","Book")" onsubmit="return save()">
             <div class="form-group">
-                <label for="bookname">书名</label>
+                <label for="bookname" class="control-label">书名</label>
                 <input type="text" class="form-control" id="BookName" name="BookName" placeholder="书名" value="@Model.Book.BookName">
             </div>
             <div class="form-group">
@@ -24,7 +24,24 @@
                 <label for="BookSummary">简介</label>
                 <textarea class="form-control" rows="5" id="BookSummary" name="BookSummary">@Model.Book.BookSummary</textarea>
             </div>
+            <div class="form-group">
+                @{ 
 
+                    bool isEnd = Model.Book.BookState.HasValue && Model.Book.BookState.Value == 1;
+                }
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="BookState" id="optionsRadios1" value="0" @if (!isEnd) { <text>checked</text>}>
+                        连载中
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="BookState" id="optionsRadios2" value="1"  @if (isEnd) { <text>checked</text>} >
+完结
+                    </label>
+                </div>
+            </div>
             <div class="form-group">
                 <label for="type">分类</label>
                 @{
@@ -58,8 +75,8 @@
                     }
                 }
             </div>
-            <button type="submit" class="btn btn-default" >提交</button>
-            <input type="hidden" value="@Model.Book.BookId"  name="BookId" />
+            <button type="submit" class="btn btn-default">提交</button>
+            <input type="hidden" value="@Model.Book.BookId" name="BookId" />
         </form>
     </div>
 </div>
