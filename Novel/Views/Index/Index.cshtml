@@ -1,44 +1,10 @@
 ﻿@{
-    Layout = "_Layout";
+
+    Layout = "~/Views/Shared/_LayoutNew.cshtml";
+
     ViewData["Title"] = "书客来-免费小说网";
-    var c = ViewData["cdatas"] as Dictionary<BookCategory, List<Book>>;
+        var c = ViewData["cdatas"] as Dictionary<BookCategory, List<Book>>;
 }
-<div>
 
-    @foreach (var categroy in c)
-    {
-        @if (categroy.Value.Count<4)
-        {
-            continue;
-        }
-        <div class="pure-g">
-            <div class="pure-u-1">
-                <h2 class="content-subhead">@categroy.Key.CategoryName</h2>
-            </div>
-        </div>
-        
-        <div class="pure-g">
-            @foreach (var item in categroy.Value)
-            {
-                <div class="pure-u-1-4">
-                    <div class="novel">
-                        @{ string title = item.BookName + "(" + item.BookAuthor + ")";}
-                        <a href="@Url.Action("Novel",new { id=item.BookId })" title='@title' alt="@item.BookName">
-                            <img class="img" src="@item.BookImage">
-                        </a>
-                        <p class="title" title="@item.BookSummary">
-                            <a href="@Url.Action("Novel",new { id=item.BookId })">
-                                @item.BookName
-                            </a>
-                            <br />
-                            <span class="author">@item.BookAuthor</span>
-                        </p>
-                    </div>
 
-                </div>
-            }
-        </div>
-    }
-
-</div>
 
