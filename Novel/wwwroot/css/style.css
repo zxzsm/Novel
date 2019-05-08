@@ -260,6 +260,12 @@ Padding space
 .nopl {
     padding-left: 0px;
 }
+.nopb {
+    padding-bottom: 0px !important;
+}
+.nopt {
+    padding-top: 0px;
+}
 
 .pinside10 {
     padding: 10px;
