@@ -67,7 +67,8 @@ a {
         color: #15549a;
     }
 
-strong {
+.center{
+    text-align:center;
 }
 
 blockquote {
