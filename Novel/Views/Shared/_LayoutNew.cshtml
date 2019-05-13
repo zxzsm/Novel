@@ -9,7 +9,7 @@
     <meta name="baidu_union_verify" content="4cc2a05da4cf99eb06d2c5ab2f93ce39">
     <meta name="robots" content="all">
     <meta name="googlebot" content="all">
-    <meta name="baiduspider" content="all"> 
+    <meta name="baiduspider" content="all">
     <meta name="keywords" content="@Html.Raw(ViewData[" keywords"])" />
     <meta name="description" content="@Html.Raw(ViewData[" description"])">
     <meta http-equiv="mobile-agent" content="format=wml; url=@Html.Raw(ViewData[" mobileurl"])">
@@ -21,7 +21,7 @@
     <script src="~/js/bootstrap.js"></script>
 </head>
 <body>
-    <div id="sticky-wrapper" class="sticky-wrapper" >
+    <div id="sticky-wrapper" class="sticky-wrapper">
         <div class="header nopb">
             <div class="container">
                 <div class="row">
@@ -35,11 +35,12 @@
                             <div class="col-md-8">
                                 <form class="form-horizontal pdt10">
                                     <div class="form-group mb0">
-                                        <div class="col-sm-7">
+                                        <div class="input-group col-md-8">
                                             <input type="text" class="form-control" placeholder="书名" />
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <button type="submit" class="btn btn-default">查询</button>
+                                            <div class="input-group-addon" style="padding:0px;border:none;">
+                                                <button type="submit" class="btn btn-default">查询</button>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </form>
@@ -54,17 +55,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="row mb10">
-                    <div class="col-md-12">
-                        <ul class="nav nav-pills">
-                            <li><a href="/" class="pure-menu-heading pure-menu-link">首页</a></li>
-                            @foreach (var item in BookCommon.Categories)
-                            {
-                                <li><a href="@Url.Action("Category","Index",new { category=Pinyin.GetPinYin(item.CategoryName)})" class="pure-menu-link">@item.CategoryName</a></li>
-                            }
-                        </ul>
                     </div>
                 </div>
             </div>
