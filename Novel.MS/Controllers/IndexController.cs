@@ -39,11 +39,6 @@ namespace Novel.MS.Controllers
             }
             return View(searchViewModel);
         }
-        public IActionResult Task()
-        {
-            return View();
-        }
-
         public IActionResult Task(TaskSearchViewModel simpleViewModel)
         {
             using (BookTaskService taskService = new BookTaskService())
@@ -91,6 +86,11 @@ namespace Novel.MS.Controllers
                 bookTaskService.AddBookReptileTask(task);
             }
             return Content("<script> window.close();</script>", "text/html");
+        }
+
+        public IActionResult Hot(BaseSimpleViewModel simpleViewModel)
+        {
+            return View();
         }
 
     }

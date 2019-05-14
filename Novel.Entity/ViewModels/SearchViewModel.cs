@@ -28,4 +28,6 @@ namespace Novel.Entity.ViewModels
     {
         public int synctype { get; set; }
     }
+
+
 }

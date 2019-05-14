@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.106
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.352
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Novel", "Novel\Novel.csproj", "{C1515F0C-2BC4-4A6D-83B7-E9C7CAE327C0}"
 EndProject
@@ -32,7 +32,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Novel.OAuth", "Novel.OAuth\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Novel.Test", "Novel.Test\Novel.Test.csproj", "{F9E11D7E-57D0-4EB1-8C51-0061BE35F0D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Novel.MS", "Novel.MS\Novel.MS.csproj", "{DE6E46DB-19B9-42D6-9AD3-0CCA27AD1380}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Novel.MS", "Novel.MS\Novel.MS.csproj", "{DE6E46DB-19B9-42D6-9AD3-0CCA27AD1380}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

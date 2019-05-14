@@ -1,44 +1,138 @@
-﻿@{
-    Layout = "_Layout";
+﻿@using Novel.Utilities
+@{
+
+    Layout = "~/Views/Shared/_LayoutNew.cshtml";
+
     ViewData["Title"] = "书客来-免费小说网";
     var c = ViewData["cdatas"] as Dictionary<BookCategory, List<Book>>;
 }
-<div>
 
-    @foreach (var categroy in c)
-    {
-        @if (categroy.Value.Count<4)
-        {
-            continue;
-        }
-        <div class="pure-g">
-            <div class="pure-u-1">
-                <h2 class="content-subhead">@categroy.Key.CategoryName</h2>
+<style>
+    .img {
+        margin: 0px auto;
+        border-radius: 7px;
+        height: 200px;
+    }
+
+    h2 {
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    .bbo {
+        border-bottom: 1px solid #EB3C00;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-2">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="bbo">小说分类</h2>
+            </div>
+            <div class="col-md-12">
+                @foreach (var item in BookCommon.Categories)
+                {
+                    <a href="@Url.Action(" Category","Index",new { category=Pinyin.GetPinYin(item.CategoryName)})" class="list-category service-block ">
+                        @item.CategoryName
+                    </a>
+                }
             </div>
         </div>
-        
-        <div class="pure-g">
-            @foreach (var item in categroy.Value)
+
+    </div>
+    <div class="col-md-8">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="bbo">热门推荐</h2>
+            </div>
+            @foreach (var item in c.First().Value)
             {
-                <div class="pure-u-1-4">
-                    <div class="novel">
+                <div class="col-md-3 col-sm-6 col-xs-6">
+                    <div class=" service-block   mb10 center pdt10">
+                        <a>
+                            <div class="icon mb10"> <img src="@item.BookImage" alt="@item.BookName" class="img"></div>
+                            <h3> @item.BookName</h3>
+                            <p>@item.BookAuthor</p>
+                        </a>
+
+                    </div>
+                </div>
+                @*<div class="novel">
                         @{ string title = item.BookName + "(" + item.BookAuthor + ")";}
-                        <a href="@Url.Action("Novel",new { id=item.BookId })" title='@title' alt="@item.BookName">
+                        <a href="@Url.Action("Novel", new { id = item.BookId })" title='@title' alt="@item.BookName">
                             <img class="img" src="@item.BookImage">
                         </a>
                         <p class="title" title="@item.BookSummary">
-                            <a href="@Url.Action("Novel",new { id=item.BookId })">
+                            <a href="@Url.Action("Novel", new { id = item.BookId })">
                                 @item.BookName
                             </a>
                             <br />
                             <span class="author">@item.BookAuthor</span>
                         </p>
-                    </div>
+                    </div>*@
 
-                </div>
             }
+
         </div>
-    }
+    </div>
+    <div class="col-md-2">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="bbo">月排行榜</h2>
+            </div>
+            <div class="col-md-12">
+                @{
+                    int index = 1;
+                    string cssSelectced = "number";
+                }
+                @foreach (var item in c.First().Value)
+                {
+                    <a href="" class="list-category service-block ">
 
+                        @if (index <= 3)
+                            {
+                                cssSelectced = "number red";
+                            }
+                            else
+                            {
+                                cssSelectced = "number";
+                            }
+                        <span class="@cssSelectced ">
+                            @index
+                        </span>
+                        @item.BookName
+                    </a>
+                    index++;
+                }
+            </div>
+            <div class="col-md-12">
+                <h2 class="bbo">周排行榜</h2>
+            </div>
+            <div class="col-md-12">
+                @{
+                    index = 1;
+                    cssSelectced = "number";
+                }
+                @foreach (var item in c.First().Value)
+                {
+                    @if (index <= 3)
+                    {
+                        cssSelectced = "number red";
+                    }
+                    else
+                    {
+                        cssSelectced = "number";
+                    }
+                    <a href="" class="list-category service-block ">
+                        <span class="@cssSelectced">@index</span>
+                        @item.BookName
+                    </a>
+                    index++;
+
+                }
+            </div>
+        </div>
+
+    </div>
 </div>
-

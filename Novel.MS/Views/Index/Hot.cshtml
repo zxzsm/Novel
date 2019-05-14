@@ -1,0 +1,17 @@
+﻿
+@{
+    ViewData["Title"] = "热门推荐";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row" id="content">
+    <div class="col-md-12">
+        <form class="form-inline" id="headsearch" style="margin:25px 0px 0px 0px;">
+            @*@Html.TextBoxFor(m => m.keyword, new { @class = "form-control", style = "width:40%;" })*@
+            @Html.TextBox("keyword",null,)
+
+            <button type="submit" class="btn btn-primary">搜索</button>
+
+        </form>
+    </div>
+</div>
