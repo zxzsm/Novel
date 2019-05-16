@@ -20,10 +20,12 @@ namespace Novel.Entity.Models
         public virtual DbSet<BookGroupCategroyRelation> BookGroupCategroyRelation { get; set; }
         public virtual DbSet<BookIndex> BookIndex { get; set; }
         public virtual DbSet<BookItem> BookItem { get; set; }
+        public virtual DbSet<BookLinks> BookLinks { get; set; }
+        public virtual DbSet<BookRecommend> BookRecommend { get; set; }
         public virtual DbSet<BookReptileTask> BookReptileTask { get; set; }
         public virtual DbSet<BookShelf> BookShelf { get; set; }
         public virtual DbSet<BookThumbsup> BookThumbsup { get; set; }
-        public virtual DbSet<Sign> Sign { get; set; }
+        public virtual DbSet<Linksubmit> Linksubmit { get; set; }
         public virtual DbSet<TaskToDo> TaskToDo { get; set; }
         public virtual DbSet<UserInfo> UserInfo { get; set; }
         public virtual DbSet<UserRead> UserRead { get; set; }
@@ -33,13 +35,14 @@ namespace Novel.Entity.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(StringCommon.ConnectionString);
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Data Source=118.25.74.102;Initial Catalog=Book;Persist Security Info=True;User ID=zx;Password=1qaz@WSX;");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("ProductVersion", "2.2.1-servicing-10028");
+            modelBuilder.HasAnnotation("ProductVersion", "2.2.4-servicing-10062");
 
             modelBuilder.Entity<Book>(entity =>
             {
@@ -124,6 +127,22 @@ namespace Novel.Entity.Models
                 entity.Property(e => e.UpdateTime).HasColumnType("datetime");
             });
 
+            modelBuilder.Entity<BookLinks>(entity =>
+            {
+                entity.Property(e => e.Url)
+                    .IsRequired()
+                    .HasMaxLength(300);
+            });
+
+            modelBuilder.Entity<BookRecommend>(entity =>
+            {
+                entity.Property(e => e.Created)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.DataYm).HasColumnName("DataYM");
+            });
+
             modelBuilder.Entity<BookReptileTask>(entity =>
             {
                 entity.Property(e => e.BookName).HasMaxLength(50);
@@ -161,11 +180,17 @@ namespace Novel.Entity.Models
                     .HasMaxLength(50);
             });
 
-            modelBuilder.Entity<Sign>(entity =>
+            modelBuilder.Entity<Linksubmit>(entity =>
             {
-                entity.Property(e => e.CreateTime).HasColumnType("datetime");
+                entity.Property(e => e.Result).HasMaxLength(500);
 
-                entity.Property(e => e.UpdateTime).HasColumnType("datetime");
+                entity.Property(e => e.UpdatedTime)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.WebUrl)
+                    .IsRequired()
+                    .HasMaxLength(500);
             });
 
             modelBuilder.Entity<TaskToDo>(entity =>

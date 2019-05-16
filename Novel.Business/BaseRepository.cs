@@ -35,12 +35,6 @@ namespace Novel.Service
             return Db.SaveChanges() > 0;
         }
 
-        //查询
-        public IQueryable<T> LoadEntities(Func<T, bool> wherelambda)
-        {
-            return Db.Set<T>().Where<T>(wherelambda).AsQueryable();
-        }
-
         //分页
         public IQueryable<T> LoadPagerEntities<S>(int pageSize, int pageIndex, Func<T, S> orderByLambda, out int total, out int totalPage,
             bool isAsc = true, params Func<T, bool>[] whereLambda)
@@ -58,7 +52,7 @@ namespace Novel.Service
                     tempData = tempData.Where(expression);
                 }
             }
-            
+
             total = tempData.Count();
 
             totalPage = (int)Math.Ceiling(total / (double)pageSize);
@@ -123,7 +117,7 @@ namespace Novel.Service
         {
             using (Db)
             {
-
+                Db = null;
             }
         }
     }

@@ -88,9 +88,34 @@ namespace Novel.MS.Controllers
             return Content("<script> window.close();</script>", "text/html");
         }
 
-        public IActionResult Hot(BaseSimpleViewModel simpleViewModel)
+        public IActionResult Hot(BaseSimpleViewModel viewModel)
         {
+            using (BookRecommendService service = new BookRecommendService())
+            {
+                var t = service.GetBookRecommends(viewModel);
+                ViewData["Data"] = t;
+                var url = Url.Action("Hot", "Index");
+                var pageOption = new MoPagerOption
+                {
+                    CurrentPage = t.PageIndex,
+                    PageSize = viewModel.ps,
+                    RouteUrl = url,
+                    TotalPage = t.TotalPages,
+                    PageIndexName = "pi"
+                };
+                ViewBag.PagerOption = pageOption;
+            }
             return View();
+        }
+
+        public IActionResult EditHot(int id)
+        {
+            BookRecommendViewModel bookRecommendViewModel = null;
+            using (BookRecommendService service = new BookRecommendService())
+            {
+                bookRecommendViewModel = service.GetBookRecommendViewModel(id);
+            }
+            return View(bookRecommendViewModel);
         }
 
     }
