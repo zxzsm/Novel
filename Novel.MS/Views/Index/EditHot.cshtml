@@ -1,26 +1,84 @@
-﻿
+﻿@model Novel.Entity.ViewModels.BookRecommendViewModel
+@using Novel.Entity.Models
 @{
     ViewData["Title"] = "EditHot";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+<h1>添加热门推荐</h1>
 <div class="row">
     <div class="col-md-12">
         <form method="post" action="@Url.Action("SaveTask","Index")" onsubmit="return save()">
-            @*<div class="form-group">
-                <label for="SyncType" class="control-label">类型</label>
-                @Html.DropDownListFor(m => m.SyncType, selectListItems, new { @class = "form-control" })
+            <div class="form-group">
+                <label for="book" class=" control-label">书名</label>
+               
+                @Html.TextBoxFor(m => m.BookName, new { @class = "form-control  ", placeholder = "输入书籍" })
             </div>
             <div class="form-group">
-                <label for="Url" class="control-label">抓取链接</label>
-                @Html.TextBoxFor(m => m.Url, new { @class = "form-control" })
+                <label for="book" class=" control-label">选择年月</label>
+
+                @{
+                    DateTime now = DateTime.Now;
+                    List<SelectListItem> dateYMS = new List<SelectListItem>();
+                    @for (int i = 1; i <= 12; i++)
+                    {
+                        string dataYM = new DateTime(now.Year, i, 1).ToString("yyyyMM");
+                        dateYMS.Add(new SelectListItem
+                        {
+                            Text = dataYM,
+                            Value = dataYM
+                        });
+                    }
+                }
+                @Html.DropDownListFor(m => m.DataYm, dateYMS, new { @class = "form-control" })
             </div>
             <div class="form-group">
-                <label for="CurrentRecod" class="control-label">抓取章节</label>
-                @Html.TextBoxFor(m => m.CurrentRecod, new { @class = "form-control" })
+                <label for="order" class=" control-label">排序</label>
+                @Html.TextBoxFor(m => m.Order, new { @class = "form-control", placeholder = "排序", type = "number" })
             </div>
-            <button type="submit" class="btn btn-default">提交</button>
-            @Html.HiddenFor(m => m.Id)*@
         </form>
     </div>
 </div>
+
+<script>
+    $(function () {
+        $("#BookName").bsSuggest('init', {
+            url: '@Url.Action("GetSerarchBook", "Index")?k=', /*优先从url ajax 请求 json 帮助数据，注意最后一个参数为关键字请求参数*/
+            effectiveFields: ["BookID", "BookName"],
+            searchFields: ["k"],
+            effectiveFieldsAlias: { BookName: "姓名" },
+            clearable: true,
+            idField: "BookID",
+            keyField: "BookName"
+        }).on('onDataRequestSuccess', function (e, result) {
+            console.log('onDataRequestSuccess: ', result);
+        }).on('onSetSelectValue', function (e, selectedData, selectedRawData) {
+            console.log('onSetSelectValue: ', e.target.value, selectedData, selectedRawData);
+        }).on('onUnsetSelectValue', function () {
+            console.log('onUnsetSelectValue');
+        }).on('onShowDropdown', function (e, data) {
+            console.log('onShowDropdown', e.target.value, data);
+        }).on('onHideDropdown', function (e, data) {
+            console.log('onHideDropdown', e.target.value, data);
+        });
+        @*$("#BookName").bsSuggest("init", {
+            effectiveFields: ["userName", "email"],
+            searchFields: ["shortAccount"],
+            effectiveFieldsAlias: { userName: "姓名" },
+            clearable: true,
+            idField: "userId",
+            keyField: "userName",
+            url: '@Url.Action("GetSerarchBook", "Index")?k=', /*优先从url ajax 请求 json 帮助数据，注意最后一个参数为关键字请求参数*/
+        }).on('onDataRequestSuccess', function (e, result) {
+             console.log('onDataRequestSuccess: ', result);
+         }).on('onSetSelectValue', function (e, selectedData, selectedRawData) {
+             console.log('onSetSelectValue: ', e.target.value, selectedData, selectedRawData);
+         }).on('onUnsetSelectValue', function () {
+             console.log('onUnsetSelectValue');
+         }).on('onShowDropdown', function (e, data) {
+             console.log('onShowDropdown', e.target.value, data);
+         }).on('onHideDropdown', function (e, data) {
+             console.log('onHideDropdown', e.target.value, data);
+         });*@
+    });
+
+</script>

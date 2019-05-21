@@ -118,5 +118,13 @@ namespace Novel.MS.Controllers
             return View(bookRecommendViewModel);
         }
 
+        public IActionResult GetSerarchBook(string k)
+        {
+            using (BookRecommendService service = new BookRecommendService())
+            {
+                return Json(service.GetAllBooks(k));
+            }
+        }
+
     }
 }

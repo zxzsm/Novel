@@ -71,5 +71,10 @@ SELECT a.[Id]
             var q = Db.Database.SqlQuery<BookRecommendViewModel>(sql, sqlParameters.ToArray());
             return q != null && q.Count != 0 ? q.First() : null;
         }
+
+        public List<Book> GetAllBooks(string name)
+        {
+            return Db.Book.Where(m=>m.BookName.Contains(name)).Take(10).Select(m => new Book { BookId = m.BookId, BookName = m.BookName }).ToList();
+        }
     }
 }
